@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
-
-
 function App() {
+  const navigate = useNavigate(); // Хук для навигации
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -55,47 +56,46 @@ function App() {
     }
 
     alert(`Email: ${formData.email}\nPassword: ${formData.password}`);
+
+    // Перенаправление на "/main" после успешной валидации
+    navigate("/main");
   };
 
   return (
-    <div>
+    <div className="page-container">
+      <div className="form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              className="form-field"
+              type="text"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+          </div>
 
-        <div className="page-container">
-  <div className="form">
-    <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="email">Email:</label>
-        <input
-          className="form-field"
-          type="text"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              className="form-field"
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+            {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
+          </div>
+
+          <button className="submit" type="submit">
+            Submit
+          </button>
+        </form>
       </div>
-
-      <div className="form-group">
-        <label htmlFor="password">Password:</label>
-        <input
-          className="form-field"
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
-      </div>
-
-      <button className="submit" type="submit">
-        Submit
-      </button>
-    </form>
-  </div>
-</div>
-
     </div>
   );
 }
