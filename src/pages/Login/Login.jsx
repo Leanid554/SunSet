@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./index.scss";
 
-import Navbar from "../../components/Navbar/Navbar";
+
 
 function App() {
   const [formData, setFormData] = useState({
@@ -59,7 +59,7 @@ function App() {
 
   return (
     <div>
-        <Navbar/>
+
         <div className="page-container">
   <div className="form">
     <form onSubmit={handleSubmit}>

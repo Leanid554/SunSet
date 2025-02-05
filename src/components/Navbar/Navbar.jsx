@@ -1,15 +1,14 @@
-import React from 'react';
-import Logo from './../../assets/img/logo.png';
-import './index.scss';
+import React from "react";
+import Logo from "../../assets/img/logo.png";
+import "./index.scss"
 
-export default function LogoFirst() {
+export default function Navbar({ count }) {
   return (
-    <div>
-        <div className="navbar_logo">
-            <img src={Logo} alt="Logo" />
-        </div>
-
-
-    </div>
-  )
+    <nav className="navbar">
+      <div className="navbar_logo">
+        <img src={Logo} alt="Logo" />
+      </div>
+      <p className="visit-counter">count: {count}</p>
+    </nav>
+  );
 }
