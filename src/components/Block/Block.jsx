@@ -1,39 +1,51 @@
+// Block.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Block1.scss"; 
+import "./Block1.scss";
 
-function Block1({ videos, mainPath = "/main" }) {
+function Block({ videos, mainPath = "/main" }) {
   return (
     <div className="block-container">
-      {/* Кнопка "Main" */}
-      <div className="main-button">
-        <Link to={mainPath} className="main-link">Main</Link>
+      {/* "stanowisko" element */}
+      <div className="stanowisko-container">
+        <div className="stanowisko">stanowisko</div>
       </div>
 
-      {/* Список видео */}
+      {/* Список видео и тестов */}
       <div className="video-list">
         {videos.map((video) => (
           <div key={video.id} className="video-item">
-            <Link to={`/video/${video.id}`} className="video-link">
-              <h3>{video.title}</h3>
-              {/* Прогресс-бар */}
-              <div className="progress-bar">
-                <div
-                  className="progress"
-                  style={{ width: `${video.progress}%` }}
-                ></div>
-              </div>
-            </Link>
+            {/* Если это тест, открываем страницу с тестом */}
+            {video.id === 51 || video.id === 52 ? (
+              <Link to={`/test/${video.id}`} className="video-link">
+                <div className="video-content">
+                  <h3>{video.title}</h3>
+                </div>
+              </Link>
+            ) : (
+              <Link to={`/video/${video.id}`} className="video-link">
+                <div className="video-content">
+                  <h3>{video.title}</h3>
+                  {/* Прогресс-бар */}
+                  <div className="progress-bar">
+                    <div
+                      className="progress"
+                      style={{ width: `${video.progress}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Кнопка возврата */}
-      <div className="back-to-main">
-        <Link to={mainPath} className="back-button">Вернуться к выбору блока</Link>
+      {/* Кнопка "Wróć do bloków" */}
+      <div className="back-button-container">
+        <Link to="/main" className="back-button">Wróć do bloków</Link>
       </div>
     </div>
   );
 }
 
-export default Block1;
+export default Block;

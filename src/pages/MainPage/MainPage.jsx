@@ -13,7 +13,7 @@ const BlockLink = ({ title, path }) => (
 function MainPage() {
   return (
     <div className="main-page">
-      <div className="block-container">
+      <div className="block-containerMain">
       <BlockLink title="Block 1" path="/block/1" />
       <BlockLink title="Block 2" path="/block/2" />
 

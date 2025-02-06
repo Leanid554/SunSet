@@ -1,8 +1,10 @@
-/* src/components/Block1.scss */
-
+// Block1.scss
 .block-container {
   position: relative;
-  padding-top: 40px; /* Убедитесь, что кнопка не накладывается на контент */
+  padding-top: 40px;
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column;
+  justify-content: space-between; /* Space between video list and button */
 }
 
 .video-list {
@@ -12,26 +14,33 @@
 }
 
 .video-item {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 20px;
-  text-align: center;
+  background-color: #f0f0f0; /* Light gray background */
+  border: 1px solid #ccc;
   border-radius: 8px;
+  padding: 10px;
+  text-align: center;
   position: relative;
 }
 
-h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.video-content {
+  height: 100px; /* Adjust height as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Стили для прогресс-бара */
+h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
 .progress-bar {
-  width: 100%;
-  height: 8px;
+  width: 80%; /* Adjust width as needed */
+  height: 5px;
   background-color: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
+  border-radius: 2px;
+  margin-top: 5px;
 }
 
 .progress {
@@ -40,56 +49,31 @@ h3 {
   transition: width 0.3s ease;
 }
 
-/* Стили для замка */
-.lock-icon {
+.stanowisko-container {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  color: #ccc;
-}
-
-/* Стили для кнопки "Main" */
-.main-button {
-  position: absolute; /* Абсолютное позиционирование */
-  top: 20px;
+  top: -5px; /* Изменено с 20px на -5px */
   left: 20px;
-  z-index: 10;
-}
-
-.main-link {
-  background-color: #28a745;
+  background-color: red;
   color: white;
   padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.main-link:hover {
-  background-color: #218838;
-}
-
-/* Стили для кнопки возврата */
-.back-to-main {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   z-index: 10;
+}
+
+.back-button-container {
+  text-align: center;
+  margin-top: 20px;
 }
 
 .back-button {
-  background-color: #007bff;
+  /* Стиль самой кнопки */
+  background-color: #f1120e;
   color: white;
   padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 8px;
+  border-radius: 5px;
   text-decoration: none;
-  border: 2px solid #007bff;
-  transition: background-color 0.3s;
+
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #c02929;
 }

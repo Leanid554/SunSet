@@ -15,6 +15,8 @@ import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import Block1Page from "./pages/BlockPage/BlockPage";
+import TestPage from "./pages/TestPage";  // Новое местоположение
+
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -33,6 +35,7 @@ function App() {
         <Route path="/main" element={<MainPage />} />
         <Route path="/block/:id" element={<Block1Page />} />
         <Route path="/video/:id" element={<VideoPage />} />
+        <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </>
   );
