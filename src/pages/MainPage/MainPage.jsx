@@ -22,8 +22,10 @@ const BlockLink = ({ title, path, progress }) => (
 
 function MainPage() {
   // Прогресс для блоков
-  const block1Progress = 80; // Пример прогресса для Block 1
-  const block2Progress = 40; // Пример прогресса для Block 2
+  const block1Progress = 100; // Пример прогресса для Block 1
+  const block2Progress = 100; // Пример прогресса для Block 2
+  const block3Progress = 40; // Пример прогресса для Block 2
+  const block4Progress = 0; // Пример прогресса для Block 2
   
 
   return (
@@ -31,6 +33,8 @@ function MainPage() {
       <div className="block-containerMain">
         <BlockLink title="Block 1" path="/block/1" progress={block1Progress} />
         <BlockLink title="Block 2" path="/block/2" progress={block2Progress} />
+        <BlockLink title="Block 3" path="/block/3" progress={block3Progress} />
+        <BlockLink title="Block 4" path="/block/4" progress={block4Progress} />
       </div>
     </div>
   );

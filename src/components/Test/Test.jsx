@@ -16,6 +16,20 @@ const tests = {
       { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
     ],
   },
+  53: {
+    title: "Test 3",
+    questions: [
+      { question: "What is 1 + 1?", options: ["1", "2", "3"], answer: "2" },  //test block 2
+      { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
+    ],
+  },
+  54: {
+    title: "Test 4",
+    questions: [
+      { question: "What is 1 + 1?", options: ["1", "2", "3"], answer: "2" },  //test block 2
+      { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
+    ],
+  },
 };
 
 function Test({ testId }) {

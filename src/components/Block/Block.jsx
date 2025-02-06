@@ -16,7 +16,7 @@ function Block({ videos, mainPath = "/main" }) {
         {videos.map((video) => (
           <div key={video.id} className="video-item">
             {/* Если это тест, открываем страницу с тестом */}
-            {video.id === 51 || video.id === 52 ? (
+            {video.id === 51 || video.id === 52 || video.id === 53 || video.id === 54 ? (
               <Link to={`/test/${video.id}`} className="video-link">
                 <div className="video-content">
                   <h3>{video.title}</h3>
