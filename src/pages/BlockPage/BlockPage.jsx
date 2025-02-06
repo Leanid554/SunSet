@@ -9,8 +9,8 @@ const videosData = {
     { id: 12, title: "Lekcja2", progress: 100 },
     { id: 13, title: "Lekcja3", progress: 100 },
     { id: 14, title: "Lekcja4", progress: 100 },
-    { id: 15, title: "Lekcja5", progress: 50 },
-    { id: 16, title: "Lekcja6", progress: 0 },
+    { id: 15, title: "Lekcja5", progress: 100 },
+    { id: 16, title: "Lekcja6", progress: 100 },
     { id: 17, title: "Lekcja7", progress: 0 },
     { id: 18, title: "Lekcja8", progress: 0 },
     { id: 19, title: "Lekcja9", progress: 0 },
@@ -50,15 +50,30 @@ const videosData = {
     { id: 47, title: "Lekcja7", progress: 0 },
     { id: 48, title: "Lekcja8", progress: 0 },
     { id: 49, title: "Lekcja9", progress: 0 },
-    { id: 54, title: "Test 4", progress: 0 },
+    { id: 54, title: "Test 4", progress: 0 }, // 5n test 4n-4block 3n-3block 2n-2block 1n-1block
   ],
 };
+  // Другие блоки аналогично
+
+
+function getAccessibleVideos(videos) {
+  let accessibleVideos = [];
+  for (let i = 0; i < videos.length; i++) {
+    if (i === 0 || videos[i - 1].progress === 100) {
+      accessibleVideos.push(videos[i]);
+    } else {
+      break;
+    }
+  }
+  return accessibleVideos;
+}
 
 function BlockPages() {
   const { id } = useParams();
   const videos = videosData[id] || [];
+  const accessibleVideos = getAccessibleVideos(videos);
 
-  return <Block videos={videos} mainPath="/main" />;
+  return <Block videos={accessibleVideos} mainPath="/main" />;
 }
 
 export default BlockPages;
