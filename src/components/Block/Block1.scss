@@ -1,6 +1,6 @@
 // Block1.scss
 .block-container {
-  position: relative;
+
   padding-top: 40px;
   display: flex; /* Use flexbox for layout */
   flex-direction: column;
@@ -20,6 +20,10 @@
   padding: 10px;
   text-align: center;
   position: relative;
+  transition: 0.3s all;
+}
+.video-item:hover{
+  transform: translateY(-5px);
 }
 
 .video-content {
@@ -28,6 +32,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.video-link:hover{
+  transform: translateY(-5px);
 }
 
 h3 {
@@ -50,14 +57,23 @@ h3 {
 }
 
 .stanowisko-container {
-  position: absolute;
-  top: -5px; /* Изменено с 20px на -5px */
-  left: 20px;
+  width: 20%; 
+  max-width: 200px; 
+  min-width: 120px; 
+  margin: 20px auto; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   background-color: red;
   color: white;
   padding: 10px 20px;
   z-index: 10;
+  border-radius: 10px;
+  font-size: 23px;
 }
+
+
 
 .back-button-container {
   text-align: center;

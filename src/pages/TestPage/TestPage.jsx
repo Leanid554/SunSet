@@ -1,7 +1,7 @@
 // src/pages/TestPage.jsx
 import React from "react";
 import { useParams } from "react-router-dom";
-import Test from "../components/Test/Test"; // Компонент с тестами
+import Test from "../../components/Test/Test"; // Компонент с тестами
 
 
 function TestPage() {

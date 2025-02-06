@@ -15,8 +15,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import Block1Page from "./pages/BlockPage/BlockPage";
-import TestPage from "./pages/TestPage";  // Новое местоположение
-
+import TestPage from "./pages/TestPage/TestPage"; // Новое местоположение
 
 function App() {
   const visits = useSelector((state) => state.visits.count);

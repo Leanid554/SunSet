@@ -44,6 +44,7 @@ function Block({ videos, mainPath = "/main" }) {
       <div className="back-button-container">
         <Link to="/main" className="back-button">Wróć do bloków</Link>
       </div>
+      
     </div>
   );
 }
