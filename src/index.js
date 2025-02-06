@@ -13,10 +13,8 @@ import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Login/Login";
 import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
-import Block1 from "./components/Block1";
-import Block2 from "./components/Block2";
-import VideoPage from "./pages/MainPage/VideoPage";
-
+import VideoPage from "./pages/VideoPage/VideoPage";
+import Block1Page from "./pages/BlockPage/BlockPage";
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -33,9 +31,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/block1" element={<Block1 />} />
-        <Route path="/block2" element={<Block2 />} />
-        <Route path="/video/:id" component={VideoPage} /> {/* Динамический маршрут */}
+        <Route path="/block/:id" element={<Block1Page />} />
+        <Route path="/video/:id" element={<VideoPage />} />
       </Routes>
     </>
   );
