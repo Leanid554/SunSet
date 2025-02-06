@@ -13,6 +13,9 @@ import Navbar from "./components/Navbar/Navbar";
 import Login from "./pages/Login/Login";
 import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
+import VideoPage from "./pages/VideoPage/VideoPage";
+import Block1Page from "./pages/BlockPage/BlockPage";
+import TestPage from "./pages/TestPage/TestPage"; // Новое местоположение
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -29,6 +32,9 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/block/:id" element={<Block1Page />} />
+        <Route path="/video/:id" element={<VideoPage />} />
+        <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </>
   );
