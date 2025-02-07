@@ -6,9 +6,10 @@ function VideoPage() {
   const { id } = useParams();
   const videoId = Number(id);
   const navigate = useNavigate();
-  const videoRef = useRef(null); // Ссылка на элемент видео
-  const [showQuestion, setShowQuestion] = useState(false); // Состояние для показа вопроса
-  const [userAnswer, setUserAnswer] = useState(null); // Ответ пользователя
+  const videoRef = useRef(null);
+  const [showQuestion, setShowQuestion] = useState(false);
+  const [userAnswer, setUserAnswer] = useState(null);
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
   let blockId = null;
   let lessonTitle = `Lekcja ${videoId % 10}`;
@@ -26,26 +27,23 @@ function VideoPage() {
     lessonTitle = `Test ${videoId - 50}`;
   }
 
-  // Функция для показа вопроса
   const showQuiz = () => {
     setShowQuestion(true);
-    videoRef.current.pause(); // Ставим видео на паузу
+    videoRef.current.pause();
   };
 
-  // Функция для обработки выбора ответа
   const handleAnswer = (answer) => {
     setUserAnswer(answer);
     setShowQuestion(false);
-    videoRef.current.play(); // Возобновляем воспроизведение видео
+    videoRef.current.play();
   };
 
-  // Эффект для случайного появления вопроса
   useEffect(() => {
     const timeout = setTimeout(() => {
-      showQuiz(); // Показываем вопрос через случайное время
-    }, Math.random() * 5000 + 5000); // Вопрос появляется через 5-10 секунд
+      showQuiz();
+    }, Math.random() * 5000 + 5000);
 
-    return () => clearTimeout(timeout); // Очищаем таймер при размонтировании
+    return () => clearTimeout(timeout);
   }, [id]);
 
   const goToNextLesson = () => {
@@ -61,22 +59,39 @@ function VideoPage() {
     } else if (blockId === 4 && nextVideoId <= 49) {
       nextBlockVideoId = nextVideoId;
     } else {
-      return; 
+      return;
     }
 
     navigate(`/video/${nextBlockVideoId}`);
   };
 
+  // Обработка завершения видео с учетом погрешности
+  const handleVideoProgress = () => {
+    const videoElement = videoRef.current;
+    if (videoElement && videoElement.currentTime >= videoElement.duration - 0.5) {
+      setIsVideoCompleted(true);
+    }
+  };
+
+  // Сброс состояния при смене видео
+  useEffect(() => {
+    setIsVideoCompleted(false);
+  }, [id]);
+
   return (
     <div className="video-page">
       <h3>{lessonTitle}</h3>
-      <video ref={videoRef} key={id} width="600" controls>
+      <video
+        ref={videoRef}
+        key={id}
+        width="600"
+        controls
+        onTimeUpdate={handleVideoProgress}
+      >
         <source src={`/videos/video${id}.mp4`} type="video/mp4" />
         <p>Twoja przeglądarka не obsługuje odtwarzania wideo.</p>
       </video>
 
-      
-      {/* Вопрос появляется только если showQuestion равно true */}
       {showQuestion && (
         <div className="quiz-popup">
           <h4>Сколько будет 2 + 2?</h4>
@@ -100,7 +115,8 @@ function VideoPage() {
           </Link>
         )}
 
-        <button className="next-button-video" onClick={goToNextLesson}>
+        {/* Блокировка кнопки до завершения видео */}
+        <button className="next-button-video" onClick={goToNextLesson} disabled={!isVideoCompleted}>
           Dalej
         </button>
       </div>
