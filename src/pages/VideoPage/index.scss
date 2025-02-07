@@ -3,8 +3,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #ffffff; /* Темный фон */
+  background-color: #ffffff;
+  h3{
+    font-size: 24px;
+  }
 }
 
 video {
@@ -13,11 +15,37 @@ video {
   border: 1px solid #fff; /* Добавим белую рамку */
   border-radius: 5px;
 }
+.buttons-video{
+  display: flex;
+  gap: 20px;
+  padding-top: 20px;
+}
 
 .back-button1 {
-  background-color: #d80202; /* Красный цвет кнопки */
+  background-color: #f82d2d; 
   color: #fff;
+  width:50px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 18px;
+  margin-top: 20px;
+  border: 0px;
+  transition: 0.3s all;
+}
+
+.next-button-video:hover,.back-button1:hover{
+  background-color: #d80202; 
+}
+.next-button-video{
+  transition: 0.3s all;
+  background-color: #f82d2d; 
+  color: #fff;
+  padding: 15px 34px;
   border-radius: 5px;
   text-decoration: none;
   font-size: 18px;

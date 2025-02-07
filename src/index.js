@@ -15,7 +15,8 @@ import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import Block1Page from "./pages/BlockPage/BlockPage";
-import TestPage from "./pages/TestPage/TestPage"; // Новое местоположение
+import TestPage from "./pages/TestPage/TestPage";
+import "./index.css";
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -33,7 +34,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/block/:id" element={<Block1Page />} />
-        <Route path="/video/:id" element={<VideoPage />} />
+        <Route
+          path="/video/:id"
+          element={<VideoPage key={window.location.pathname} />}
+        />
         <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </>
