@@ -1,4 +1,3 @@
-// Block.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Block1.scss";
@@ -6,11 +5,6 @@ import "./Block1.scss";
 function Block({ videos, mainPath = "/main" }) {
   return (
     <div className="block-container">
-      {/* "stanowisko" element */}
-      <div className="stanowisko-container">
-        <div className="stanowisko">stanowisko</div>
-      </div>
-
       {/* Список видео и тестов */}
       <div className="video-list">
         {videos.map((video) => (
@@ -27,7 +21,7 @@ function Block({ videos, mainPath = "/main" }) {
                 <div className="video-content">
                   <h3>{video.title}</h3>
                   {/* Прогресс-бар */}
-                  <div className="progress-bar">
+                  <div className="progress-bar-block">
                     <div
                       className="progress"
                       style={{ width: `${video.progress}%` }}
@@ -44,7 +38,6 @@ function Block({ videos, mainPath = "/main" }) {
       <div className="back-button-container">
         <Link to="/main" className="back-button">Wróć do bloków</Link>
       </div>
-      
     </div>
   );
 }

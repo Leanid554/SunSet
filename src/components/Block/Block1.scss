@@ -1,79 +1,71 @@
-// Block1.scss
 .block-container {
-
-  padding-top: 40px;
-  display: flex; /* Use flexbox for layout */
+  padding-top: 120px;
+  display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space between video list and button */
+  align-items: center;
+ 
 }
 
 .video-list {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(25%, 1fr)); 
   gap: 20px;
+  width: 100%; 
+  max-width: 1700px; 
+  margin-bottom: 50px;
 }
 
 .video-item {
-  background-color: #f0f0f0; /* Light gray background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0; /* Светло-серый фон */
   border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  position: relative;
+  height: 150px;
+ 
+  border-radius: 15px;
+  box-shadow: 2px 2px 5px 3px rgba(0, 0, 0, 0.1);
   transition: 0.3s all;
 }
-.video-item:hover{
+
+.video-item:hover {
   transform: translateY(-5px);
 }
 
 .video-content {
-  height: 100px; /* Adjust height as needed */
+  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.video-link:hover{
-  transform: translateY(-5px);
+
+.video-content h3 {
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
 }
 
-h3 {
-  font-size: 16px;
-  margin-bottom: 5px;
+.video-link {
+  text-decoration: none;
+  color: inherit;
 }
 
-.progress-bar {
-  width: 80%; /* Adjust width as needed */
-  height: 5px;
+.progress-bar-block {
+  width: 500%;
+  height: 10px;
   background-color: #e0e0e0;
-  border-radius: 2px;
   margin-top: 5px;
+  border-radius: 5px;
 }
 
 .progress {
+  border-radius: 5px;
   height: 100%;
   background-color: #28a745;
   transition: width 0.3s ease;
 }
-
-.stanowisko-container {
-  width: 20%; 
-  max-width: 200px; 
-  min-width: 120px; 
-  margin: 20px auto; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: red;
-  color: white;
-  padding: 10px 20px;
-  z-index: 10;
-  border-radius: 10px;
-  font-size: 23px;
-}
-
-
 
 .back-button-container {
   text-align: center;
@@ -81,13 +73,12 @@ h3 {
 }
 
 .back-button {
-  /* Стиль самой кнопки */
   background-color: #f1120e;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 30px;
   border-radius: 5px;
+  font-size: 18px;
   text-decoration: none;
-
 }
 
 .back-button:hover {
