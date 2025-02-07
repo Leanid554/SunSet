@@ -8,7 +8,7 @@ function MainPage() {
     { title: "Block 1", path: "/block/1", videosData: [
       { id: 11, progress: 100 }, { id: 12, progress: 100 }, { id: 13, progress: 100 },
       { id: 14, progress: 100 }, { id: 15, progress: 100 }, { id: 16, progress: 100 },
-      { id: 17, progress: 0 }, { id: 18, progress: 0 }, { id: 19, progress: 0 }, { id: 51, progress: 0 }
+      { id: 17, progress: 100 }, { id: 18, progress: 100 }, { id: 19, progress: 100 }, { id: 51, progress: 0 }
     ], isEnabled: true },
     { title: "Block 2", path: "/block/2", videosData: [
       { id: 21, progress: 100 }, { id: 22, progress: 100 }, { id: 23, progress: 100 },
