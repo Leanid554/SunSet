@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import './index.scss';
 
@@ -6,6 +6,9 @@ function VideoPage() {
   const { id } = useParams();
   const videoId = Number(id);
   const navigate = useNavigate();
+  const videoRef = useRef(null); // Ссылка на элемент видео
+  const [showQuestion, setShowQuestion] = useState(false); // Состояние для показа вопроса
+  const [userAnswer, setUserAnswer] = useState(null); // Ответ пользователя
 
   let blockId = null;
   let lessonTitle = `Lekcja ${videoId % 10}`;
@@ -23,7 +26,26 @@ function VideoPage() {
     lessonTitle = `Test ${videoId - 50}`;
   }
 
+  // Функция для показа вопроса
+  const showQuiz = () => {
+    setShowQuestion(true);
+    videoRef.current.pause(); // Ставим видео на паузу
+  };
+
+  // Функция для обработки выбора ответа
+  const handleAnswer = (answer) => {
+    setUserAnswer(answer);
+    setShowQuestion(false);
+    videoRef.current.play(); // Возобновляем воспроизведение видео
+  };
+
+  // Эффект для случайного появления вопроса
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      showQuiz(); // Показываем вопрос через случайное время
+    }, Math.random() * 5000 + 5000); // Вопрос появляется через 5-10 секунд
+
+    return () => clearTimeout(timeout); // Очищаем таймер при размонтировании
   }, [id]);
 
   const goToNextLesson = () => {
@@ -48,27 +70,40 @@ function VideoPage() {
   return (
     <div className="video-page">
       <h3>{lessonTitle}</h3>
-      <video key={id} width="600" controls>
+      <video ref={videoRef} key={id} width="600" controls>
         <source src={`/videos/video${id}.mp4`} type="video/mp4" />
-        <p>Twoja przeglądarka nie obsługuje odtwarzania wideo.</p>
+        <p>Twoja przeglądarka не obsługuje odtwarzania wideo.</p>
       </video>
 
-
-    <div className='buttons-video'>
-      {blockId === 'test' ? (
-        <Link to={`/test/${id}`} className="back-button1">
-          Wrócić
-        </Link>
-      ) : (
-        <Link to={`/block/${blockId}`} className="back-button1">
-          Wrócić
-        </Link>
+      
+      {/* Вопрос появляется только если showQuestion равно true */}
+      {showQuestion && (
+        <div className="quiz-popup">
+          <h4>Сколько будет 2 + 2?</h4>
+          <div className="answers">
+            <button onClick={() => handleAnswer(1)}>1</button>
+            <button onClick={() => handleAnswer(2)}>2</button>
+            <button onClick={() => handleAnswer(3)}>3</button>
+            <button onClick={() => handleAnswer(4)}>4</button>
+          </div>
+        </div>
       )}
 
-      <button className='next-button-video' onClick={goToNextLesson}>
-        Dalej
-      </button>
-    </div>
+      <div className="buttons-video">
+        {blockId === 'test' ? (
+          <Link to={`/test/${id}`} className="back-button1">
+            Wrócić
+          </Link>
+        ) : (
+          <Link to={`/block/${blockId}`} className="back-button1">
+            Wrócić
+          </Link>
+        )}
+
+        <button className="next-button-video" onClick={goToNextLesson}>
+          Dalej
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,14 +1,47 @@
-.main-page {
-  padding: 20px;
-  text-align: center;
-}
+// .main-page {
+//   padding: 20px;
+//   text-align: center;
+//   background-color: #f0f0f0; /* Светло-серый фон */
+// }
 
 .block-containerMain {
-  padding-top: 100px;
   display: flex;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
-  justify-content: center; 
-  
+  // padding: 20px;
+  // // background-color: #fff; /* Белый фон для контейнера блоков */
+  border-radius: 10px;
+  // box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.block-item {
+  width: 300px;
+  height: 150px;
+  border-radius: 10px;
+  background-color: #f5f5f5; /* Светло-серый фон для блоков */
+  // display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.block-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  width: 80%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4CAF50; /* Зеленый цвет прогресса */
+}
