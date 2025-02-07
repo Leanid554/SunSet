@@ -1,6 +1,6 @@
 import React from "react";
 import BlockLink from "./../../components/BlockLinkMain/BlockLinkMain";
-import BlockInfo from "../../components/BlockInfo"; // Импортируем новый компонент
+import BlockInfo from "../../components/BlockInfo/BlockInfo"; // Импортируем новый компонент
 import "./index.scss"; // Импортируем стили
 
 function MainPage() {
@@ -44,7 +44,6 @@ function MainPage() {
         {updatedProgressData.map((block, index) => (
           <div key={index} className="block-item">
             <BlockLink {...block} />
-            <BlockInfo videosData={block.videosData} />
           </div>
         ))}
       </div>

@@ -1,8 +1,7 @@
-// components/BlockInfo.jsx
 import React from 'react';
+import './index.scss';
 
 const BlockInfo = ({ videosData }) => {
-  // Функция для вычисления прогресса блока
   const calculateProgress = (videosData) => {
     let completedVideos = 0;
     let totalVideos = 0;
@@ -16,7 +15,6 @@ const BlockInfo = ({ videosData }) => {
       totalVideos += 1;
     });
 
-    // Подсчитываем тесты
     videosData.forEach((video) => {
       if (video.id === 51 || video.id === 52 || video.id === 53 || video.id === 54) {
         if (video.progress === 100) {
@@ -26,7 +24,6 @@ const BlockInfo = ({ videosData }) => {
       }
     });
 
-    // Вычисляем общий прогресс: (выполненные видео + выполненные тесты) / (всего видео + всего тестов)
     const totalItems = totalVideos + totalTests;
     const completedItems = completedVideos + completedTests;
     return (completedItems / totalItems) * 100;
@@ -38,7 +35,7 @@ const BlockInfo = ({ videosData }) => {
     <div className="block-info">
       <div className="progress-bar">
         <div
-          className="progress"
+          className="progress-block-info"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
