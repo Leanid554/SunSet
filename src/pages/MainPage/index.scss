@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 120px;
+  padding-top: 60px;
 }
 
 .block-container {
@@ -11,7 +11,7 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  max-width: 800px;
+  max-width: 70%;
 }
 
 .block-header-row {
@@ -27,11 +27,12 @@
 .dostep-label {
   font-size: 14px;
   color: #777;
+  padding-right: 10px;
 }
 
 .block-item {
   display: flex;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   border-radius: 10px;
   padding: 15px;
   align-items: center;
@@ -47,7 +48,7 @@
 
 .block-item.disabled {
   pointer-events: none;
-  background-color: #ddd;
+  background-color: #b3b3b3;
 }
 
 .block-content {
@@ -68,7 +69,7 @@
 }
 
 .block-progress-bar-container {
-  width: 150px;
+  width: 7%;
   height: 10px;
   background-color: #e0e0e0;
   border-radius: 5px;

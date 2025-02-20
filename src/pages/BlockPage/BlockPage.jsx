@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Block from "../../components/Block/Block";
 import videosData from "../../components/videosData/videosData"; // Импортируем данные
-import './index.scss';
+
 
 function getAccessibleVideos(videos) {
   let accessibleVideos = [];
