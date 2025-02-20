@@ -10,14 +10,14 @@ const BlockLink = ({ title, path, isEnabled, videosData }) => {
         <Link to={path} className="block-button">
           <div className="block-content">
             <h3>{title}</h3>
-            <BlockInfo videosData={videosData} /> {/* Оставляем только один прогресс-бар */}
+            <BlockInfo videosData={videosData} />
           </div>
         </Link>
       ) : (
         <div className="blocked-button">
           <div className="block-content">
             <h3>{title} (Blocked)</h3>
-            <BlockInfo videosData={videosData} /> {/* Прогресс-бар остается здесь тоже */}
+            <BlockInfo videosData={videosData} />
             <p>Progress in the previous block is not 100%. This block is locked.</p>
           </div>
         </div>

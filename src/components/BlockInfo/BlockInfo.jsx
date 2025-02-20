@@ -7,8 +7,8 @@ const BlockInfo = ({ videosData }) => {
 
   return (
     <div className="block-info">
-      <div className="progress-bar-BlockInfo">
-        <div className="progress-BlockInfo" style={{ width: `${averageProgress}%` }}></div>
+      <div className="main-page-progress-bar">
+        <div className="main-page-progress" style={{ width: `${averageProgress}%` }}></div>
       </div>
     </div>
   );
