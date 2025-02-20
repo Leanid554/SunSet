@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { store } from "./store/store";
 import { incrementVisit } from "./store/visitsSlice";
 import Navbar from "./components/Navbar/Navbar";
@@ -34,10 +29,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/block/:id" element={<Block1Page />} />
-        <Route
-          path="/video/:id"
-          element={<VideoPage key={window.location.pathname} />}
-        />
+        <Route path="/video/:id" element={<VideoPage key={window.location.pathname} />} />
         <Route path="/test/:id" element={<TestPage />} />
       </Routes>
     </>

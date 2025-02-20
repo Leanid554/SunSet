@@ -21,9 +21,9 @@ function Block({ videos, mainPath = "/main" }) {
                 <div className="video-content">
                   <h3>{video.title}</h3>
                   {/* Прогресс-бар */}
-                  <div className="progress-bar-block">
+                  <div className="progress-bar-block-Block">
                     <div
-                      className="progress"
+                      className="progress-Block"
                       style={{ width: `${video.progress}%` }}
                     ></div>
                   </div>

@@ -1,32 +1,18 @@
 .block-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    text-align: center;
-  
-    p {
-      font-weight: 300;
-      font-size: 18px;
-      margin-top: 10px;
-    }
-  }
-  
-  .progress-bar {
-    width: 80%; 
-    max-width: 300px; 
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    margin-top: 10px; 
-    position: relative;
-    display: flex;
-    align-items: center; 
-  }
-  
-  .progress-block-info {
-    border-radius: 5px;
-    height: 100%;
-    background-color: #28a745;
-    transition: width 0.3s ease-in-out; 
-  }
-  
+  width: 100%;
+  margin-top: 20px;
+}
+
+.progress-bar-BlockInfo {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-BlockInfo {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
