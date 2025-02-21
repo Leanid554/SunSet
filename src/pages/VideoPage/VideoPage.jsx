@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import videoQuestions from "../../data/videoQuestions"; // 🔥 Импортируем вопросы
 import "./index.scss";
 
 function VideoPage() {
@@ -28,12 +29,8 @@ function VideoPage() {
     blockId = 5;
   }
 
-  // 3 вопроса на разные секунды
-  const questions = [
-    { time: 2, question: "Сколько будет 2 + 2?", options: ["1", "2", "3", "4"], correct: "4" },
-    { time: 5, question: "Сколько будет 3 + 3?", options: ["4", "5", "6", "7"], correct: "6" },
-    { time: 9, question: "Сколько будет 5 - 2?", options: ["1", "2", "3", "4"], correct: "3" },
-  ];
+  // 🔥 Берём вопросы для текущего видео из videoQuestions
+  const questions = videoQuestions[videoId] || [];
 
   const handleVideoProgress = () => {
     const videoElement = videoRef.current;
@@ -48,7 +45,7 @@ function VideoPage() {
 
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion);
-      videoElement.pause(); // Остановить видео на время ответа
+      videoElement.pause();
     }
 
     // Если видео дошло до конца
@@ -59,14 +56,13 @@ function VideoPage() {
 
   const handleAnswer = (selectedAnswer) => {
     if (currentQuestion) {
-      // Проверяем правильность ответа
       if (selectedAnswer === currentQuestion.correct) {
         setCorrectAnswers((prev) => prev + 1);
       }
 
       setAnsweredQuestions((prev) => ({ ...prev, [currentQuestion.time]: true }));
       setCurrentQuestion(null);
-      videoRef.current.play(); // Продолжить видео
+      videoRef.current.play();
     }
   };
 
@@ -101,10 +97,10 @@ function VideoPage() {
         onTimeUpdate={handleVideoProgress}
       >
         <source src={`/videos/video${id}.mp4`} type="video/mp4" />
-        <p>Twoja przeglądarka nie obsługuje odtwarzania wideo.</p>
+        <p>Twoja przeglądarka nie obsługuje odtwarzania вideo.</p>
       </video>
 
-      {/* Всплывающее окно с вопросом */}
+      {/* Вопрос */}
       {currentQuestion && (
         <div className="quiz-popup">
           <h4>{currentQuestion.question}</h4>
@@ -119,7 +115,7 @@ function VideoPage() {
       )}
 
       <div className="buttons-video">
-        {/* Если ответил < 2 вопросов – кнопка "Wróć do lekcji" */}
+        {/* Если ответил < 2 вопросов – "Wróć do lekcji" */}
         {!hasEnoughCorrectAnswers && isVideoCompleted && (
           <Link to={`/block/${blockId}`} className="back-button1">
             Wróć do lekcji
