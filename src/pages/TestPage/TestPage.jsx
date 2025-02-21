@@ -15,9 +15,9 @@ function TestPage() {
     <div className="test-page">
       <h2>Test {id}</h2>
       <Test testId={id} page={currentPage} />
-      <button className="next-test-button" onClick={goToNextPage}>
+      {/* <button className="next-test-button" onClick={goToNextPage}>
         Dalej
-      </button>
+      </button> */}
     </div>
   );
 }

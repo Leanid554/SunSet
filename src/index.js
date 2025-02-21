@@ -12,6 +12,8 @@ import VideoPage from "./pages/VideoPage/VideoPage";
 import Block1Page from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
 import "./index.css";
+import AdminPage from "./pages/AdminPage/AdminPage";
+
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -31,6 +33,8 @@ function App() {
         <Route path="/block/:id" element={<Block1Page />} />
         <Route path="/video/:id" element={<VideoPage key={window.location.pathname} />} />
         <Route path="/test/:id" element={<TestPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        
       </Routes>
     </>
   );

@@ -21,7 +21,7 @@ const videosData = {
     { id: 26, title: "Lekcja6", progress: 100 },
     { id: 27, title: "Lekcja7", progress: 100 },
     { id: 28, title: "Lekcja8", progress: 100 },
-    { id: 29, title: "Lekcja9", progress: 0 },
+    { id: 29, title: "Lekcja9", progress: 100 },
     { id: 52, title: "Test 2", progress: 0 },
   ],
   3: [

@@ -1,22 +1,45 @@
-.navbar_logo img {
-    width:220px ;
-    padding: 0 0 0 20px;
-}
-.navbar{
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    padding: 10px 20px;
 }
+
+.navbar_logo img {
+    width: 220px;
+    padding-left: 20px;
+}
+
 .position {
-    width: 20%; 
-    max-width: 200px; 
-    min-width: 120px; 
+    width: 20%;
+    max-width: 200px;
+    min-width: 120px;
     margin-right: 40px;
     text-align: center;
     border-bottom: 1px solid red;
     color: rgb(0, 0, 0);
     padding: 10px 20px;
-    z-index: 10;
     font-size: 23px;
     cursor: pointer;
-  }
+}
+
+/* Кнопка "Admin Panel" */
+.admin-button {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.admin-button:hover {
+    background-color: #cc0000;
+}
