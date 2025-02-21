@@ -11,6 +11,7 @@ function VideoPage() {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   let blockId = null;
   let lessonTitle = `Lekcja ${videoId % 10}`;
@@ -25,46 +26,47 @@ function VideoPage() {
     blockId = 4;
   } else if (videoId >= 60 && videoId <= 69) {
     blockId = 5;
-  } else if ([51, 52, 53, 54, 55].includes(videoId)) {
-    blockId = "test";
-    lessonTitle = `Test ${videoId - 50}`;
   }
 
-  // Список вопросов с привязкой ко времени видео
+  // 3 вопроса на разные секунды
   const questions = [
-    { time: 5, question: "Сколько будет 2 + 2?", options: ["1", "2", "3", "4"], correct: "4" },
-    { time: 10, question: "Сколько будет 3 + 3?", options: ["4", "5", "6", "7"], correct: "6" },
+    { time: 2, question: "Сколько будет 2 + 2?", options: ["1", "2", "3", "4"], correct: "4" },
+    { time: 5, question: "Сколько будет 3 + 3?", options: ["4", "5", "6", "7"], correct: "6" },
+    { time: 9, question: "Сколько будет 5 - 2?", options: ["1", "2", "3", "4"], correct: "3" },
   ];
 
-  // Показывать вопрос в нужный момент
   const handleVideoProgress = () => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
     const currentTime = videoElement.currentTime;
 
-    // Проверяем, есть ли вопрос на текущем моменте видео и он ещё не был показан
+    // Найти вопрос по текущему времени, если он ещё не был задан
     const nextQuestion = questions.find(
       (q) => q.time <= currentTime && !answeredQuestions[q.time]
     );
 
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion);
-      videoElement.pause(); // Ставим видео на паузу
+      videoElement.pause(); // Остановить видео на время ответа
     }
 
-    // Проверка на завершение видео
+    // Если видео дошло до конца
     if (videoElement.currentTime >= videoElement.duration - 0.5) {
       setIsVideoCompleted(true);
     }
   };
 
-  // Обработка ответа
   const handleAnswer = (selectedAnswer) => {
     if (currentQuestion) {
+      // Проверяем правильность ответа
+      if (selectedAnswer === currentQuestion.correct) {
+        setCorrectAnswers((prev) => prev + 1);
+      }
+
       setAnsweredQuestions((prev) => ({ ...prev, [currentQuestion.time]: true }));
       setCurrentQuestion(null);
-      videoRef.current.play(); // Продолжаем видео
+      videoRef.current.play(); // Продолжить видео
     }
   };
 
@@ -72,6 +74,7 @@ function VideoPage() {
     setIsVideoCompleted(false);
     setAnsweredQuestions({});
     setCurrentQuestion(null);
+    setCorrectAnswers(0);
   }, [id]);
 
   const goToNextLesson = () => {
@@ -84,6 +87,8 @@ function VideoPage() {
       navigate(`/video/${nextVideoId}`);
     }
   };
+
+  const hasEnoughCorrectAnswers = correctAnswers >= 2;
 
   return (
     <div className="video-page">
@@ -99,7 +104,7 @@ function VideoPage() {
         <p>Twoja przeglądarka nie obsługuje odtwarzania wideo.</p>
       </video>
 
-      {/* Вопрос появляется в нужный момент */}
+      {/* Всплывающее окно с вопросом */}
       {currentQuestion && (
         <div className="quiz-popup">
           <h4>{currentQuestion.question}</h4>
@@ -114,19 +119,19 @@ function VideoPage() {
       )}
 
       <div className="buttons-video">
-        {blockId === "test" ? (
-          <Link to={`/test/${id}`} className="back-button1">
-            Wrócić
-          </Link>
-        ) : (
+        {/* Если ответил < 2 вопросов – кнопка "Wróć do lekcji" */}
+        {!hasEnoughCorrectAnswers && isVideoCompleted && (
           <Link to={`/block/${blockId}`} className="back-button1">
-            Wrócić
+            Wróć do lekcji
           </Link>
         )}
 
-        <button className="next-button-video" onClick={goToNextLesson} disabled={!isVideoCompleted}>
-          Dalej
-        </button>
+        {/* Если 2+ ответа правильные и видео просмотрено – можно идти дальше */}
+        {hasEnoughCorrectAnswers && isVideoCompleted && (
+          <button className="next-button-video" onClick={goToNextLesson}>
+            Dalej
+          </button>
+        )}
       </div>
     </div>
   );
