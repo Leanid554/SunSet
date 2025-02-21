@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import './index.scss';
+import React, { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import "./index.scss";
 
 function VideoPage() {
   const { id } = useParams();
   const videoId = Number(id);
   const navigate = useNavigate();
   const videoRef = useRef(null);
-  const [showQuestion, setShowQuestion] = useState(false);
-  const [userAnswer, setUserAnswer] = useState(null);
+
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [answeredQuestions, setAnsweredQuestions] = useState({});
 
   let blockId = null;
   let lessonTitle = `Lekcja ${videoId % 10}`;
@@ -22,61 +23,67 @@ function VideoPage() {
     blockId = 3;
   } else if (videoId >= 40 && videoId <= 49) {
     blockId = 4;
-  } else if ([51, 52, 53, 54].includes(videoId)) {
-    blockId = 'test';
+  } else if (videoId >= 60 && videoId <= 69) {
+    blockId = 5;
+  } else if ([51, 52, 53, 54, 55].includes(videoId)) {
+    blockId = "test";
     lessonTitle = `Test ${videoId - 50}`;
   }
 
-  const showQuiz = () => {
-    setShowQuestion(true);
-    videoRef.current.pause();
-  };
+  // Список вопросов с привязкой ко времени видео
+  const questions = [
+    { time: 5, question: "Сколько будет 2 + 2?", options: ["1", "2", "3", "4"], correct: "4" },
+    { time: 10, question: "Сколько будет 3 + 3?", options: ["4", "5", "6", "7"], correct: "6" },
+  ];
 
-  const handleAnswer = (answer) => {
-    setUserAnswer(answer);
-    setShowQuestion(false);
-    videoRef.current.play();
-  };
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      showQuiz();
-    }, Math.random() * 5000 + 5000);
-
-    return () => clearTimeout(timeout);
-  }, [id]);
-
-  const goToNextLesson = () => {
-    const nextVideoId = videoId + 1;
-    let nextBlockVideoId = nextVideoId;
-
-    if (blockId === 1 && nextVideoId <= 19) {
-      nextBlockVideoId = nextVideoId;
-    } else if (blockId === 2 && nextVideoId <= 29) {
-      nextBlockVideoId = nextVideoId;
-    } else if (blockId === 3 && nextVideoId <= 39) {
-      nextBlockVideoId = nextVideoId;
-    } else if (blockId === 4 && nextVideoId <= 49) {
-      nextBlockVideoId = nextVideoId;
-    } else {
-      return;
-    }
-
-    navigate(`/video/${nextBlockVideoId}`);
-  };
-
-  // Обработка завершения видео с учетом погрешности
+  // Показывать вопрос в нужный момент
   const handleVideoProgress = () => {
     const videoElement = videoRef.current;
-    if (videoElement && videoElement.currentTime >= videoElement.duration - 0.5) {
+    if (!videoElement) return;
+
+    const currentTime = videoElement.currentTime;
+
+    // Проверяем, есть ли вопрос на текущем моменте видео и он ещё не был показан
+    const nextQuestion = questions.find(
+      (q) => q.time <= currentTime && !answeredQuestions[q.time]
+    );
+
+    if (nextQuestion) {
+      setCurrentQuestion(nextQuestion);
+      videoElement.pause(); // Ставим видео на паузу
+    }
+
+    // Проверка на завершение видео
+    if (videoElement.currentTime >= videoElement.duration - 0.5) {
       setIsVideoCompleted(true);
     }
   };
 
-  // Сброс состояния при смене видео
+  // Обработка ответа
+  const handleAnswer = (selectedAnswer) => {
+    if (currentQuestion) {
+      setAnsweredQuestions((prev) => ({ ...prev, [currentQuestion.time]: true }));
+      setCurrentQuestion(null);
+      videoRef.current.play(); // Продолжаем видео
+    }
+  };
+
   useEffect(() => {
     setIsVideoCompleted(false);
+    setAnsweredQuestions({});
+    setCurrentQuestion(null);
   }, [id]);
+
+  const goToNextLesson = () => {
+    const nextVideoId = videoId + 1;
+
+    if ((blockId === 1 && nextVideoId <= 19) ||
+        (blockId === 2 && nextVideoId <= 29) ||
+        (blockId === 3 && nextVideoId <= 39) ||
+        (blockId === 4 && nextVideoId <= 49)) {
+      navigate(`/video/${nextVideoId}`);
+    }
+  };
 
   return (
     <div className="video-page">
@@ -89,23 +96,25 @@ function VideoPage() {
         onTimeUpdate={handleVideoProgress}
       >
         <source src={`/videos/video${id}.mp4`} type="video/mp4" />
-        <p>Twoja przeglądarka не obsługuje odtwarzania wideo.</p>
+        <p>Twoja przeglądarka nie obsługuje odtwarzania wideo.</p>
       </video>
 
-      {showQuestion && (
+      {/* Вопрос появляется в нужный момент */}
+      {currentQuestion && (
         <div className="quiz-popup">
-          <h4>Сколько будет 2 + 2?</h4>
+          <h4>{currentQuestion.question}</h4>
           <div className="answers">
-            <button onClick={() => handleAnswer(1)}>1</button>
-            <button onClick={() => handleAnswer(2)}>2</button>
-            <button onClick={() => handleAnswer(3)}>3</button>
-            <button onClick={() => handleAnswer(4)}>4</button>
+            {currentQuestion.options.map((option, index) => (
+              <button key={index} onClick={() => handleAnswer(option)}>
+                {option}
+              </button>
+            ))}
           </div>
         </div>
       )}
 
       <div className="buttons-video">
-        {blockId === 'test' ? (
+        {blockId === "test" ? (
           <Link to={`/test/${id}`} className="back-button1">
             Wrócić
           </Link>
@@ -115,7 +124,6 @@ function VideoPage() {
           </Link>
         )}
 
-        {/* Блокировка кнопки до завершения видео */}
         <button className="next-button-video" onClick={goToNextLesson} disabled={!isVideoCompleted}>
           Dalej
         </button>

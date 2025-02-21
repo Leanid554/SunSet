@@ -14,7 +14,7 @@ export default function Navbar({ count }) {
       </div>
       
       {location.pathname !== "/login" && (
-        <div className="position">Stanowisko</div>
+        <div className="position">Call-Center</div>
       )}
     </nav>
   );

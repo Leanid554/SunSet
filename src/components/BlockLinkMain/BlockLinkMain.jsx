@@ -16,9 +16,9 @@ const BlockLink = ({ title, path, isEnabled, videosData }) => {
       ) : (
         <div className="blocked-button">
           <div className="block-content">
-            <h3>{title} (Blocked)</h3>
+            <h3>{title} (niedostępny)</h3>
             <BlockInfo videosData={videosData} />
-            <p>Progress in the previous block is not 100%. This block is locked.</p>
+            <p>Postęp w poprzednim bloku nie wynosi 100%. Ten blok jest zablokowany.</p>
           </div>
         </div>
       )}

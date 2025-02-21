@@ -1,37 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import videosData from "../../components/videosData/videosData"; // Данные о видео
+import videosData from "../../components/videosData/videosData";
 import './index.scss';
 
-// Функция для вычисления прогресса блока на основе прогресса видео
+// Function to calculate the block progress based on the video progress
 const calculateBlockProgress = (videos) => {
-  if (videos.length === 0) return 0; // Если нет видео, прогресс 0
+  if (videos.length === 0) return 0; // If there are no videos, the progress is 0
 
-  // Суммируем прогрессы всех видео и считаем их средний прогресс
+  // Sum the progress of all videos and calculate their average progress
   const totalProgress = videos.reduce((acc, video) => acc + video.progress, 0);
-  return Math.round(totalProgress / videos.length); // Возвращаем средний прогресс блока
+  return Math.round(totalProgress / videos.length); // Return the average block progress
 };
 
 function MainPage() {
-  // Данные для каждого блока
+  // Data for each block
   const progressData = [
-    { title: "Block 1", path: "/block/1", blockId: 1, prevBlockId: null },
-    { title: "Block 2", path: "/block/2", blockId: 2, prevBlockId: 1 },
-    { title: "Block 3", path: "/block/3", blockId: 3, prevBlockId: 2 },
-    { title: "Block 4", path: "/block/4", blockId: 4, prevBlockId: 3 },
+    { title: "Wprowadzenie", path: "/block/1", blockId: 1, prevBlockId: null },
+    { title: "Podstawy rozmowy", path: "/block/2", blockId: 2, prevBlockId: 1 },
+    { title: "Klienty i typy ", path: "/block/3", blockId: 3, prevBlockId: 2 },
+    { title: "Jak podac informacje ", path: "/block/4", blockId: 4, prevBlockId: 3 },
+    { title: "zamknięcie transakcji", path: "/block/5", blockId: 5, prevBlockId: 4 }, // New block
   ];
 
   const checkIfEnabled = (blockId) => {
-    if (blockId === 1) return true; // Блок 1 всегда доступен
+    if (blockId === 1) return true; // Block 1 is always available
     const prevBlockData = videosData[progressData[blockId - 1].prevBlockId] || [];
-    const prevBlockProgress = calculateBlockProgress(prevBlockData); // Получаем прогресс предыдущего блока
-    return prevBlockProgress === 100; // Блок доступен, если предыдущий блок завершен на 100%
+    const prevBlockProgress = calculateBlockProgress(prevBlockData); // Get the progress of the previous block
+    return prevBlockProgress === 100; // The block is available if the previous block is 100% complete
   };
 
   return (
     <div className="main-page">
       <div className="block-container">
-        {/* Заголовки, которые должны быть в верхней части */}
+        {/* Headings that should be at the top */}
         <div className="block-header-row">
           <div className="block-label">nazwa</div>
           <div className="progress-label">progresja</div>
@@ -42,23 +43,23 @@ function MainPage() {
         {progressData.map((block, index) => {
           const blockVideosData = videosData[block.blockId] || [];
           const isEnabled = checkIfEnabled(block.blockId);
-          const blockProgress = calculateBlockProgress(blockVideosData); // Рассчитываем прогресс блока
+          const blockProgress = calculateBlockProgress(blockVideosData); // Calculate the block progress
 
           return (
             <Link to={isEnabled ? block.path : "#"} key={index} className={`block-item ${isEnabled ? "" : "disabled"}`}>
               <div className="block-content">
-                {/* Данные для каждого блока */}
+                {/* Data for each block */}
                 <div className="block-row">
                   <div className="block-title">{block.title}</div>
                   <div className="block-progress-bar-container">
                     <div className="block-progress-bar">
                       <div
                         className="progress completed"
-                        style={{ width: `${blockProgress}%` }} // Заполнение зелёной части
+                        style={{ width: `${blockProgress}%` }} // Filling the green part
                       ></div>
                       <div
                         className="progress remaining"
-                        style={{ width: `${100 - blockProgress}%` }} // Заполнение серой части
+                        style={{ width: `${100 - blockProgress}%` }} // Filling the gray part
                       ></div>
                     </div>
                   </div>

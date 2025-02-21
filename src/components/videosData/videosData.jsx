@@ -1,3 +1,4 @@
+// Данные о видео (прогресс)
 const videosData = {
   1: [
     { id: 11, title: "Lekcja1", progress: 100 },
@@ -40,16 +41,33 @@ const videosData = {
     { id: 42, title: "Lekcja2", progress: 100 },
     { id: 43, title: "Lekcja3", progress: 100 },
     { id: 44, title: "Lekcja4", progress: 100 },
-    { id: 45, title: "Lekcja5", progress: 50 },
+    { id: 45, title: "Lekcja5", progress: 0 },
     { id: 46, title: "Lekcja6", progress: 0 },
     { id: 47, title: "Lekcja7", progress: 0 },
     { id: 48, title: "Lekcja8", progress: 0 },
     { id: 49, title: "Lekcja9", progress: 0 },
     { id: 54, title: "Test 4", progress: 0 },
   ],
+  5: [
+    { id: 61, title: "Lekcja1", progress: 100 },
+    { id: 62, title: "Lekcja2", progress: 100 },
+    { id: 63, title: "Lekcja3", progress: 100 },
+    { id: 64, title: "Lekcja4", progress: 100 },
+    { id: 65, title: "Lekcja5", progress: 100 },
+    { id: 66, title: "Lekcja6", progress: 0 },
+    { id: 67, title: "Lekcja7", progress: 0 },
+    { id: 68, title: "Lekcja8", progress: 0 },
+    { id: 69, title: "Lekcja9", progress: 0 },
+    { id: 55, title: "Test 5", progress: 0 },
+  ],
 };
 
-// Функция для обновления прогресса
+// 🔹 Хранилище результатов тестов (для каждого пользователя)
+const userResults = {};
+
+/**
+ * ✅ Функция для обновления прогресса видео
+ */
 export const updateProgress = (blockId, videoId, newProgress) => {
   if (videosData[blockId]) {
     const video = videosData[blockId].find((video) => video.id === videoId);
@@ -59,4 +77,28 @@ export const updateProgress = (blockId, videoId, newProgress) => {
   }
 };
 
+/**
+ * ✅ Функция для сохранения результатов теста
+ * @param {string} userId - ID пользователя
+ * @param {number} testId - ID теста
+ * @param {number} score - Балл за тест (0-100)
+ */
+export const saveTestResult = (userId, testId, score) => {
+  if (!userResults[userId]) {
+    userResults[userId] = {}; // Создаем объект для нового пользователя
+  }
+  userResults[userId][testId] = score; // Записываем результат теста
+};
+
+/**
+ * ✅ Функция для получения результатов теста пользователя
+ * @param {string} userId - ID пользователя
+ * @returns {object} - Объект с результатами тестов
+ */
+export const getUserResults = (userId) => {
+  return userResults[userId] || {}; // Возвращаем результаты или пустой объект
+};
+
+// Экспортируем данные и функции
+export { userResults };
 export default videosData;

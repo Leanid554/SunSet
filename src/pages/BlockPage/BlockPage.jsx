@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import Block from "../../components/Block/Block";
 import videosData from "../../components/videosData/videosData"; // Импортируем данные
 
-
 function getAccessibleVideos(videos) {
   let accessibleVideos = [];
   for (let i = 0; i < videos.length; i++) {
