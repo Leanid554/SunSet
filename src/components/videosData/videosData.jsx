@@ -8,8 +8,8 @@ const videosData = {
     { id: 15, title: "Lekcja5", progress: 100 },
     { id: 16, title: "Lekcja6", progress: 100 },
     { id: 17, title: "Lekcja7", progress: 100 },
-    { id: 18, title: "Lekcja8", progress: 100 },
-    { id: 19, title: "Lekcja9", progress: 100 },
+    { id: 18, title: "Lekcja8", progress: 0 },
+    { id: 19, title: "Lekcja9", progress: 0 },
     { id: 51, title: "Test 1", progress: 100 },
   ],
   2: [
