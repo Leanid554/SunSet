@@ -25,17 +25,12 @@
   .back-button1 {
     background-color: #f82d2d;
     color: #fff;
-    width: 50px;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 15px 30px;
     border-radius: 5px;
     text-decoration: none;
     font-size: 18px;
     margin-top: 20px;
-    border: 0px;
     transition: 0.3s all;
   }
 
@@ -44,20 +39,20 @@
   }
 
   .next-button-video {
-    transition: 0.3s all;
     background-color: #f82d2d;
     color: #fff;
     padding: 15px 34px;
     border-radius: 5px;
-    text-decoration: none;
     font-size: 18px;
     margin-top: 20px;
     border: 0px;
+    transition: 0.3s all;
   }
 
   .next-button-video:hover {
     background-color: #d80202;
   }
+
   .quiz-popup {
     position: fixed;
     top: 50%;
@@ -70,14 +65,14 @@
     text-align: center;
     z-index: 100;
   }
-  
+
   .answers {
     display: flex;
     justify-content: center;
     gap: 10px;
     margin-top: 20px;
   }
-  
+
   .answers button {
     background-color: #f82d2d;
     color: white;
@@ -86,9 +81,8 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  
+
   .answers button:hover {
     background-color: #d80202;
   }
-  
 }

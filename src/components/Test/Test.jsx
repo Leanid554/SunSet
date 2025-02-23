@@ -1,56 +1,78 @@
-// src/components/Test/Test.jsx
-import React from "react";
-
-const tests = {
-  51: {
-    title: "Test 1",
-    questions: [
-      { question: "What is 2 + 2?", options: ["3", "4", "5"], answer: "4" }, //test block 1
-      { question: "What is 3 + 5?", options: ["7", "8", "9"], answer: "8" },
-    ],
-  },
-  52: {
-    title: "Test 2",
-    questions: [
-      { question: "What is 1 + 1?", options: ["1", "2", "3"], answer: "2" },  //test block 2
-      { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
-    ],
-  },
-  53: {
-    title: "Test 3",
-    questions: [
-      { question: "What is 1 + 1?", options: ["1", "2", "3"], answer: "2" },  //test block 2
-      { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
-    ],
-  },
-  54: {
-    title: "Test 4",
-    questions: [
-      { question: "What is 1 + 1?", options: ["1", "2", "3"], answer: "2" },  //test block 2
-      { question: "What is 2 + 3?", options: ["4", "5", "6"], answer: "5" },
-    ],
-  },
-};
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Test.scss";
+import videosData, { updateProgress, saveTestResult } from "../../data/videosData";
+import testsData from "../../data/testsData"; 
+import Question from "../../components/Test/Question";
 
 function Test({ testId }) {
-  const test = tests[testId];
+  const test = testsData[testId];
+  const navigate = useNavigate();
+  const [userAnswers, setUserAnswers] = useState(Array(test.questions.length).fill(null));
+  const [currentPage, setCurrentPage] = useState(0);
+  const [testFinished, setTestFinished] = useState(false);
+  const [successPercentage, setSuccessPercentage] = useState(null);
+
+  const handleAnswerChange = (index, answer) => {
+    setUserAnswers((prev) => {
+      const updated = [...prev];
+      updated[index] = answer;
+      return updated;
+    });
+  };
+
+  const handleFinishTest = () => {
+    const correctCount = userAnswers.filter((ans, idx) => ans === test.questions[idx].answer).length;
+    const score = Math.round((correctCount / test.questions.length) * 100);
+    setSuccessPercentage(score);
+    saveTestResult("user1", testId, score);
+
+    if (score >= 80) {
+      if (videosData[test.blockId]) {
+        videosData[test.blockId].forEach((video) => updateProgress(test.blockId, video.id, 100));
+      }
+      if (videosData[test.nextBlockId]) {
+        videosData[test.nextBlockId].forEach((video) => updateProgress(test.nextBlockId, video.id, 0));
+      }
+    }
+
+    setTestFinished(true);
+  };
 
   return (
     <div className="test">
-      <h3>{test?.title}</h3>
-      <form>
-        {test?.questions.map((q, index) => (
-          <div key={index} className="question">
-            <p>{q.question}</p>
-            {q.options.map((option, i) => (
-              <label key={i}>
-                <input type="radio" name={`question-${index}`} value={option} />
-                {option}
-              </label>
+      <h3>{test.title}</h3>
+      {!testFinished ? (
+        <>
+          <form>
+            {test.questions.map((q, idx) => (
+              <Question
+                key={idx}
+                question={q.question}
+                options={q.options}
+                selectedAnswer={userAnswers[idx]}
+                onAnswerChange={(answer) => handleAnswerChange(idx, answer)}
+              />
             ))}
-          </div>
-        ))}
-      </form>
+          </form>
+          <button onClick={handleFinishTest} className="finish-button">Zakończ</button>
+        </>
+      ) : (
+        <div className="result">
+          <p>Twój wynik: {successPercentage}%</p>
+          {successPercentage >= 80 ? (
+            <>
+              <p>Test zdany! 🎉</p>
+              <button onClick={() => navigate("/main")} className="go-to-main">Zakończ blok</button>
+            </>
+          ) : (
+            <>
+              <p>Przejdź kurs ponownie</p>
+              <button onClick={() => navigate("/block/1")} className="go-to-video">Wróć do wyboru видео</button>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

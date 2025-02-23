@@ -10,13 +10,14 @@ import {
 import { store } from "./store/store";
 import { incrementVisit } from "./store/visitsSlice";
 import Navbar from "./components/Navbar/Navbar";
-import Login from "./pages/Login/Login";
 import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import Block1Page from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
 import "./index.css";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import LoginPage from "./pages/Login/LoginPage";
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -31,7 +32,7 @@ function App() {
       <Navbar count={visits} />
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/block/:id" element={<Block1Page />} />
         <Route
@@ -39,6 +40,7 @@ function App() {
           element={<VideoPage key={window.location.pathname} />}
         />
         <Route path="/test/:id" element={<TestPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </>
   );

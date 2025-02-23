@@ -1,42 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import LessonList from "./LessonList";
+import TestList from "./TestList";
 import "./Block1.scss";
 
 function Block({ videos, mainPath = "/main" }) {
-  return (
-    <div className="block-container">
-      {/* Список видео и тестов */}
-      <div className="video-list">
-        {videos.map((video) => (
-          <div key={video.id} className="video-item">
-            {/* Если это тест, открываем страницу с тестом */}
-            {video.id === 51 || video.id === 52 || video.id === 53 || video.id === 54 ? (
-              <Link to={`/test/${video.id}`} className="video-link">
-                <div className="video-content">
-                  <h3>{video.title}</h3>
-                </div>
-              </Link>
-            ) : (
-              <Link to={`/video/${video.id}`} className="video-link">
-                <div className="video-content">
-                  <h3>{video.title}</h3>
-                  {/* Прогресс-бар */}
-                  <div className="progress-bar-block">
-                    <div
-                      className="progress"
-                      style={{ width: `${video.progress}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </Link>
-            )}
-          </div>
-        ))}
-      </div>
+  const lessons = videos.filter(video => video.id < 51 || video.id > 55);
+  const tests = videos.filter(video => video.id >= 51 && video.id <= 55);
+  const allLessonsCompleted = lessons.every(lesson => lesson.progress === 100);
 
-      {/* Кнопка "Wróć do bloków" */}
+  return (
+    <div>
+      <LessonList lessons={lessons} />
+      <TestList tests={tests} allLessonsCompleted={allLessonsCompleted} />
+
       <div className="back-button-container">
-        <Link to="/main" className="back-button">Wróć do bloków</Link>
+        <Link to={mainPath} className="back-button">Wróć do bloków</Link>
       </div>
     </div>
   );
