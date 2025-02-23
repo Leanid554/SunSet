@@ -1,31 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import videoQuestions from "../../data/videoQuestions";
+import VideoPlayer from "../../components/Video/VideoPlayer";
+import QuizPopup from "../../components/Video/QuizPopup";
+import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
-import videoQuestions from "../../data/videoQuestions"; // Подключаем вопросы
 
 function VideoPage() {
   const { id } = useParams();
-  const videoRef = useRef(null);
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
-  const questions = videoQuestions[id] || []; // Загружаем вопросы по ID видео
+  const questions = videoQuestions[id] || [];
 
-  const handleVideoProgress = () => {
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
-
-    const currentTime = videoElement.currentTime;
-    const nextQuestion = questions.find(q => q.time <= currentTime && !answeredQuestions[q.time]);
-
+  const handleVideoProgress = (nextQuestion) => {
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion);
-      videoElement.pause();
-    }
-
-    if (currentTime >= videoElement.duration - 0.5) {
+    } else {
       setIsVideoCompleted(true);
     }
   };
@@ -34,32 +27,25 @@ function VideoPage() {
     if (currentQuestion) {
       setAnsweredQuestions(prev => ({ ...prev, [currentQuestion.time]: true }));
       setCurrentQuestion(null);
-      videoRef.current.play();
     }
+  };
+
+  const handleNext = () => {
+    navigate(`/video/${+id + 1}`);
   };
 
   return (
     <div className="video-page">
       <h3>Lekcja {id}</h3>
-      <video ref={videoRef} key={id} width="600" controls onTimeUpdate={handleVideoProgress}>
-        <source src={`/videos/video${id}.mp4`} type="video/mp4" />
-      </video>
-
-      {currentQuestion && (
-        <div className="quiz-popup">
-          <h4>{currentQuestion.question}</h4>
-          <div className="answers">
-            {currentQuestion.options.map((option, idx) => (
-              <button key={idx} onClick={() => handleAnswer(option)}>{option}</button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="buttons-video">
-        <Link to={`/block/${id}`} className="back-button1">Wrócić</Link>
-        <button className="next-button-video" onClick={() => navigate(`/video/${+id + 1}`)} disabled={!isVideoCompleted}>Dalej</button>
-      </div>
+      <VideoPlayer videoId={id} questions={questions} onVideoProgress={handleVideoProgress} />
+      
+      {currentQuestion && <QuizPopup question={currentQuestion} onAnswer={handleAnswer} />}
+      
+      <NavigationButtons
+        videoId={id}
+        isVideoCompleted={isVideoCompleted}
+        onNext={handleNext}
+      />
     </div>
   );
 }
