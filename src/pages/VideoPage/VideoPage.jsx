@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import videoQuestions from "../../data/videoQuestions";
 import VideoPlayer from "../../components/Video/VideoPlayer";
@@ -13,7 +13,10 @@ function VideoPage() {
   const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
-  const questions = videoQuestions[id] || [];
+  const questions = videoQuestions[id]?.map(q => ({
+    ...q,
+    answered: answeredQuestions[q.time] || false, // Проверяем, отвечали ли на вопрос
+  })) || [];
 
   const handleVideoProgress = (nextQuestion) => {
     if (nextQuestion) {
