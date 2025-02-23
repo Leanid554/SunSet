@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import "./Block1.scss";
 
 function Block({ videos, mainPath = "/main" }) {
+  // Разделение видео на уроки и тесты
   const lessons = videos.filter(video => video.id < 51 || video.id > 55);
-  const tests = videos.filter(video => video.id >= 51 && video.id <= 55); // Фильтруем тесты
+  const tests = videos.filter(video => video.id >= 51 && video.id <= 55);
 
   return (
     <div>
+      {/* Контейнер с уроками */}
       <div className="block-container block-height">
         <div className="block-header-row">
           <div className="block-label">nazwa</div>
@@ -15,11 +17,11 @@ function Block({ videos, mainPath = "/main" }) {
           <div className="progress-label">procent</div>
           <div className="access-label">dostęp</div>
         </div>
-        
+
         <div className="video-list-container">
           {lessons.map((video, index) => {
-            const previousLesson = lessons[index - 1]; // Предыдущий урок
-            const isDisabled = previousLesson && previousLesson.progress < 100; // Блокируем, если прошлый урок не завершен
+            const previousLesson = lessons[index - 1];
+            const isDisabled = previousLesson && previousLesson.progress < 100; // 🔒 Блокируем, если предыдущий не пройден
 
             return (
               <div key={video.id} className="video-item-wrapper">
@@ -29,7 +31,7 @@ function Block({ videos, mainPath = "/main" }) {
                       <div className="block-title">{video.title}</div>
                       <div className="position1">{video.position || "Call-Center"}</div>
                       <span className="progress-text">{video.progress}%</span>
-                      <span className="access-text">{video.progress === 100 ? "tak" : "nie"}</span>
+                      <span className="access-text">{video.progress === 100 ? "🔓" : "🔒"}</span>
                     </div>
                   </div>
                 </Link>
@@ -39,11 +41,11 @@ function Block({ videos, mainPath = "/main" }) {
         </div>
       </div>
 
-      {/* 🔹 Тесты разблокируются только если ВСЕ уроки завершены */}
+      {/* Контейнер с тестами (разблокируются, если все уроки пройдены) */}
       <div className="test-container">
         {tests.map((test) => {
           const allLessonsCompleted = lessons.every(lesson => lesson.progress === 100);
-          const isTestDisabled = !allLessonsCompleted; // Блокируем тест, если не все уроки на 100%
+          const isTestDisabled = !allLessonsCompleted; // 🔒 Блокируем тест, если не все уроки пройдены
 
           return (
             <div key={test.id} className="video-item-wrapper">
@@ -62,6 +64,7 @@ function Block({ videos, mainPath = "/main" }) {
         })}
       </div>
 
+      {/* Кнопка возврата к выбору блоков */}
       <div className="back-button-container">
         <Link to={mainPath} className="back-button">Wróć do bloków</Link>
       </div>

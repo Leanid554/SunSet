@@ -4,14 +4,14 @@
     align-items: center;
     position: relative;
     padding: 10px 20px;
-}
-
-.navbar_logo img {
+  }
+  
+  .navbar_logo img {
     width: 220px;
     padding-left: 20px;
-}
-
-.position {
+  }
+  
+  .position {
     width: 20%;
     max-width: 200px;
     min-width: 120px;
@@ -22,10 +22,10 @@
     padding: 10px 20px;
     font-size: 23px;
     cursor: pointer;
-}
-
-/* Кнопка "Admin Panel" */
-.admin-button {
+  }
+  
+  /* Кнопка "Admin Panel" */
+  .admin-button {
     position: absolute;
     right: 20px;
     top: 10px;
@@ -37,8 +37,9 @@
     text-decoration: none;
     font-weight: bold;
     transition: 0.3s;
-}
-
-.admin-button:hover {
+  }
+  
+  .admin-button:hover {
     background-color: #cc0000;
-}
+  }
+  

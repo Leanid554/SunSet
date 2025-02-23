@@ -64,7 +64,7 @@ function MainPage() {
                     </div>
                   </div>
                   <span className="progress-text">{blockProgress}%</span>
-                  <span className="dostep-text">{isEnabled ? "tak" : "Nie"}</span>
+                  <span className="dostep-text">{isEnabled ? "🔓" : "🔒"}</span>
                 </div>
               </div>
             </Link>

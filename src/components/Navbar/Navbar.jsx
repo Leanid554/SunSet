@@ -13,15 +13,14 @@ export default function Navbar({ count }) {
         <p className="visit-counter">count: {count}</p>
       </div>
 
+      {/* Отображаем "Call-Center", если не на странице логина */}
       {location.pathname !== "/login" && (
         <div className="position">Call-Center</div>
       )}
 
-      {/* Кнопка "Admin Panel" */}
+      {/* Кнопка "Admin Panel" (не отображается на странице админа) */}
       {location.pathname !== "/admin" && (
-        <Link to="/admin" className="admin-button">
-          Admin Panel
-        </Link>
+        <Link to="/admin" className="admin-button">Admin Panel</Link>
       )}
     </nav>
   );

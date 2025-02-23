@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./index.scss";
 
-function App() {
+function Login() {
   const navigate = useNavigate(); // Хук для навигации
 
   const [formData, setFormData] = useState({
@@ -13,7 +14,10 @@ function App() {
   const [errors, setErrors] = useState({
     email: "",
     password: "",
+    server: "",
   });
+
+  const [loading, setLoading] = useState(false); // Состояние загрузки
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -30,14 +34,16 @@ function App() {
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
+      server: "",
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({ email: "", password: "", server: "" });
 
+    // Валидация
     const newErrors = {};
-
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!validateEmail(formData.email)) {
@@ -55,10 +61,32 @@ function App() {
       return;
     }
 
-    alert(`Email: ${formData.email}\nPassword: ${formData.password}`);
+    setLoading(true); // Включаем индикатор загрузки
 
-    // Перенаправление на "/main" после успешной валидации
-    navigate("/main");
+    try {
+      const response = await axios.post(
+        "https://testapp-backend-t9ez5n-13f667-217-154-81-219.traefik.me/auth/login",
+        formData
+      );
+
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);
+        localStorage.setItem("token", response.data.token); // Сохраняем токен
+
+        // ✅ Даем время UI обновиться, прежде чем менять маршрут
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/main"); // Перенаправляем после завершения загрузки
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        server: "Invalid email or password",
+      }));
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,6 +102,7 @@ function App() {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              disabled={loading} // Блокируем ввод во время загрузки
             />
             {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
           </div>
@@ -87,12 +116,15 @@ function App() {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              disabled={loading} // Блокируем ввод во время загрузки
             />
             {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
           </div>
 
-          <button className="submit" type="submit">
-            Submit
+          {errors.server && <p style={{ color: "red" }}>{errors.server}</p>}
+
+          <button className="submit" type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Submit"}
           </button>
         </form>
       </div>
@@ -100,4 +132,4 @@ function App() {
   );
 }
 
-export default App;
+export default Login;
