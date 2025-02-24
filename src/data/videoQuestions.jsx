@@ -9,6 +9,16 @@ const videoQuestions = {
     { time: 5, question: "Сколько будет 7 - 3?", options: ["3", "4", "5", "6"], correct: "4" },
     { time: 9, question: "Сколько ног у паука?", options: ["4", "6", "8", "10"], correct: "8" },
   ],
+  12: [
+    { time: 2, question: "Какой сегодня день недели?", options: ["Понедельник", "Среда", "Пятница", "Воскресенье"], correct: "Среда" },
+    { time: 5, question: "Сколько будет 7 - 3?", options: ["3", "4", "5", "6"], correct: "4" },
+    { time: 9, question: "Сколько ног у паука?", options: ["4", "6", "8", "10"], correct: "8" },
+  ],
+  13: [
+    { time: 2, question: "Какой сегодня день недели?", options: ["Понедельник", "Среда", "Пятница", "Воскресенье"], correct: "Среда" },
+    { time: 5, question: "Сколько будет 7 - 3?", options: ["3", "4", "5", "6"], correct: "4" },
+    { time: 9, question: "Сколько ног у паука?", options: ["4", "6", "8", "10"], correct: "8" },
+  ],
 };
 
 export default videoQuestions;

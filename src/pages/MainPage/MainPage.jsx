@@ -1,22 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import videosData from "../../data/videosData";
+import React, { useEffect, useState } from "react";
 import BlockItem from "../../components/Main/BlockItem";
-import progressData from "../../data/progressData"; 
-import './index.scss';
-const calculateBlockProgress = (videos) => {
-  if (videos.length === 0) return 0;
+import "./index.scss";
 
-  const totalProgress = videos.reduce((acc, video) => acc + video.progress, 0);
-  return Math.round(totalProgress / videos.length); 
-};
+const API_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
 
-function MainPage() {
-  const checkIfEnabled = (blockId) => {
-    if (blockId === 1) return true; 
-    const prevBlockData = videosData[progressData[blockId - 1].prevBlockId] || [];
-    const prevBlockProgress = calculateBlockProgress(prevBlockData);
-    return prevBlockProgress === 100; 
+const MainPage = () => {
+  const [blocks, setBlocks] = useState([]);
+  const [progress, setProgress] = useState({});
+
+  useEffect(() => {
+    // Запрашиваем список блоков с бэкенда
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => setBlocks(data))
+      .catch((err) => console.error("Ошибка загрузки блоков:", err));
+  }, []);
+
+  useEffect(() => {
+    // Запрашиваем прогресс пользователя
+    fetch("https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/user-progress")
+      .then((res) => res.json())
+      .then((data) => setProgress(data))
+      .catch((err) => console.error("Ошибка загрузки прогресса:", err));
+  }, []);
+
+  const checkIfEnabled = (block, index) => {
+    if (index === 0) return true; // Первый блок всегда доступен
+    const prevBlock = blocks[index - 1];
+    return prevBlock && progress[prevBlock.id] === 100; // Разблокировка при 100% прогрессе
   };
 
   return (
@@ -29,23 +40,17 @@ function MainPage() {
           <div className="dostep-label">dostep</div>
         </div>
 
-        {progressData.map((block, index) => {
-          const blockVideosData = videosData[block.blockId] || [];
-          const isEnabled = checkIfEnabled(block.blockId);
-          const blockProgress = calculateBlockProgress(blockVideosData);
-
-          return (
-            <BlockItem
-              key={index}
-              block={block}
-              blockProgress={blockProgress}
-              isEnabled={isEnabled}
-            />
-          );
-        })}
+        {blocks.map((block, index) => (
+          <BlockItem
+            key={block.id}
+            block={block}
+            blockProgress={progress[block.id] || 0}
+            isEnabled={checkIfEnabled(block, index)}
+          />
+        ))}
       </div>
     </div>
   );
-}
+};
 
 export default MainPage;
