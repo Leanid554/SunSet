@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function NavigationButtons({ videoId, isVideoCompleted, onNext }) {
+function NavigationButtons({ videoId, isVideoCompleted, onNext, id }) {
   const getBlockId = (videoId) => {
     if (videoId >= 10 && videoId <= 19) return 1;
     if (videoId >= 20 && videoId <= 29) return 2;
@@ -16,11 +16,13 @@ function NavigationButtons({ videoId, isVideoCompleted, onNext }) {
 
   return (
     <div className="buttons-video">
-      <Link to={`/block/${blockId}`} className="back-button1">Wrócić</Link>
+      <Link to={`/lectures/user/${id}/block/${blockId}`} className="back-button1">
+        Wrócić
+      </Link>
       <button
         className="next-button-video"
         onClick={onNext}
-        disabled={!isVideoCompleted} // Кнопка теперь блокируется, если видео не просмотрено полностью
+        disabled={!isVideoCompleted}
       >
         Dalej
       </button>
