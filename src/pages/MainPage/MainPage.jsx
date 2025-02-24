@@ -40,14 +40,15 @@ const MainPage = () => {
           <div className="dostep-label">dostep</div>
         </div>
 
-        {blocks.map((block, index) => (
-          <BlockItem
-            key={block.id}
-            block={block}
-            blockProgress={progress[block.id] || 0}
-            isEnabled={checkIfEnabled(block, index)}
+        {blocks.map((block) => (
+          <BlockItem 
+            key={block.id} 
+            block={block} 
+            blockProgress={block.progress || 0} 
+            isEnabled={block.isEnabled || true} 
           />
         ))}
+
       </div>
     </div>
   );

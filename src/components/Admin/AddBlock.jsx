@@ -10,14 +10,19 @@ const AddBlock = ({ blocks, setBlocks }) => {
 
   const addBlock = async () => {
     if (newBlockName.trim() === "") return;
-
+  
     setLoading(true);
     setError(null);
-
+  
     try {
       const response = await axios.post(`${API_BASE_URL}/blocks`, { title: newBlockName });
-
-      setBlocks([...blocks, response.data]); // Добавляем новый блок в состояние
+  
+      const newBlock = {
+        ...response.data,
+        path: response.data.path || `/blocks/${response.data.id}` // Если path нет, создаём свой
+      };
+  
+      setBlocks([...blocks, newBlock]); // Добавляем блок с path
       setNewBlockName("");
     } catch (err) {
       setError("Ошибка при добавлении блока");
@@ -26,6 +31,7 @@ const AddBlock = ({ blocks, setBlocks }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="admin-section">

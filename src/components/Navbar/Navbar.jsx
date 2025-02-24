@@ -7,12 +7,14 @@ export default function Navbar({ count }) {
   const location = useLocation();
 
   return (
+   
     <nav className="navbar">
+       <Link to="/main">
       <div className="navbar_logo">
-        <img src={Logo} alt="Logo" />
+        <img src={Logo} alt="Logo"  />
         <p className="visit-counter">count: {count}</p>
       </div>
-
+      </Link>
       {/* Отображаем "Call-Center", если не на странице логина */}
       {location.pathname !== "/login" && (
         <div className="position">Call-Center</div>
