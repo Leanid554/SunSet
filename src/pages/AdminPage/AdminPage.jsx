@@ -12,14 +12,14 @@ const AdminPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [lectures, setLectures] = useState([]);
   const [users, setUsers] = useState([]);
-  const [userStats, setUserStats] = useState(null);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
-  const [loadingStats, setLoadingStats] = useState(false);
-  const [errorStats, setErrorStats] = useState(null);
+  const [lecturesVisible, setLecturesVisible] = useState(true); // Управляем видимостью списка лекций
+  const [blocksVisible, setBlocksVisible] = useState(true); // Управляем видимостью списка блоков
 
   useEffect(() => {
     fetchUsers();
     fetchBlocks();
+    fetchLectures();
   }, []);
 
   const fetchUsers = async () => {
@@ -40,23 +40,41 @@ const AdminPage = () => {
     }
   };
 
-  const fetchUserStats = async () => {
-    if (!selectedUserEmail) return;
-
-    setLoadingStats(true);
-    setErrorStats(null);
-
+  const fetchLectures = async () => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/user-stats`, {
-        email: selectedUserEmail,
-      });
-      setUserStats(response.data);
+      const response = await axios.get(`${API_BASE_URL}/lectures`);
+      setLectures(response.data);
     } catch (error) {
-      setErrorStats("Ошибка при получении статистики пользователя");
-      console.error("Ошибка:", error);
-    } finally {
-      setLoadingStats(false);
+      console.error("Ошибка при получении лекций:", error);
     }
+  };
+
+  const deleteLecture = async (lectureId) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/lectures/${lectureId}`);
+      setLectures(lectures.filter(lecture => lecture.id !== lectureId));
+      alert("Лекция успешно удалена");
+    } catch (error) {
+      console.error("Ошибка при удалении лекции:", error);
+      alert("Ошибка при удалении лекции");
+    }
+  };
+
+  const deleteBlock = async (blockId) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/blocks/${blockId}`);
+      setBlocks(blocks.filter(block => block.id !== blockId));
+      alert("Блок успешно удален");
+    } catch (error) {
+      console.error("Ошибка при удалении блока:", error);
+      alert("Ошибка при удалении блока");
+    }
+  };
+
+  // Функция для нахождения названия блока по ID
+  const getBlockTitle = (blockId) => {
+    const block = blocks.find(block => block.id === blockId);
+    return block ? block.title : "Неизвестный блок";
   };
 
   return (
@@ -67,31 +85,44 @@ const AdminPage = () => {
       <AddUser users={users} setUsers={setUsers} />
       <UserList users={users} />
 
-      {/* Блок статистики пользователя */}
+      {/* Секция лекций */}
       <div className="admin-section">
-        <h3>📊 Статистика пользователя</h3>
-        <select
-          value={selectedUserEmail}
-          onChange={(e) => setSelectedUserEmail(e.target.value)}
-        >
-          <option value="">Выберите пользователя</option>
-          {users.map((user) => (
-            <option key={user.id} value={user.email}>
-              {user.email}
-            </option>
-          ))}
-        </select>
-        <button onClick={fetchUserStats} disabled={loadingStats}>
-          {loadingStats ? "Загрузка..." : "📈 Показать статистику"}
+        <h3>📚 Список всех лекций</h3>
+        <button onClick={() => setLecturesVisible(!lecturesVisible)}>
+          {lecturesVisible ? "Скрыть список лекций" : "Показать список лекций"}
         </button>
 
-        {errorStats && <p style={{ color: "red" }}>{errorStats}</p>}
+        {lecturesVisible && lectures.length > 0 && (
+          <ul>
+            {lectures.map((lecture) => (
+              <li key={lecture.id}>
+                <strong>Название:</strong> {lecture.title} |
+                <strong> ID:</strong> {lecture.id} |
+                <strong> Блок:</strong> {getBlockTitle(lecture.blockId)} (ID: {lecture.blockId}) |
+                <button onClick={() => deleteLecture(lecture.id)}>Удалить лекцию</button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-        {userStats && (
-          <div className="user-stats">
-            <h4>📌 Данные по {selectedUserEmail}</h4>
-            <pre>{JSON.stringify(userStats, null, 2)}</pre>
-          </div>
+      {/* Секция блоков */}
+      <div className="admin-section">
+        <h3>📦 Список всех блоков</h3>
+        <button onClick={() => setBlocksVisible(!blocksVisible)}>
+          {blocksVisible ? "Скрыть список блоков" : "Показать список блоков"}
+        </button>
+
+        {blocksVisible && blocks.length > 0 && (
+          <ul>
+            {blocks.map((block) => (
+              <li key={block.id}>
+                <strong>Название блока:</strong> {block.title} |
+                <strong> ID:</strong> {block.id} |
+                <button onClick={() => deleteBlock(block.id)}>Удалить блок</button>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>
