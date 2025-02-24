@@ -1,26 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
-function VideoPlayer({ videoId, questions, onVideoProgress }) {
+function VideoPlayer({ videoId, questions, onVideoProgress, setIsVideoCompleted, answeredQuestions }) {
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    setIsVideoCompleted(false); // Сбрасываем прогресс при смене видео
+  }, [videoId, setIsVideoCompleted]);
 
   const handleVideoProgress = () => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
-    const currentTime = videoElement.currentTime;
+    const progress = (videoElement.currentTime / videoElement.duration) * 100;
 
-    // Фильтруем вопросы, на которые еще не отвечали
-    const unansweredQuestions = questions.filter(q => !q.answered);
+    // Находим следующий вопрос, который еще не был показан
+    const nextQuestion = questions.find(q => q.time <= videoElement.currentTime && !answeredQuestions[q.time]);
 
-    const nextQuestion = unansweredQuestions.find(q => q.time <= currentTime);
-    
     if (nextQuestion) {
       onVideoProgress(nextQuestion);
       videoElement.pause();
     }
 
-    if (currentTime >= videoElement.duration - 0.5) {
-      onVideoProgress(null);
+    if (progress >= 99) {
+      setIsVideoCompleted(true);
     }
   };
 

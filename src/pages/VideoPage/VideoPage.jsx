@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import videoQuestions from "../../data/videoQuestions";
 import VideoPlayer from "../../components/Video/VideoPlayer";
@@ -10,19 +10,19 @@ function VideoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState({});
+  const [answeredQuestions, setAnsweredQuestions] = useState({}); // Отслеживаем, на какие вопросы ответили
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
-  const questions = videoQuestions[id]?.map(q => ({
-    ...q,
-    answered: answeredQuestions[q.time] || false, // Проверяем, отвечали ли на вопрос
-  })) || [];
+  const questions = videoQuestions[id] || []; // Берем вопросы только для текущего видео
+
+  useEffect(() => {
+    setAnsweredQuestions({}); // Очищаем список отвеченных вопросов при смене видео
+    setIsVideoCompleted(false);
+  }, [id]);
 
   const handleVideoProgress = (nextQuestion) => {
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion);
-    } else {
-      setIsVideoCompleted(true);
     }
   };
 
@@ -40,7 +40,13 @@ function VideoPage() {
   return (
     <div className="video-page">
       <h3>Lekcja {id}</h3>
-      <VideoPlayer videoId={id} questions={questions} onVideoProgress={handleVideoProgress} />
+      <VideoPlayer
+        videoId={id}
+        questions={questions}
+        onVideoProgress={handleVideoProgress}
+        setIsVideoCompleted={setIsVideoCompleted}
+        answeredQuestions={answeredQuestions} // Передаем список отвеченных вопросов
+      />
       
       {currentQuestion && <QuizPopup question={currentQuestion} onAnswer={handleAnswer} />}
       
