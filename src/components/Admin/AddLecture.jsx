@@ -4,7 +4,7 @@ import axios from "axios";
 const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
 
 const AddLecture = ({ lectures, setLectures }) => {
-  const [blocks, setBlocks] = useState([]); // Блоки загружаются с бэка
+  const [blocks, setBlocks] = useState([]); 
   const [newLecture, setNewLecture] = useState({ blockId: "", title: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

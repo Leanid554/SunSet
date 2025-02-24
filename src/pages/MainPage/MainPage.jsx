@@ -9,7 +9,6 @@ const MainPage = () => {
   const [progress, setProgress] = useState({});
 
   useEffect(() => {
-    // Запрашиваем список блоков с бэкенда
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => setBlocks(data))
@@ -17,7 +16,6 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    // Запрашиваем прогресс пользователя
     fetch("https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/user-progress")
       .then((res) => res.json())
       .then((data) => setProgress(data))
@@ -25,9 +23,9 @@ const MainPage = () => {
   }, []);
 
   const checkIfEnabled = (block, index) => {
-    if (index === 0) return true; // Первый блок всегда доступен
+    if (index === 0) return true; 
     const prevBlock = blocks[index - 1];
-    return prevBlock && progress[prevBlock.id] === 100; // Разблокировка при 100% прогрессе
+    return prevBlock && progress[prevBlock.id] === 100; 
   };
 
   return (

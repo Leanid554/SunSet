@@ -13,7 +13,7 @@ import Navbar from "./components/Navbar/Navbar";
 import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
-import Block1Page from "./pages/BlockPage/BlockPage";
+import BlockPage from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
 import "./index.css";
 import AdminPage from "./pages/AdminPage/AdminPage";
@@ -34,7 +34,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
-        <Route path="/block/:id" element={<Block1Page />} />
+        <Route path="/lectures/:id/block/:blockId" element={<BlockPage />} />
         <Route
           path="/video/:id"
           element={<VideoPage key={window.location.pathname} />}
