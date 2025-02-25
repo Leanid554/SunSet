@@ -4,6 +4,7 @@ import AddBlock from "../../components/Admin/AddBlock";
 import AddLecture from "../../components/Admin/AddLecture";
 import AddUser from "../../components/Admin/AddUser";
 import UserList from "../../components/Admin/UserList";
+import UploadVideo from "../../components/Admin/UploadVideo"; // Импортируем компонент загрузки видео
 import "./index.scss";
 
 const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
@@ -13,8 +14,8 @@ const AdminPage = () => {
   const [lectures, setLectures] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
-  const [lecturesVisible, setLecturesVisible] = useState(true); // Управляем видимостью списка лекций
-  const [blocksVisible, setBlocksVisible] = useState(true); // Управляем видимостью списка блоков
+  const [lecturesVisible, setLecturesVisible] = useState(true);
+  const [blocksVisible, setBlocksVisible] = useState(true);
 
   useEffect(() => {
     fetchUsers();
@@ -100,6 +101,8 @@ const AdminPage = () => {
                 <strong> ID:</strong> {lecture.id} |
                 <strong> Блок:</strong> {getBlockTitle(lecture.blockId)} (ID: {lecture.blockId}) |
                 <button onClick={() => deleteLecture(lecture.id)}>Удалить лекцию</button>
+                {/* Компонент для загрузки видео в лекцию */}
+                <UploadVideo lectureId={lecture.id} />
               </li>
             ))}
           </ul>

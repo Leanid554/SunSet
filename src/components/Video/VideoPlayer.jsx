@@ -1,35 +1,66 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-function VideoPlayer({ videoId, questions, onVideoProgress, setIsVideoCompleted, answeredQuestions }) {
-  const videoRef = useRef(null);
+function VideoPlayer() {
+  const { id } = useParams(); // Используем "id", так как это параметр в маршруте
+  const [selectedLecture, setSelectedLecture] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setIsVideoCompleted(false); // Сбрасываем прогресс при смене видео
-  }, [videoId, setIsVideoCompleted]);
-
-  const handleVideoProgress = () => {
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
-
-    const progress = (videoElement.currentTime / videoElement.duration) * 100;
-
-    // Находим следующий вопрос, который еще не был показан
-    const nextQuestion = questions.find(q => q.time <= videoElement.currentTime && !answeredQuestions[q.time]);
-
-    if (nextQuestion) {
-      onVideoProgress(nextQuestion);
-      videoElement.pause();
+    if (!id) {
+      setError("Ошибка: ID лекции не найден.");
+      setLoading(false);
+      return;
     }
 
-    if (progress >= 99) {
-      setIsVideoCompleted(true);
-    }
-  };
+    const fetchLectureDetails = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Токен авторизации (если нужно)
+
+        if (!token) {
+          setError("Ошибка: Необходим токен для доступа.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get(
+          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`, // Используем "id"
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setSelectedLecture(response.data); // Сохраняем полученную лекцию
+      } catch (err) {
+        console.error("Ошибка загрузки лекции:", err);
+        setError("Не удалось загрузить данные лекции.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLectureDetails();
+  }, [id]); // Запрашиваем данные при изменении "id"
+
+  if (loading) return <p>Загрузка видео...</p>;
+  if (error) return <p>{error}</p>;
+  if (!selectedLecture) return <p>Лекция не найдена.</p>;
 
   return (
-    <video ref={videoRef} key={videoId} width="600" controls onTimeUpdate={handleVideoProgress}>
-      <source src={`/videos/video${videoId}.mp4`} type="video/mp4" />
-    </video>
+    <div>
+      <h1>{selectedLecture.title}</h1>
+      {selectedLecture.videoUrl ? (
+        <video width="600" controls>
+          <source
+            src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
+            type="video/mp4"
+          />
+          Ваш браузер не поддерживает видео.
+        </video>
+      ) : (
+        <p>Видео не загружено.</p>
+      )}
+    </div>
   );
 }
 

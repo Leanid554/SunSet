@@ -7,16 +7,16 @@ import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
 
 function VideoPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // Получаем id из URL
   const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState({}); // Отслеживаем, на какие вопросы ответили
+  const [answeredQuestions, setAnsweredQuestions] = useState({});
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
   const questions = videoQuestions[id] || []; // Берем вопросы только для текущего видео
 
   useEffect(() => {
-    setAnsweredQuestions({}); // Очищаем список отвеченных вопросов при смене видео
+    setAnsweredQuestions({});
     setIsVideoCompleted(false);
   }, [id]);
 
@@ -28,7 +28,7 @@ function VideoPage() {
 
   const handleAnswer = (selectedAnswer) => {
     if (currentQuestion) {
-      setAnsweredQuestions(prev => ({ ...prev, [currentQuestion.time]: true }));
+      setAnsweredQuestions((prev) => ({ ...prev, [currentQuestion.time]: true }));
       setCurrentQuestion(null);
     }
   };
@@ -45,11 +45,11 @@ function VideoPage() {
         questions={questions}
         onVideoProgress={handleVideoProgress}
         setIsVideoCompleted={setIsVideoCompleted}
-        answeredQuestions={answeredQuestions} // Передаем список отвеченных вопросов
+        answeredQuestions={answeredQuestions}
       />
-      
+
       {currentQuestion && <QuizPopup question={currentQuestion} onAnswer={handleAnswer} />}
-      
+
       <NavigationButtons
         videoId={id}
         isVideoCompleted={isVideoCompleted}

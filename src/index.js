@@ -15,7 +15,6 @@ import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import BlockPage from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
-import "./index.css";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import LoginPage from "./pages/Login/LoginPage";
 
@@ -31,16 +30,15 @@ function App() {
     <>
       <Navbar count={visits} />
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/block/:blockId" element={<BlockPage />} />
         <Route path="/lectures/:id/block/:blockId" element={<BlockPage />} />
-        <Route
-          path="/video/:id"
-          element={<VideoPage key={window.location.pathname} />}
-        />
+        <Route path="/video/:id" element={<VideoPage />} />
         <Route path="/test/:id" element={<TestPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="*" element={<Navigate to="/main" replace />} />
       </Routes>
     </>
   );
