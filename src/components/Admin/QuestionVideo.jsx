@@ -8,6 +8,7 @@ const QuestionVideo = ({ lectureId }) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [answer, setAnswer] = useState("");
+  const [timeInSeconds, setTimeInSeconds] = useState(0); // Добавим состояние для времени в секундах
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
@@ -21,6 +22,7 @@ const QuestionVideo = ({ lectureId }) => {
       options,
       answer,
       lectureId,
+      timeInSeconds, // Добавляем время в секунды
     };
 
     try {
@@ -55,6 +57,13 @@ const QuestionVideo = ({ lectureId }) => {
         placeholder="Правильный ответ"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
+      />
+      {/* Добавляем поле для времени в секундах */}
+      <input
+        type="number"
+        placeholder="Время в секундах"
+        value={timeInSeconds}
+        onChange={(e) => setTimeInSeconds(parseInt(e.target.value) || 0)} // Преобразуем в целое число
       />
       <button onClick={handleSubmit}>Добавить вопрос</button>
     </div>
