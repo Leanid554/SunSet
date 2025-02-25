@@ -5,6 +5,7 @@ import AddLecture from "../../components/Admin/AddLecture";
 import AddUser from "../../components/Admin/AddUser";
 import UserList from "../../components/Admin/UserList";
 import UploadVideo from "../../components/Admin/UploadVideo"; // Импортируем компонент загрузки видео
+import AddQuestionToVideo from "../../components/Admin/AddQuestionToVideo"; // Импортируем компонент для добавления вопросов
 import "./index.scss";
 
 const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
@@ -13,6 +14,7 @@ const AdminPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [lectures, setLectures] = useState([]);
   const [users, setUsers] = useState([]);
+  const [questions, setQuestions] = useState([]); // Храним вопросы для видео
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [lecturesVisible, setLecturesVisible] = useState(true);
   const [blocksVisible, setBlocksVisible] = useState(true);
@@ -71,15 +73,22 @@ const AdminPage = () => {
       alert("Ошибка при удалении блока");
     }
   };
+
   const getBlockTitle = (blockId) => {
     const block = blocks.find(block => block.id === blockId);
     return block ? block.title : "Неизвестный блок";
   };
 
+  const handleQuestionAdded = (newQuestion) => {
+    setQuestions([...questions, newQuestion]);
+  };
+
   return (
     <div className="admin-page">
       <h2>📌 Панель Администратора</h2>
-      <AddBlock blocks={blocks}  setBlocks={setBlocks} fetchBlocks={fetchBlocks} />
+
+      {/* Компоненты для добавления блоков, лекций и пользователей */}
+      <AddBlock blocks={blocks} setBlocks={setBlocks} fetchBlocks={fetchBlocks} />
       <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
       <AddUser users={users} setUsers={setUsers} />
       <UserList users={users} />
@@ -99,8 +108,15 @@ const AdminPage = () => {
                 <strong> ID:</strong> {lecture.id} |
                 <strong> Блок:</strong> {getBlockTitle(lecture.blockId)} (ID: {lecture.blockId}) |
                 <button onClick={() => deleteLecture(lecture.id)}>Удалить лекцию</button>
+
                 {/* Компонент для загрузки видео в лекцию */}
                 <UploadVideo lectureId={lecture.id} />
+
+                {/* Компонент для добавления вопросов к видео */}
+                <AddQuestionToVideo
+                  lectureId={lecture.id}
+                  onQuestionAdded={handleQuestionAdded}
+                />
               </li>
             ))}
           </ul>
@@ -125,6 +141,20 @@ const AdminPage = () => {
             ))}
           </ul>
         )}
+      </div>
+
+      {/* Секция вопросов */}
+      <div className="admin-section">
+        <h3>✍️ Список вопросов к видео</h3>
+        <ul>
+          {questions.map((question, index) => (
+            <li key={index}>
+              <strong>Вопрос:</strong> {question.question} | 
+              <strong> Время:</strong> {question.timestamp} сек | 
+              <strong> Правильный ответ:</strong> {question.correctAnswer}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

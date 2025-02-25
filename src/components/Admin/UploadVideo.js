@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL =
+  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
 
-const UploadVideo = ({ lectureId }) => {
+const UploadVideo = ({ lectureId, onVideoUploaded }) => {
   const [video, setVideo] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Обработчик выбора файла
   const handleFileChange = (e) => {
     setVideo(e.target.files[0]);
   };
 
-  // Обработчик загрузки видео
   const handleUpload = async () => {
     if (!video) {
       alert("Выберите видео для загрузки.");
@@ -25,9 +24,9 @@ const UploadVideo = ({ lectureId }) => {
     setUploading(true);
 
     try {
-      // Отправляем запрос на загрузку видео для конкретной лекции
+      // Отправляем запрос на загрузку видео
       const response = await axios.post(
-        `${API_BASE_URL}/lectures/${lectureId}/upload-video`, // URL с ID лекции
+        `${API_BASE_URL}/lectures/${lectureId}/upload-video`,
         formData,
         {
           headers: {
@@ -36,10 +35,12 @@ const UploadVideo = ({ lectureId }) => {
         }
       );
 
-      // Успешная загрузка
+      // Предположим, что ответ содержит ссылку на загруженное видео
+      const videoUrl = response.data.videoUrl;
+      onVideoUploaded(videoUrl); // Отправляем URL видео в родительский компонент
+
       alert("Видео загружено успешно!");
     } catch (error) {
-      // Обработка ошибок
       console.error("Ошибка при загрузке видео:", error);
       alert("Ошибка при загрузке видео");
     } finally {
