@@ -4,21 +4,15 @@ import LessonList from "./LessonList";
 import TestList from "./TestList";
 import "./Block1.scss";
 
-function Block({ videos, mainPath = "/main" }) {
-  console.log("Videos received:", videos); 
-
-
+function Block({ videos, mainPath = "/main", onLectureClick }) {
   const lessons = videos.filter(video => video.id < 51 || video.id > 55);
   const tests = videos.filter(video => video.id >= 51 && video.id <= 55);
-
-  console.log("Lessons:", lessons);
-  console.log("Tests:", tests); 
 
   const allLessonsCompleted = lessons.every(lesson => lesson.progress === 100);
 
   return (
     <div>
-      <LessonList lessons={lessons} />
+      <LessonList lessons={lessons} onLectureClick={onLectureClick} />
       <TestList tests={tests} allLessonsCompleted={allLessonsCompleted} />
 
       <div className="back-button-container">

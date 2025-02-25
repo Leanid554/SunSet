@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Block1.scss";
 
-function LessonList({ lessons }) {
+function LessonList({ lessons, onLectureClick }) {
   return (
     <div className="block-container block-height">
       <div className="block-header-row">
@@ -19,7 +19,11 @@ function LessonList({ lessons }) {
 
           return (
             <div key={video.id} className="video-item-wrapper">
-              <Link to={`/video/${video.id}`} className={`video-item ${isDisabled ? "disabled" : ""}`}>
+              <Link
+                to={`/video/${video.id}`}
+                className={`video-item ${isDisabled ? "disabled" : ""}`}
+                onClick={() => onLectureClick(video)}
+              >
                 <div className="video-content">
                   <div className="block-row">
                     <div className="block-title">{video.title}</div>

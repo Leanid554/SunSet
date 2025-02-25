@@ -4,9 +4,10 @@ import "./index.scss";
 
 const API_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
 
-const MainPage = () => {
+const MainPage = ({ userId }) => {
   const [blocks, setBlocks] = useState([]);
   const [progress, setProgress] = useState({});
+  const [selectedBlock, setSelectedBlock] = useState(null);
 
   useEffect(() => {
     fetch(API_URL)
@@ -16,16 +17,18 @@ const MainPage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/user-progress")
+    fetch(`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/user-progress`)
       .then((res) => res.json())
       .then((data) => setProgress(data))
       .catch((err) => console.error("Ошибка загрузки прогресса:", err));
   }, []);
 
-  const checkIfEnabled = (block, index) => {
-    if (index === 0) return true; 
-    const prevBlock = blocks[index - 1];
-    return prevBlock && progress[prevBlock.id] === 100; 
+  const handleBlockClick = (blockId) => {
+    setSelectedBlock(blockId);
+
+    fetch(`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks/${blockId}/user/${userId}`)
+      .then((res) => res.json())
+      .catch((err) => console.error("Ошибка записи посещения блока:", err));
   };
 
   return (
@@ -39,14 +42,15 @@ const MainPage = () => {
         </div>
 
         {blocks.map((block) => (
-          <BlockItem 
-            key={block.id} 
-            block={block} 
-            blockProgress={block.progress || 0} 
-            isEnabled={block.isEnabled || true} 
+          <BlockItem
+            key={block.id}
+            block={block}
+            blockProgress={progress[block.id] || 0}
+            isEnabled={block.isEnabled || true}
+            isActive={selectedBlock === block.id}
+            onClick={() => handleBlockClick(block.id)}
           />
         ))}
-
       </div>
     </div>
   );
