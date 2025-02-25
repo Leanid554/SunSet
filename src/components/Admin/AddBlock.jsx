@@ -15,15 +15,9 @@ const AddBlock = ({ blocks, setBlocks }) => {
     setError(null);
   
     try {
-      const response = await axios.post(`${API_BASE_URL}/blocks`, { title: newBlockName });
-  
-      const newBlock = {
-        ...response.data,
-        path: response.data.path || `/blocks/${response.data.id}` // Если path нет, создаём свой
-      };
-  
-      setBlocks([...blocks, newBlock]); // Добавляем блок с path
-      setNewBlockName("");
+      await axios.post(`${API_BASE_URL}/blocks`, { title: newBlockName });
+
+      window.location.reload();
     } catch (err) {
       setError("Ошибка при добавлении блока");
       console.error("Ошибка:", err);
@@ -31,6 +25,9 @@ const AddBlock = ({ blocks, setBlocks }) => {
       setLoading(false);
     }
   };
+  
+  
+  
   
 
   return (

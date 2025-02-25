@@ -71,8 +71,6 @@ const AdminPage = () => {
       alert("Ошибка при удалении блока");
     }
   };
-
-  // Функция для нахождения названия блока по ID
   const getBlockTitle = (blockId) => {
     const block = blocks.find(block => block.id === blockId);
     return block ? block.title : "Неизвестный блок";
@@ -81,7 +79,7 @@ const AdminPage = () => {
   return (
     <div className="admin-page">
       <h2>📌 Панель Администратора</h2>
-      <AddBlock blocks={blocks} setBlocks={setBlocks} />
+      <AddBlock blocks={blocks}  setBlocks={setBlocks} fetchBlocks={fetchBlocks} />
       <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
       <AddUser users={users} setUsers={setUsers} />
       <UserList users={users} />

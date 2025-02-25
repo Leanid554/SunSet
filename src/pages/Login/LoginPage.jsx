@@ -38,20 +38,31 @@ function LoginPage() {
     e.preventDefault();
     setErrors({ email: "", password: "", server: "" });
     setLoading(true);
-
+  
     try {
       const response = await axios.post(
         "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/auth/login",
         formData,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true, // Убираем передачу кук
-          mode: "cors", // Включаем CORS
+          withCredentials: true,
+          mode: "cors",
         }
       );
-
+  
+      console.log(response.data); // Логируем полный ответ от сервера
+  
       if (response.status === 201) {
-        localStorage.setItem("token", response.data.token);
+        const { token, userId } = response.data; // Предполагаем, что сервер возвращает эти поля
+  
+        if (userId) {
+          localStorage.setItem("token", token);
+          localStorage.setItem("userId", userId);
+          console.log(`id user ${userId}`); // Проверяем userId
+        } else {
+          console.error("userId is undefined or not in the response data.");
+        }
+  
         setTimeout(() => {
           setLoading(false);
           navigate("/main");
@@ -59,7 +70,7 @@ function LoginPage() {
       }
     } catch (error) {
       console.error("Ошибка авторизации:", error);
-
+  
       if (error.message.includes("ERR_NETWORK")) {
         setErrors({
           ...errors,
@@ -74,7 +85,8 @@ function LoginPage() {
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <div className="page-container">
       <div className="form">
