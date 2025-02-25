@@ -1,3 +1,4 @@
+/* Основные стили */
 .admin-page {
   padding: 20px;
   max-width: 800px;
@@ -11,6 +12,36 @@ h2 {
   color: #333;
 }
 
+/* Контейнер для добавления (Dodawanie) */
+.dodawanie-container {
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.dodawanie-container h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Контейнер для управления (Zarzadzanie) */
+.zarzadzanie-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.zarzadzanie-container h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Секции управления (Блоки, Лекции, Пользователи) */
 .admin-section {
   margin-bottom: 20px;
   padding: 15px;
@@ -23,6 +54,22 @@ h2 {
   margin-bottom: 10px;
   font-size: 18px;
   color: #444;
+}
+
+/* Кнопка для открытия/закрытия списка */
+button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #c9302c;
 }
 
 /* Стили для input, select, button */
@@ -48,18 +95,6 @@ select {
 input::placeholder {
   color: #888;
   font-size: 14px;
-}
-
-button {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background-color: #c9302c;
 }
 
 /* Стили для таблицы */
