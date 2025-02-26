@@ -5,12 +5,12 @@ import "./QuestionVideo.scss";
 function QuestionVideo({ lectureId, videoRef }) {
   const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const token = localStorage.getItem("token");
-
         if (!token) {
           console.error("Ошибка: Токен отсутствует");
           return;
@@ -34,12 +34,13 @@ function QuestionVideo({ lectureId, videoRef }) {
     if (!videoRef.current) return;
 
     const checkTime = () => {
-      const currentTime = videoRef.current.currentTime;
+      const currentTime = Math.floor(videoRef.current.currentTime);
+
       const questionToShow = questions.find(
-        (q) => Math.floor(q.timeInSeconds) === Math.floor(currentTime)
+        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id)
       );
 
-      if (questionToShow && questionToShow !== activeQuestion) {
+      if (questionToShow) {
         videoRef.current.pause();
         setActiveQuestion(questionToShow);
       }
@@ -47,9 +48,10 @@ function QuestionVideo({ lectureId, videoRef }) {
 
     videoRef.current.addEventListener("timeupdate", checkTime);
     return () => videoRef.current.removeEventListener("timeupdate", checkTime);
-  }, [questions, activeQuestion, videoRef]);
+  }, [questions, answeredQuestions, videoRef]);
 
-  const handleAnswer = () => {
+  const handleAnswer = (questionId) => {
+    setAnsweredQuestions((prev) => new Set(prev).add(questionId));
     setActiveQuestion(null);
     videoRef.current.play();
   };
@@ -60,12 +62,13 @@ function QuestionVideo({ lectureId, videoRef }) {
         <div className="question-modal">
           <div className="modal-content">
             <p><strong>Вопрос:</strong> {activeQuestion.question}</p>
-            <ul>
+            <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
-                <li key={index}>{option}</li>
+                <li key={index} onClick={() => handleAnswer(activeQuestion.id)}>
+                  {option}
+                </li>
               ))}
             </ul>
-            <button onClick={handleAnswer}>Ответить</button>
           </div>
         </div>
       )}
