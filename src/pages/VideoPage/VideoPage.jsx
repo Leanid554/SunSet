@@ -1,36 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import videoQuestions from "../../data/videoQuestions";
 import VideoPlayer from "../../components/Video/VideoPlayer";
 import QuizPopup from "../../components/Video/QuizPopup";
 import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
 
 function VideoPage() {
-  const { id } = useParams(); // Получаем id из URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [answeredQuestions, setAnsweredQuestions] = useState({});
-  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const videoRef = useRef(null);
 
-  const questions = videoQuestions[id] || []; // Берем вопросы только для текущего видео
-
+  // Обновляем текущее время видео
   useEffect(() => {
-    setAnsweredQuestions({});
-    setIsVideoCompleted(false);
-  }, [id]);
-
-  const handleVideoProgress = (nextQuestion) => {
-    if (nextQuestion) {
-      setCurrentQuestion(nextQuestion);
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.ontimeupdate = () => {
+        setVideoProgress(videoElement.currentTime);
+      };
     }
-  };
+  }, []);
 
-  const handleAnswer = (selectedAnswer) => {
-    if (currentQuestion) {
-      setAnsweredQuestions((prev) => ({ ...prev, [currentQuestion.time]: true }));
-      setCurrentQuestion(null);
-    }
+  const handleAnswer = (answer) => {
+    console.log("Ответ пользователя:", answer);
   };
 
   const handleNext = () => {
@@ -39,22 +31,15 @@ function VideoPage() {
 
   return (
     <div className="video-page">
-      <h3>Lekcja {id}</h3>
-      <VideoPlayer
-        videoId={id}
-        questions={questions}
-        onVideoProgress={handleVideoProgress}
-        setIsVideoCompleted={setIsVideoCompleted}
-        answeredQuestions={answeredQuestions}
-      />
+      <h3>Лекция {id}</h3>
+      
+      {/* Передаём ref в VideoPlayer, но сам код VideoPlayer НЕ ТРОГАЕМ */}
+      <VideoPlayer ref={videoRef} />
 
-      {currentQuestion && <QuizPopup question={currentQuestion} onAnswer={handleAnswer} />}
+      {/* Передаём время видео в QuizPopup */}
+      <QuizPopup lectureId={id} currentTime={videoProgress} onAnswer={handleAnswer} />
 
-      <NavigationButtons
-        videoId={id}
-        isVideoCompleted={isVideoCompleted}
-        onNext={handleNext}
-      />
+      <NavigationButtons videoId={id} onNext={handleNext} />
     </div>
   );
 }
