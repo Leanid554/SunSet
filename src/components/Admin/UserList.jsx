@@ -3,14 +3,13 @@ import React from "react";
 const UserList = ({ users }) => {
   return (
     <div className="admin-section">
-      <h3>👥 Lista użytkowników</h3>
+      <h3>👥 Список пользователей</h3>
       <table>
         <thead>
           <tr>
             <th>ID</th>
             <th>E-mail</th>
-            <th>Rola</th>
-            <th>Hasło</th>
+            <th>Роль</th>
           </tr>
         </thead>
         <tbody>
@@ -19,7 +18,6 @@ const UserList = ({ users }) => {
               <td>{user.id}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-              <td>********</td>
             </tr>
           ))}
         </tbody>

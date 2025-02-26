@@ -4,21 +4,22 @@ import AddBlock from "../../components/Admin/AddBlock";
 import AddLecture from "../../components/Admin/AddLecture";
 import AddUser from "../../components/Admin/AddUser";
 import UserList from "../../components/Admin/UserList";
-import UploadVideo from "../../components/Admin/UploadVideo"; // Импортируем компонент загрузки видео
-import QuestionVideo from "../../components/Admin/QuestionVideo.jsx"; // Импортируем компонент для вопросов
+import UploadVideo from "../../components/Admin/UploadVideo";
+import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
+import UserStats from "../../components/Admin/UserStats";
 import "./index.scss";
 
-// Добавим API_BASE_URL в AdminPage.jsx
 const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
 
 const AdminPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [lectures, setLectures] = useState([]);
   const [users, setUsers] = useState([]);
-  const [selectedLectureId, setSelectedLectureId] = useState(null); // Состояние для выбранной лекции
-  const [lecturesVisible, setLecturesVisible] = useState(false); // Изначально скрыт
-  const [blocksVisible, setBlocksVisible] = useState(false); // Изначально скрыт
-  const [usersVisible, setUsersVisible] = useState(false); // Изначально скрыт
+  const [selectedLectureId, setSelectedLectureId] = useState(null);
+  const [lecturesVisible, setLecturesVisible] = useState(false);
+  const [blocksVisible, setBlocksVisible] = useState(false);
+  const [usersVisible, setUsersVisible] = useState(false);
+  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -30,8 +31,13 @@ const AdminPage = () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/users`);
       setUsers(response.data);
+      localStorage.setItem("users", JSON.stringify(response.data));
     } catch (error) {
       console.error("Ошибка при получении пользователей:", error);
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        setUsers(JSON.parse(storedUsers));
+      }
     }
   };
 
@@ -56,7 +62,7 @@ const AdminPage = () => {
   const deleteLecture = async (lectureId) => {
     try {
       await axios.delete(`${API_BASE_URL}/lectures/${lectureId}`);
-      setLectures(lectures.filter(lecture => lecture.id !== lectureId));
+      setLectures(lectures.filter((lecture) => lecture.id !== lectureId));
       alert("Лекция успешно удалена");
     } catch (error) {
       console.error("Ошибка при удалении лекции:", error);
@@ -67,7 +73,7 @@ const AdminPage = () => {
   const deleteBlock = async (blockId) => {
     try {
       await axios.delete(`${API_BASE_URL}/blocks/${blockId}`);
-      setBlocks(blocks.filter(block => block.id !== blockId));
+      setBlocks(blocks.filter((block) => block.id !== blockId));
       alert("Блок успешно удален");
     } catch (error) {
       console.error("Ошибка при удалении блока:", error);
@@ -75,9 +81,8 @@ const AdminPage = () => {
     }
   };
 
-  // Функция для нахождения названия блока по ID
   const getBlockTitle = (blockId) => {
-    const block = blocks.find(block => block.id === blockId);
+    const block = blocks.find((block) => block.id === blockId);
     return block ? block.title : "Неизвестный блок";
   };
 
@@ -85,86 +90,75 @@ const AdminPage = () => {
     <div className="admin-page">
       <h2>📌 Панель Администратора</h2>
 
-      {/* Контейнер для добавления */}
+      {/* Добавление */}
       <div className="dodawanie-container">
-        <h3>Dodawanie</h3>
-        
+        <h3>🛠 Добавление</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
         <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
-      {/* Контейнер для управления */}
+      {/* Управление */}
       <div className="zarzadzanie-container">
-        <h3>Zarzadzanie</h3>
+        <h3>⚙ Управление</h3>
 
-        {/* Секция блоков */}
+        {/* Блоки */}
         <div className="admin-section">
           <h3>📦 Блоки</h3>
           <button onClick={() => setBlocksVisible(!blocksVisible)}>
-            {blocksVisible ? "Скрыть список блоков" : "Показать список блоков"}
+            {blocksVisible ? "Скрыть" : "Показать"}
           </button>
-
           {blocksVisible && blocks.length > 0 && (
             <ul>
               {blocks.map((block) => (
                 <li key={block.id}>
-                  <strong>Название блока:</strong> {block.title} |
-                  <strong> ID:</strong> {block.id} |
-                  <button onClick={() => deleteBlock(block.id)}>Удалить блок</button>
+                  <strong>{block.title}</strong> (ID: {block.id})
+                  <button onClick={() => deleteBlock(block.id)}>Удалить</button>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Секция лекций */}
+        {/* Лекции */}
         <div className="admin-section">
           <h3>📚 Лекции</h3>
           <button onClick={() => setLecturesVisible(!lecturesVisible)}>
-            {lecturesVisible ? "Скрыть список лекций" : "Показать список лекций"}
+            {lecturesVisible ? "Скрыть" : "Показать"}
           </button>
-
           {lecturesVisible && lectures.length > 0 && (
             <ul>
               {lectures.map((lecture) => (
                 <li key={lecture.id}>
-                  <strong>Название:</strong> {lecture.title} |
-                  <strong> ID:</strong> {lecture.id} |
-                  <strong> Блок:</strong> {getBlockTitle(lecture.blockId)} (ID: {lecture.blockId}) |
-                  <button onClick={() => deleteLecture(lecture.id)}>Удалить лекцию</button>
-                  {/* Компонент для загрузки видео в лекцию */}
+                  <strong>{lecture.title}</strong> (ID: {lecture.id}) | Блок: {getBlockTitle(lecture.blockId)}
+                  <button onClick={() => deleteLecture(lecture.id)}>Удалить</button>
                   <UploadVideo lectureId={lecture.id} />
-                  {/* Компонент для добавления вопросов для лекции */}
                   <button onClick={() => setSelectedLectureId(lecture.id)}>
                     Добавить вопросы
                   </button>
-                  {selectedLectureId === lecture.id && (
-                    <QuestionVideo lectureId={lecture.id} />
-                  )}
+                  {selectedLectureId === lecture.id && <QuestionVideo lectureId={lecture.id} />}
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Секция пользователей */}
+        {/* Пользователи */}
         <div className="admin-section">
           <h3>👤 Пользователи</h3>
           <button onClick={() => setUsersVisible(!usersVisible)}>
-            {usersVisible ? "Скрыть список пользователей" : "Показать список пользователей"}
+            {usersVisible ? "Скрыть" : "Показать"}
           </button>
+          {usersVisible && <UserList users={users} />}
+        </div>
 
-          {usersVisible && users.length > 0 && (
-            <ul>
-              {users.map((user) => (
-                <li key={user.id}>
-                  <strong>Email:</strong> {user.email} |
-                  <strong> ID:</strong> {user.id}
-                </li>
-              ))}
-            </ul>
-          )}
+        {/* Статистика пользователей */}
+        <div className="admin-section">
+          <h3>📊 Статистика пользователей</h3>
+          <button onClick={() => setStatsVisible(!statsVisible)}>
+            {statsVisible ? "Скрыть" : "Показать"}
+          </button>
+          {statsVisible && <UserStats users={users} />}
         </div>
       </div>
     </div>
