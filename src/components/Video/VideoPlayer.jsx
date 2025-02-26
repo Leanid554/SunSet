@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-function VideoPlayer() {
-  const { id } = useParams(); // Используем "id", так как это параметр в маршруте
+const VideoPlayer = React.forwardRef((props, ref) => {
+  const { id } = useParams();
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,8 +17,7 @@ function VideoPlayer() {
 
     const fetchLectureDetails = async () => {
       try {
-        const token = localStorage.getItem("token"); // Токен авторизации (если нужно)
-
+        const token = localStorage.getItem("token");
         if (!token) {
           setError("Ошибка: Необходим токен для доступа.");
           setLoading(false);
@@ -26,11 +25,11 @@ function VideoPlayer() {
         }
 
         const response = await axios.get(
-          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`, // Используем "id"
+          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        setSelectedLecture(response.data); // Сохраняем полученную лекцию
+        setSelectedLecture(response.data);
       } catch (err) {
         console.error("Ошибка загрузки лекции:", err);
         setError("Не удалось загрузить данные лекции.");
@@ -40,7 +39,7 @@ function VideoPlayer() {
     };
 
     fetchLectureDetails();
-  }, [id]); // Запрашиваем данные при изменении "id"
+  }, [id]);
 
   if (loading) return <p>Загрузка видео...</p>;
   if (error) return <p>{error}</p>;
@@ -50,7 +49,7 @@ function VideoPlayer() {
     <div>
       <h1>{selectedLecture.title}</h1>
       {selectedLecture.videoUrl ? (
-        <video width="600" controls>
+        <video ref={ref} width="600" controls>
           <source
             src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
             type="video/mp4"
@@ -62,6 +61,6 @@ function VideoPlayer() {
       )}
     </div>
   );
-}
+});
 
 export default VideoPlayer;
