@@ -64,14 +64,14 @@ const AddQuestionToVideo = ({ lectureId }) => {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState([]);
   const [answer, setAnswer] = useState('');
-//   const [timestamp, setTimestamp] = useState('');
+  const [timeInSeconds, setTimestamp] = useState('');
   const [questions, setQuestions] = useState([]);
 
   const handleAddQuestion = async () => {
-    // if (!question || !answer || !timestamp || options.length === 0) {
-    //   alert('Пожалуйста, заполните все поля');
-    //   return;
-    // }
+    if (!question || !answer || !timeInSeconds || options.length === 0) {
+      alert('Пожалуйста, заполните все поля');
+      return;
+    }
 
     try {
 
@@ -105,12 +105,12 @@ const AddQuestionToVideo = ({ lectureId }) => {
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />
-      {/* <input
+      <input
         type="number"
         placeholder="Таймстамп (в секундах)"
-        value={timestamp}
+        value={timeInSeconds}
         onChange={(e) => setTimestamp(e.target.value)}
-      /> */}
+      />
       <input
         type="text"
         placeholder="Опция"
