@@ -17,6 +17,7 @@ import BlockPage from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import LoginPage from "./pages/Login/LoginPage";
+import VideoPlayer from "./components/Video/VideoPlayer";
 
 function App() {
   const visits = useSelector((state) => state.visits.count);
@@ -39,6 +40,7 @@ function App() {
         <Route path="/test/:id" element={<TestPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/main" replace />} />
+        <Route path="/video/:id" component={<VideoPlayer />} />
       </Routes>
     </>
   );

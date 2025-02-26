@@ -1,7 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-function NavigationButtons({ videoId, isVideoCompleted, onNext, id }) {
+function NavigationButtons({ videoId, isVideoCompleted, onNext }) {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   const getBlockId = (videoId) => {
     if (videoId >= 10 && videoId <= 19) return 1;
     if (videoId >= 20 && videoId <= 29) return 2;
@@ -14,6 +17,16 @@ function NavigationButtons({ videoId, isVideoCompleted, onNext, id }) {
 
   const blockId = getBlockId(videoId);
 
+  const nextVideoId = parseInt(id, 10);
+  if (isNaN(nextVideoId)) {
+    console.error("Неверный ID видео:", id);
+  }
+
+  const handleNextClick = () => {
+    navigate(`/video/${nextVideoId + 1}`);
+    window.location.reload(); 
+  };
+
   return (
     <div className="buttons-video">
       <Link to={`/lectures/user/${id}/block/${blockId}`} className="back-button1">
@@ -21,8 +34,7 @@ function NavigationButtons({ videoId, isVideoCompleted, onNext, id }) {
       </Link>
       <button
         className="next-button-video"
-        onClick={onNext}
-        disabled={!isVideoCompleted}
+        onClick={handleNextClick}
       >
         Dalej
       </button>
