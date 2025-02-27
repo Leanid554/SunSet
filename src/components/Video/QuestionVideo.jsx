@@ -76,7 +76,8 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
     setActiveQuestion(null);
     if (videoRef.current) videoRef.current.play();
 
-    onAnswerChange(correctAnswers + 1); // Передаем родителю правильные ответы
+    // Передаем правильные ответы после их обновления
+    onAnswerChange(correctAnswers + (isCorrect ? 1 : 0));  // Увеличиваем правильные ответы только если ответ правильный
   };
 
   return (
