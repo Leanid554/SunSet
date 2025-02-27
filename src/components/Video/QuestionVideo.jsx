@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./QuestionVideo.scss";
 
-function QuestionVideo({ lectureId, videoRef }) {
+function QuestionVideo({ lectureId, videoRef, onLectureComplete }) {
   const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
-  const [answerResults, setAnswerResults] = useState([]);
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -48,13 +48,17 @@ function QuestionVideo({ lectureId, videoRef }) {
       }
     };
 
+    const handleVideoEnd = () => {
+      setIsVideoCompleted(true);
+    };
+
     const videoElement = videoRef.current;
     videoElement.addEventListener("timeupdate", checkTime);
+    videoElement.addEventListener("ended", handleVideoEnd);
 
     return () => {
-      if (videoElement) {
-        videoElement.removeEventListener("timeupdate", checkTime);
-      }
+      videoElement.removeEventListener("timeupdate", checkTime);
+      videoElement.removeEventListener("ended", handleVideoEnd);
     };
   }, [questions, answeredQuestions, videoRef]);
 
@@ -63,16 +67,6 @@ function QuestionVideo({ lectureId, videoRef }) {
     if (!question) return;
     
     const isCorrect = question.answer === selectedOption;
-    setAnswerResults((prev) => {
-      const newResults = [...prev, `Вопрос ${questionId} ответ: ${isCorrect ? "правильно" : "неправильно"}`];
-      
-      setTimeout(() => {
-        console.log(newResults);
-      }, 0);
-      
-      return newResults;
-    });
-
     if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     }
@@ -82,9 +76,11 @@ function QuestionVideo({ lectureId, videoRef }) {
     if (videoRef.current) videoRef.current.play();
   };
 
-  const handleCompleteLecture = () => {
-    alert("Lekcję zakończono!");
-  };
+  useEffect(() => {
+    if (correctAnswers >= 2 && isVideoCompleted) {
+      onLectureComplete();
+    }
+  }, [correctAnswers, isVideoCompleted, onLectureComplete]);
 
   return (
     <div>
@@ -101,11 +97,6 @@ function QuestionVideo({ lectureId, videoRef }) {
             </ul>
           </div>
         </div>
-      )}
-      {correctAnswers >= 2 && (
-        <button className="complete-lecture-btn" onClick={handleCompleteLecture}>
-          Zakończ Lekcję
-        </button>
       )}
     </div>
   );
