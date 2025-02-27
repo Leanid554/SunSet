@@ -9,32 +9,32 @@ function VideoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [videoProgress, setVideoProgress] = useState(0);
+  const [isLectureCompleted, setIsLectureCompleted] = useState(false);
   const videoRef = useRef(null);
 
-  const isMounted = useRef(false);
-
   useEffect(() => {
-    isMounted.current = true;
-
     const updateTime = () => {
       if (videoRef.current) {
         setVideoProgress(videoRef.current.currentTime);
       }
     };
 
-    const videoElement = videoRef.current;
-
-    if (videoElement) {
-      videoElement.addEventListener("timeupdate", updateTime);
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener("timeupdate", updateTime);
     }
 
     return () => {
-      if (videoElement && isMounted.current) {
-        videoElement.removeEventListener("timeupdate", updateTime);
+      if (video) {
+        video.removeEventListener("timeupdate", updateTime);
       }
-      isMounted.current = false;
     };
-  }, []); 
+  }, []);
+
+  const handleLectureComplete = () => {
+    setIsLectureCompleted(true);
+    alert("Lekcję ukończono!");
+  };
 
   const handleNext = () => {
     navigate(`/video/${+id + 1}`);
@@ -42,10 +42,15 @@ function VideoPage() {
 
   return (
     <div className="video-page">
-      <h3>Лекция {id}</h3>
-
       <VideoPlayer ref={videoRef} />
-      <QuestionVideo lectureId={id} videoRef={videoRef} />
+      <QuestionVideo lectureId={id} videoRef={videoRef} onLectureComplete={handleLectureComplete} />
+      
+      {isLectureCompleted && (
+        <button className="complete-lecture-btn" onClick={handleNext}>
+          Zakończ Lekcję
+        </button>
+      )}
+
       <NavigationButtons videoId={id} onNext={handleNext} />
     </div>
   );
