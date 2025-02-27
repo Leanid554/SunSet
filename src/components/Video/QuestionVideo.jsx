@@ -6,6 +6,7 @@ function QuestionVideo({ lectureId, videoRef }) {
   const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
+  const [answerResults, setAnswerResults] = useState([]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -31,7 +32,7 @@ function QuestionVideo({ lectureId, videoRef }) {
   }, [lectureId]);
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || questions.length === 0) return;
 
     const checkTime = () => {
       const currentTime = Math.floor(videoRef.current.currentTime);
@@ -56,10 +57,24 @@ function QuestionVideo({ lectureId, videoRef }) {
     };
   }, [questions, answeredQuestions, videoRef]);
 
-  const handleAnswer = (questionId) => {
-    setAnsweredQuestions((prev) => new Set(prev).add(questionId));
+  const handleAnswer = (questionId, selectedOption) => {
+    const question = questions.find((q) => q.id === questionId);
+    if (!question) return;
+    
+    const isCorrect = question.answer === selectedOption;
+    setAnswerResults((prev) => {
+      const newResults = [...prev, `Вопрос ${questionId} ответ: ${isCorrect ? "правильно" : "неправильно"}`];
+      
+      setTimeout(() => {
+        console.log(newResults);
+      }, 0);
+      
+      return newResults;
+    });
+    
+    setAnsweredQuestions((prev) => new Set([...prev, questionId]));
     setActiveQuestion(null);
-    videoRef.current.play();
+    if (videoRef.current) videoRef.current.play();
   };
 
   return (
@@ -70,7 +85,7 @@ function QuestionVideo({ lectureId, videoRef }) {
             <p><strong>Вопрос:</strong> {activeQuestion.question}</p>
             <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
-                <li key={index} onClick={() => handleAnswer(activeQuestion.id)}>
+                <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>
                   {option}
                 </li>
               ))}
