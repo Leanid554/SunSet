@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import {
@@ -22,58 +22,7 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import LoginPage from "./pages/Login/LoginPage";
 
 function App() {
-  const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.userId);
-
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await axios.post(
-          "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/auth/login", // тест данные
-          {
-            email: "qwerty@gmail.com",
-            password: "qwerty",
-          }
-        );
-
-        if (response.status === 200 || response.status === 201) {
-          const token = response.data.accessToken;
-
-          localStorage.setItem("token", token);
-          console.log("Токен получен и сохранен:", token);
-
-          if (token.split(".").length !== 3) {
-            console.error("Некорректный JWT-токен:", token);
-            return;
-          }
-
-          try {
-            const decoded = jwtDecode(token);
-            if (decoded.sub) {
-              dispatch(setUserId(decoded.sub));
-              console.log("User ID:", decoded.sub);
-            } else {
-              console.warn("В токене отсутствует userId:", decoded);
-            }
-          } catch (error) {
-            console.error("Ошибка при декодировании токена:", error);
-          }
-        } else {
-          console.error(
-            "Ошибка при получении токена. Статус:",
-            response.status
-          );
-        }
-      } catch (error) {
-        console.error(
-          "Ошибка при получении токена с сервера:",
-          error.response || error.message
-        );
-      }
-    };
-
-    fetchToken();
-  }, [dispatch]);
 
   return (
     <>

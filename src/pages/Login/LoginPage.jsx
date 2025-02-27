@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import LoginForm from "../../components/Login/LoginForm";
 import "./index.scss";
 
@@ -45,13 +46,17 @@ function LoginPage() {
         formData,
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true, // Убираем передачу кук
-          mode: "cors", // Включаем CORS
+          withCredentials: true,
+          mode: "cors",
         }
       );
 
       if (response.status === 201) {
-        localStorage.setItem("token", response.data.token);
+        const { accessToken } = response.data;
+
+        setToken(accessToken);
+        console.log("Decoded Token:", decodeToken(accessToken));
+
         setTimeout(() => {
           setLoading(false);
           navigate("/main");
@@ -91,3 +96,51 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+// Функции для работы с токенами
+export const setToken = (accessToken) => {
+  if (accessToken) {
+    localStorage.setItem("accessToken", accessToken);
+
+    // Расшифровка токена и сохранение userId
+    const decoded = decodeToken(accessToken);
+    if (decoded && decoded.sub) {
+      localStorage.setItem("userId", decoded.sub);
+    }
+  }
+};
+
+// Получение access-токена
+export const getAccessToken = () => {
+  return localStorage.getItem("accessToken");
+};
+
+// Получение userId
+export const getUserId = () => {
+  return localStorage.getItem("userId");
+};
+
+// Удаление токенов и userId
+export const removeTokens = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("userId");
+};
+
+// Проверка аутентификации
+export const isAuthenticated = () => {
+  const token = getAccessToken();
+  if (!token) return false;
+
+  const decoded = decodeToken(token);
+  return decoded && decoded.exp * 1000 > Date.now();
+};
+
+// Функция расшифровки токена
+export const decodeToken = (token) => {
+  try {
+    return jwtDecode(token);
+  } catch (error) {
+    console.error("Ошибка декодирования токена:", error);
+    return null;
+  }
+};
