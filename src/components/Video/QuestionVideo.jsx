@@ -7,6 +7,7 @@ function QuestionVideo({ lectureId, videoRef }) {
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
   const [answerResults, setAnswerResults] = useState([]);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -71,10 +72,18 @@ function QuestionVideo({ lectureId, videoRef }) {
       
       return newResults;
     });
+
+    if (isCorrect) {
+      setCorrectAnswers((prev) => prev + 1);
+    }
     
     setAnsweredQuestions((prev) => new Set([...prev, questionId]));
     setActiveQuestion(null);
     if (videoRef.current) videoRef.current.play();
+  };
+
+  const handleCompleteLecture = () => {
+    alert("Lekcję zakończono!");
   };
 
   return (
@@ -92,6 +101,11 @@ function QuestionVideo({ lectureId, videoRef }) {
             </ul>
           </div>
         </div>
+      )}
+      {correctAnswers >= 2 && (
+        <button className="complete-lecture-btn" onClick={handleCompleteLecture}>
+          Zakończ Lekcję
+        </button>
       )}
     </div>
   );
