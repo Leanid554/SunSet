@@ -27,20 +27,20 @@ function NavigationButtons({ videoId, isVideoCompleted, onNext }) {
     window.location.reload();
   };
 
-  return (
-    <div className="buttons-video">
-      <Link to={`/lectures/user/${id}/block/${blockId}`} className="back-button1">
-        Wrócić
-      </Link>
-      <button
-        className="next-button-video"
-        onClick={handleNextClick}
-        // disabled={!isVideoCompleted} // потом нужно будет подлчюить isVideoCompleted  TODO
-      >
-        Dalej
-      </button>
-    </div>
-  );
+  // return (
+  //   <div className="buttons-video">
+  //     <Link to={`/lectures/user/${id}/block/${blockId}`} className="back-button1">
+  //       Wrócić
+  //     </Link>
+  //     <button
+  //       className="next-button-video"
+  //       onClick={handleNextClick}
+  //       // disabled={!isVideoCompleted} // потом нужно будет подлчюить isVideoCompleted  TODO
+  //     >
+  //       Dalej
+  //     </button>
+  //   </div>
+  // );
 }
 
 export default NavigationButtons;

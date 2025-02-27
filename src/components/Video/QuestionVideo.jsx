@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./QuestionVideo.scss";
 
-function QuestionVideo({ lectureId, videoRef, onLectureComplete }) {
+function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }) {
   const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
@@ -50,6 +50,7 @@ function QuestionVideo({ lectureId, videoRef, onLectureComplete }) {
 
     const handleVideoEnd = () => {
       setIsVideoCompleted(true);
+      onVideoCompleted(); // Уведомляем родителя, что видео завершено
     };
 
     const videoElement = videoRef.current;
@@ -60,27 +61,23 @@ function QuestionVideo({ lectureId, videoRef, onLectureComplete }) {
       videoElement.removeEventListener("timeupdate", checkTime);
       videoElement.removeEventListener("ended", handleVideoEnd);
     };
-  }, [questions, answeredQuestions, videoRef]);
+  }, [questions, answeredQuestions, videoRef, onVideoCompleted]);
 
   const handleAnswer = (questionId, selectedOption) => {
     const question = questions.find((q) => q.id === questionId);
     if (!question) return;
-    
+
     const isCorrect = question.answer === selectedOption;
     if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
     }
-    
+
     setAnsweredQuestions((prev) => new Set([...prev, questionId]));
     setActiveQuestion(null);
     if (videoRef.current) videoRef.current.play();
-  };
 
-  useEffect(() => {
-    if (correctAnswers >= 2 && isVideoCompleted) {
-      onLectureComplete();
-    }
-  }, [correctAnswers, isVideoCompleted, onLectureComplete]);
+    onAnswerChange(correctAnswers + 1); // Передаем родителю правильные ответы
+  };
 
   return (
     <div>

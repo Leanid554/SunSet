@@ -11,6 +11,9 @@ function VideoPage() {
   const navigate = useNavigate();
   const [videoProgress, setVideoProgress] = useState(0);
   const [isLectureCompleted, setIsLectureCompleted] = useState(false);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [error, setError] = useState(null);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +26,6 @@ function VideoPage() {
     const video = videoRef.current;
     if (video) {
       video.addEventListener("timeupdate", updateTime);
-      console.log("Лекция выбрана:", video);
     }
 
     return () => {
@@ -33,13 +35,21 @@ function VideoPage() {
     };
   }, []);
 
+  const handleAnswerChange = (newCorrectAnswers) => {
+    setCorrectAnswers(newCorrectAnswers);
+  };
+
+  const handleVideoCompleted = () => {
+    setIsVideoCompleted(true);
+  };
+
   const handleLectureComplete = async () => {
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
 
       if (!userId || !token) {
-        alert("Ошибка: пользователь не авторизован!");
+        setError("Ошибка: пользователь не авторизован!");
         return;
       }
 
@@ -53,23 +63,32 @@ function VideoPage() {
       );
 
       setIsLectureCompleted(true);
-      alert("Lekcję ukończono и записа!"); // Уведомление об успешном завершении
+      setError(null); // Если все прошло хорошо, очищаем ошибку
     } catch (error) {
       console.error("Ошибка при сохранении завершения лекции:", error);
-      alert("Ошибка при сохранении завершения лекции!"); // Уведомление об ошибке
+      setError("Ошибка при сохранении завершения лекции!");
     }
   };
+
+  const isButtonVisible = isVideoCompleted && correctAnswers >= 2;
 
   return (
     <div className="video-page">
       <VideoPlayer ref={videoRef} />
-      <QuestionVideo lectureId={id} videoRef={videoRef} onLectureComplete={handleLectureComplete} />
-      
-      {isLectureCompleted && (
+      <QuestionVideo 
+        lectureId={id} 
+        videoRef={videoRef} 
+        onAnswerChange={handleAnswerChange} 
+        onVideoCompleted={handleVideoCompleted} // Передаем onVideoCompleted
+      />
+
+      {isButtonVisible && (
         <button className="complete-lecture-btn" onClick={handleLectureComplete}>
           Zakończ Lekcję
         </button>
       )}
+
+      {error && <div className="error-message">{error}</div>}
 
       <NavigationButtons videoId={id} onNext={() => navigate(`/video/${+id + 1}`)} />
     </div>
