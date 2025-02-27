@@ -8,7 +8,7 @@ const AddUser = ({ users, setUsers }) => {
     name: "",
     email: "",
     password: "",
-    role: "użytkownik",
+    role: "użytkownik", // По умолчанию "пользователь"
   });
 
   const [error, setError] = useState("");
@@ -49,6 +49,13 @@ const AddUser = ({ users, setUsers }) => {
       <input type="text" name="name" placeholder="Имя" value={newUser.name} onChange={handleChange} />
       <input type="email" name="email" placeholder="E-mail" value={newUser.email} onChange={handleChange} />
       <input type="password" name="password" placeholder="Пароль" value={newUser.password} onChange={handleChange} />
+
+      <label>Выберите роль:</label>
+      <select name="role" value={newUser.role} onChange={handleChange}>
+        <option value="użytkownik">użytkownik (Пользователь)</option>
+        <option value="administrator">administrator (Администратор)</option>
+      </select>
+
       <button onClick={addUser} disabled={loading}>{loading ? "Добавление..." : "➕ Добавить"}</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
