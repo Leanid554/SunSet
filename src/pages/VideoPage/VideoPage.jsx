@@ -9,6 +9,7 @@ function VideoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [videoProgress, setVideoProgress] = useState(0);
+  const [isLectureCompleted, setIsLectureCompleted] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -30,16 +31,25 @@ function VideoPage() {
     };
   }, []);
 
+  const handleLectureComplete = () => {
+    setIsLectureCompleted(true);
+    alert("Lekcję ukończono!");
+  };
+
   const handleNext = () => {
     navigate(`/video/${+id + 1}`);
   };
 
   return (
     <div className="video-page">
-      {/* <h3>Лекция {id}</h3> */}
-
       <VideoPlayer ref={videoRef} />
-      <QuestionVideo lectureId={id} videoRef={videoRef} />
+      <QuestionVideo lectureId={id} videoRef={videoRef} onLectureComplete={handleLectureComplete} />
+      
+      {isLectureCompleted && (
+        <button className="complete-lecture-btn" onClick={handleNext}>
+          Zakończ Lekcję
+        </button>
+      )}
 
       <NavigationButtons videoId={id} onNext={handleNext} />
     </div>
