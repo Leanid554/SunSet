@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import VideoPlayer from "../../components/Video/VideoPlayer";
 import QuestionVideo from "../../components/Video/QuestionVideo";
 import NavigationButtons from "../../components/Video/NavigationButtons";
@@ -22,6 +23,7 @@ function VideoPage() {
     const video = videoRef.current;
     if (video) {
       video.addEventListener("timeupdate", updateTime);
+      console.log("Лекция выбрана:", video);
     }
 
     return () => {
@@ -31,13 +33,31 @@ function VideoPage() {
     };
   }, []);
 
-  const handleLectureComplete = () => {
-    setIsLectureCompleted(true);
-    alert("Lekcję ukończono!");
-  };
+  const handleLectureComplete = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
 
-  const handleNext = () => {
-    navigate(`/video/${+id + 1}`);
+      if (!userId || !token) {
+        alert("Ошибка: пользователь не авторизован!");
+        return;
+      }
+
+      // Отправляем запрос на сервер для завершения лекции и изменения passed на true
+      await axios.post(
+        `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/complete/${userId}`,
+        {
+          passed: true  // Обновляем значение passed на true
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setIsLectureCompleted(true);
+      alert("Lekcję ukończono и записа!"); // Уведомление об успешном завершении
+    } catch (error) {
+      console.error("Ошибка при сохранении завершения лекции:", error);
+      alert("Ошибка при сохранении завершения лекции!"); // Уведомление об ошибке
+    }
   };
 
   return (
@@ -46,12 +66,12 @@ function VideoPage() {
       <QuestionVideo lectureId={id} videoRef={videoRef} onLectureComplete={handleLectureComplete} />
       
       {isLectureCompleted && (
-        <button className="complete-lecture-btn" onClick={handleNext}>
+        <button className="complete-lecture-btn" onClick={handleLectureComplete}>
           Zakończ Lekcję
         </button>
       )}
 
-      <NavigationButtons videoId={id} onNext={handleNext} />
+      <NavigationButtons videoId={id} onNext={() => navigate(`/video/${+id + 1}`)} />
     </div>
   );
 }
