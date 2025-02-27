@@ -46,8 +46,14 @@ function QuestionVideo({ lectureId, videoRef }) {
       }
     };
 
-    videoRef.current.addEventListener("timeupdate", checkTime);
-    return () => videoRef.current.removeEventListener("timeupdate", checkTime);
+    const videoElement = videoRef.current;
+    videoElement.addEventListener("timeupdate", checkTime);
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener("timeupdate", checkTime);
+      }
+    };
   }, [questions, answeredQuestions, videoRef]);
 
   const handleAnswer = (questionId) => {

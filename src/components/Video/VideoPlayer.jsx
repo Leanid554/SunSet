@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const VideoPlayer = React.forwardRef((props, ref) => {
   const { id } = useParams();
@@ -49,7 +49,7 @@ const VideoPlayer = React.forwardRef((props, ref) => {
     <div>
       <h1>{selectedLecture.title}</h1>
       {selectedLecture.videoUrl ? (
-        <video ref={ref} width="600" controls>
+        <video ref={ref} {...props} width="600" controls>
           <source
             src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
             type="video/mp4"

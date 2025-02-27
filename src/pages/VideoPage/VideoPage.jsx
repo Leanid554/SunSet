@@ -11,24 +11,30 @@ function VideoPage() {
   const [videoProgress, setVideoProgress] = useState(0);
   const videoRef = useRef(null);
 
+  const isMounted = useRef(false);
+
   useEffect(() => {
+    isMounted.current = true;
+
     const updateTime = () => {
       if (videoRef.current) {
         setVideoProgress(videoRef.current.currentTime);
       }
     };
 
-    const video = videoRef.current;
-    if (video) {
-      video.addEventListener("timeupdate", updateTime);
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      videoElement.addEventListener("timeupdate", updateTime);
     }
 
     return () => {
-      if (video) {
-        video.removeEventListener("timeupdate", updateTime);
+      if (videoElement && isMounted.current) {
+        videoElement.removeEventListener("timeupdate", updateTime);
       }
+      isMounted.current = false;
     };
-  }, []);
+  }, []); 
 
   const handleNext = () => {
     navigate(`/video/${+id + 1}`);
@@ -40,7 +46,6 @@ function VideoPage() {
 
       <VideoPlayer ref={videoRef} />
       <QuestionVideo lectureId={id} videoRef={videoRef} />
-
       <NavigationButtons videoId={id} onNext={handleNext} />
     </div>
   );
