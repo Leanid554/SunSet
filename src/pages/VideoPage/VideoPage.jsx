@@ -43,7 +43,7 @@ function VideoPage() {
     setIsVideoCompleted(true);
   };
 
-  const handleLectureComplete = async () => {
+  const handleLectureComplete = async (passed) => {
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
@@ -53,17 +53,14 @@ function VideoPage() {
         return;
       }
 
-      // Отправляем запрос на сервер для завершения лекции и изменения passed на true
       await axios.post(
         `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/complete/${userId}`,
-        {
-          passed: true  // Обновляем значение passed на true
-        },
+        { passed }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       setIsLectureCompleted(true);
-      setError(null); // Если все прошло хорошо, очищаем ошибку
+      setError(null);
     } catch (error) {
       console.error("Ошибка при сохранении завершения лекции:", error);
       setError("Ошибка при сохранении завершения лекции!");
@@ -79,13 +76,18 @@ function VideoPage() {
         lectureId={id} 
         videoRef={videoRef} 
         onAnswerChange={handleAnswerChange} 
-        onVideoCompleted={handleVideoCompleted} // Передаем onVideoCompleted
+        onVideoCompleted={handleVideoCompleted}
       />
 
       {isButtonVisible && (
-        <button className="complete-lecture-btn" onClick={handleLectureComplete}>
-          Zakończ Lekcję
-        </button>
+        <>
+          <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
+            Zakończ Lekcję
+          </button>
+          <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
+            Spróbuj Ponownie
+          </button>
+        </>
       )}
 
       {error && <div className="error-message">{error}</div>}
