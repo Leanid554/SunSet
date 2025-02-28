@@ -14,21 +14,30 @@ function LessonList({ lessons, onLectureClick }) {
 
       <div className="video-list-container">
         {lessons.map((video) => (
-          <div key={video.id} className="video-item-wrapper">
-            <Link
-              to={`/video/${video.id}`}
-              className="video-item"
-              onClick={() => onLectureClick(video)}
-            >
-              <div className="video-content">
-                <div className="block-row">
-                  <div className="block-title">{video.title}</div>
-                  <div className="position1">{video.position || "Call-Center"}</div>
-                  <span className="progress-text">{video.progress}%</span>
-                  <span className="access-text">{video.progress === 100 ? "🔓" : "🔒"}</span>
+          <div key={video.id} className={`video-item-wrapper ${video.locked ? "locked" : ""}`}>
+            {video.locked ? (
+              <div className="video-item locked">
+                <div className="video-content">
+                  <div className="block-row">
+                    <div className="block-title">{video.title}</div>
+                    <div className="position1">{video.position || "Call-Center"}</div>
+                    <span className="progress-text">{video.progress}%</span>
+                    <span className="access-text">🔒</span>
+                  </div>
                 </div>
               </div>
-            </Link>
+            ) : (
+              <Link to={`/video/${video.id}`} className="video-item" onClick={() => onLectureClick(video)}>
+                <div className="video-content">
+                  <div className="block-row">
+                    <div className="block-title">{video.title}</div>
+                    <div className="position1">{video.position || "Call-Center"}</div>
+                    <span className="progress-text">{video.progress}%</span>
+                    <span className="access-text">🔓</span>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
         ))}
       </div>

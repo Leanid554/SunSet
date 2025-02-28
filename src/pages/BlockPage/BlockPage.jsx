@@ -19,6 +19,7 @@ function BlockPages() {
 
     const fetchVideos = async () => {
       try {
+        // 1️⃣ Получаем список лекций
         const response = await axios.get(`${API_BASE_URL}/lectures/user/${id}/block/${blockId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -27,24 +28,24 @@ function BlockPages() {
 
         let updatedVideos = response.data.map((lecture, index) => ({
           ...lecture,
-          locked: index !== 0, // Первая лекция всегда открыта, остальные - заблокированы
-          passed: false, // Изначально считаем, что лекция не пройдена
+          locked: index !== 0, // Все лекции, кроме первой, заблокированы
+          passed: false, // По умолчанию считаем непройденными
         }));
 
-        // Проверяем статусы всех лекций
+        // 2️⃣ Проверяем статус каждой лекции
         for (let i = 0; i < updatedVideos.length; i++) {
           try {
             const progressResponse = await axios.post(
               `${API_BASE_URL}/lectures/${updatedVideos[i].id}/complete/${userId}`,
-              {}, // ❗ Пустой объект, так как мы только проверяем статус
+              {}, // Пустое тело запроса
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
             updatedVideos[i].passed = progressResponse.data.passed || false;
             console.log(`📌 Лекция ID: ${updatedVideos[i].id} | Пройдено: ${updatedVideos[i].passed}`);
 
-            // Разблокируем следующую лекцию, если текущая пройдена
-            if (i < updatedVideos.length - 1 && updatedVideos[i].passed) {
+            // Если текущая лекция пройдена, разблокируем следующую
+            if (updatedVideos[i].passed && updatedVideos[i + 1]) {
               updatedVideos[i + 1].locked = false;
             }
           } catch (progressError) {
