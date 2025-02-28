@@ -6,11 +6,12 @@ import QuestionVideo from "../../components/Video/QuestionVideo";
 import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
 
+const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+
 function VideoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [videoProgress, setVideoProgress] = useState(0);
-  const [isLectureCompleted, setIsLectureCompleted] = useState(false);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [error, setError] = useState(null);
@@ -43,6 +44,7 @@ function VideoPage() {
     setIsVideoCompleted(true);
   };
 
+  // Функция отправки запроса и редиректа
   const handleLectureComplete = async (passed) => {
     try {
       const userId = localStorage.getItem("userId");
@@ -54,15 +56,17 @@ function VideoPage() {
       }
 
       await axios.post(
-        `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/complete/${userId}`,
-        { passed }, 
+        `${API_BASE_URL}/lectures/${id}/complete/${userId}`,
+        { passed },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setIsLectureCompleted(true);
-      setError(null);
+      console.log(`✅ Лекция ${id} завершена. Статус: ${passed}`);
+
+      // После успешного запроса переходим в блок
+      navigate(`/blocks/${id}`);
     } catch (error) {
-      console.error("Ошибка при сохранении завершения лекции:", error);
+      console.error("❌ Ошибка при сохранении завершения лекции:", error.response?.data || error.message);
       setError("Ошибка при сохранении завершения лекции!");
     }
   };
@@ -80,11 +84,11 @@ function VideoPage() {
       {isVideoCompleted && (
         correctAnswers >= 2 ? (
           <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
-            Zakończ Lekcję
+            ✅ Пройти
           </button>
         ) : (
           <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
-            Spróbuj Ponownie
+            ❌ Не пройдено
           </button>
         )
       )}
