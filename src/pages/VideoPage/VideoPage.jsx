@@ -67,8 +67,6 @@ function VideoPage() {
     }
   };
 
-  const isButtonVisible = isVideoCompleted && correctAnswers >= 2;
-
   return (
     <div className="video-page">
       <VideoPlayer ref={videoRef} />
@@ -79,15 +77,16 @@ function VideoPage() {
         onVideoCompleted={handleVideoCompleted}
       />
 
-      {isButtonVisible && (
-        <>
+      {isVideoCompleted && (
+        correctAnswers >= 2 ? (
           <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
             Zakończ Lekcję
           </button>
+        ) : (
           <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
             Spróbuj Ponownie
           </button>
-        </>
+        )
       )}
 
       {error && <div className="error-message">{error}</div>}
