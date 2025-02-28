@@ -6,9 +6,9 @@ import Block from "../../components/Block/Block";
 const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
 
 function BlockPages() {
-  const { id, blockId } = useParams(); 
+  const { id, blockId } = useParams();
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token"); // Получаем токен
+  const token = localStorage.getItem("token");
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,27 +20,39 @@ function BlockPages() {
     const fetchVideos = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/lectures/user/${id}/block/${blockId}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         console.log("✅ Полученные лекции:", response.data);
-        setVideos(response.data);
 
-        // Проверяем статус прохождения для каждой лекции
-        response.data.forEach(async (lecture) => {
+        let updatedVideos = response.data.map((lecture, index) => ({
+          ...lecture,
+          locked: index !== 0, // Первая лекция всегда открыта, остальные - заблокированы
+          passed: false, // Изначально считаем, что лекция не пройдена
+        }));
+
+        // Проверяем статусы всех лекций
+        for (let i = 0; i < updatedVideos.length; i++) {
           try {
             const progressResponse = await axios.post(
-              `${API_BASE_URL}/lectures/${lecture.id}/complete/${userId}`,
-              { passed: false }, // Можно заменить на true, если хочешь тестировать успешное завершение
+              `${API_BASE_URL}/lectures/${updatedVideos[i].id}/complete/${userId}`,
+              {}, // ❗ Пустой объект, так как мы только проверяем статус
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            console.log(`📌 Лекция ID: ${lecture.id}, Пройдено: ${progressResponse.data.passed}`);
-          } catch (progressError) {
-            console.error(`❌ Ошибка проверки статуса лекции ${lecture.id}:`, progressError.response?.data || progressError.message);
-          }
-        });
+            updatedVideos[i].passed = progressResponse.data.passed || false;
+            console.log(`📌 Лекция ID: ${updatedVideos[i].id} | Пройдено: ${updatedVideos[i].passed}`);
 
+            // Разблокируем следующую лекцию, если текущая пройдена
+            if (i < updatedVideos.length - 1 && updatedVideos[i].passed) {
+              updatedVideos[i + 1].locked = false;
+            }
+          } catch (progressError) {
+            console.error(`❌ Ошибка проверки статуса лекции ${updatedVideos[i].id}:`, progressError.response?.data || progressError.message);
+          }
+        }
+
+        setVideos(updatedVideos);
       } catch (err) {
         setError("❌ Ошибка загрузки лекций");
         console.error("Ошибка:", err.response?.data || err.message);
