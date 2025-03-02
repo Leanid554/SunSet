@@ -4,9 +4,6 @@ import { Link } from "react-router-dom";
 const BlockItem = ({ block, blockProgress = 0, isEnabled = true }) => {
   const blockPath = block.path || `/lectures/${block.id}/block/${block.id}`;
 
-
-  // console.log("BlockItem received:", block); 
-
   return (
     <Link
       to={isEnabled ? blockPath : "#"}
