@@ -44,23 +44,17 @@ function VideoPage() {
     setIsVideoCompleted(true);
   };
 
-  // Функция отправки запроса и редиректа
   const handleLectureComplete = async (passed) => {
     try {
       const userId = localStorage.getItem("userId");
-   
-
-     
-
       await axios.post(
         `${API_BASE_URL}/lectures/${id}/complete/${userId}`,
-        { "passed" : isVideoCompleted },
-     
+        { passed },
+        { headers: { "Content-Type": "application/json" } }
       );
 
       console.log(`✅ Лекция ${id} завершена. Статус: ${passed}`);
 
-      // После успешного запроса переходим в блок
       navigate(`/blocks/${id}`);
     } catch (error) {
       console.error("❌ Ошибка при сохранении завершения лекции:", error.response?.data || error.message);
