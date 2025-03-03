@@ -3,18 +3,19 @@ import BlockItem from "../../components/Main/BlockItem";
 import axios from "axios";
 import "./index.scss";
 
-const API_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
-const LECTURES_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures";
+const API_URL =
+  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
+const LECTURES_URL =
+  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures";
 
 const MainPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [progress, setProgress] = useState({});
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [lecturesStatus, setLecturesStatus] = useState({});
-  const [visitedBlocks, setVisitedBlocks] = useState(new Set()); // Для отслеживания посещенных блоков
+  const [visitedBlocks, setVisitedBlocks] = useState(new Set());
 
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!userId) {
@@ -26,7 +27,7 @@ const MainPage = () => {
 
   const fetchBlocks = async () => {
     try {
-      const { data: blocksData } = await axios.get(API_URL, getHeaders());
+      const { data: blocksData } = await axios.get(API_URL);
       const progressData = {};
       const lectureStatusData = {};
       const visitedSet = new Set();
@@ -53,7 +54,9 @@ const MainPage = () => {
 
   const fetchBlockLectures = async (blockId) => {
     try {
-      const response = await axios.get(`${LECTURES_URL}/user/${userId}/block/${blockId}`, getHeaders());
+      const response = await axios.get(
+        `${LECTURES_URL}/user/${userId}/block/${blockId}`
+      );
       let lectures = response.data;
 
       if (!Array.isArray(lectures)) {
@@ -73,7 +76,7 @@ const MainPage = () => {
   };
 
   const calculateProgress = (lectures) => {
-    const passedLectures = lectures.filter(lecture => lecture.passed).length;
+    const passedLectures = lectures.filter((lecture) => lecture.passed).length;
     return lectures.length > 0 ? (passedLectures / lectures.length) * 100 : 0;
   };
 
@@ -85,17 +88,13 @@ const MainPage = () => {
     }
 
     setSelectedBlock(blockId);
-    setVisitedBlocks(prev => new Set(prev).add(blockId)); // Помечаем блок как посещенный
+    setVisitedBlocks((prev) => new Set(prev).add(blockId)); // Помечаем блок как посещенный
 
     try {
-      await axios.post(`${API_URL}/${blockId}/user/${userId}`, {}, getHeaders());
+      await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
     } catch (err) {
       console.error("Błąd rekordu wizyty w bloku:", err.message);
     }
-  };
-
-  const getHeaders = () => {
-    return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
   };
 
   return (

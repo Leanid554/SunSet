@@ -17,16 +17,8 @@ const VideoPlayer = React.forwardRef((props, ref) => {
 
     const fetchLectureDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("Ошибка: Необходим токен для доступа.");
-          setLoading(false);
-          return;
-        }
-
         const response = await axios.get(
-          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`
         );
 
         setSelectedLecture(response.data);
@@ -46,10 +38,17 @@ const VideoPlayer = React.forwardRef((props, ref) => {
   if (!selectedLecture) return <p>Nie znaleziono wykładu.</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       <h1>{selectedLecture.title}</h1>
       {selectedLecture.videoUrl ? (
-        <video ref={ref} {...props} style={{ width: "50%", display: "block" }} controls>
+        <video
+          ref={ref}
+          {...props}
+          style={{ width: "50%", display: "block" }}
+          controls
+        >
           <source
             src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
             type="video/mp4"
