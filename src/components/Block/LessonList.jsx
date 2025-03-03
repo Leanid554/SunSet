@@ -6,10 +6,10 @@ function LessonList({ lessons, onLectureClick }) {
   return (
     <div className="block-container block-height">
       <div className="block-header-row">
-        <div className="block-label">Название</div>
-        <div className="position-label">Позиция</div>
-        <div className="progress-label">Прогресс</div>
-        <div className="access-label">Доступ</div>
+        <div className="block-label">Tytuł</div>
+        <div className="position-label">Pozycja</div>
+        <div className="progress-label">Progress</div>
+        <div className="access-label">Dostęp</div>
       </div>
 
       <div className="video-list-container">

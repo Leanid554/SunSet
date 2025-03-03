@@ -9,7 +9,7 @@ function Block({ videos, mainPath = "/main", onLectureClick }) {
       <LessonList lessons={videos} onLectureClick={onLectureClick} />
 
       <div className="back-button-container">
-        <Link to={mainPath} className="back-button">Назад к блокам</Link>
+        <Link to={mainPath} className="back-button">Powrót do bloków</Link>
       </div>
     </div>
   );

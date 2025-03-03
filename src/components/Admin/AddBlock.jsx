@@ -35,15 +35,15 @@ const AddBlock = ({ blocks, setBlocks }) => {
 
   return (
     <div className="admin-section">
-      <h3>📂 Добавить новый блок</h3>
+      <h3>📂 Dodaj nowy blok</h3>
       <input
         type="text"
-        placeholder="Название блока"
+        placeholder="Nazwa bloku"
         value={newBlockName}
         onChange={(e) => setNewBlockName(e.target.value)}
       />
       <button onClick={addBlock} disabled={loading}>
-        {loading ? "Добавление..." : "➕ Добавить"}
+        {loading ? "Dodatek..." : "➕ Dodać"}
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

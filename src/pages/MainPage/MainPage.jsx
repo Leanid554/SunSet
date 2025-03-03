@@ -17,7 +17,7 @@ const MainPage = () => {
 
   useEffect(() => {
     if (!userId) {
-      console.error("❌ Ошибка: userId отсутствует в localStorage!");
+      console.error("Błąd: brak identyfikatora użytkownika w localStorage!");
       return;
     }
     fetchBlocks();
@@ -39,19 +39,19 @@ const MainPage = () => {
       setProgress(progressData);
       setLecturesStatus(lectureStatusData);
     } catch (err) {
-      console.error("❌ Ошибка загрузки блоков:", err.message);
+      console.error("Błąd ładowania bloku:", err.message);
     }
   };
 
   const fetchBlockLectures = async (blockId) => {
     try {
-      console.log(`📌 Запрос к API: ${LECTURES_URL}/user/${userId}/block/${blockId}`);
+      console.log(`Żądanie API: ${LECTURES_URL}/user/${userId}/block/${blockId}`);
 
       const response = await axios.get(`${LECTURES_URL}/user/${userId}/block/${blockId}`, getHeaders());
       let lectures = response.data;
 
       if (!Array.isArray(lectures) || lectures.length === 0) {
-        console.warn(`⚠️ Лекций для блока ${blockId} нет или API вернул неверный формат.`);
+        console.warn(`Nie ma odczytów dla bloku ${blockId} lub interfejs API zwrócił nieprawidłowy format.`);
         return [];
       }
 
@@ -65,7 +65,7 @@ const MainPage = () => {
           );
 
           lectures[i].passed = progressResponse.data.passed || false;
-          console.log(`📌 Лекция ID: ${lectures[i].id} | Пройдено: ${lectures[i].passed}`);
+          console.log(` ID wykładu: ${lectures[i].id} | Przyjęto: ${lectures[i].passed}`);
 
           // Если текущая лекция пройдена, разблокируем следующую
           if (lectures[i].passed && lectures[i + 1]) {
@@ -74,14 +74,14 @@ const MainPage = () => {
             lectures[i].locked = !lectures[i - 1].passed;
           }
         } catch (progressError) {
-          console.error(`❌ Ошибка проверки статуса лекции ${lectures[i].id}:`, progressError.response?.data || progressError.message);
+          console.error(`Błąd sprawdzania statusu lekcji ${lectures[i].id}:`, progressError.response?.data || progressError.message);
           lectures[i].passed = false;
         }
       }
 
       return lectures;
     } catch (error) {
-      console.error("❌ Ошибка загрузки лекций:", {
+      console.error("Błąd pobierania wykładów:", {
         status: error.response?.status,
         message: error.message,
         details: error.response?.data,
@@ -100,7 +100,7 @@ const MainPage = () => {
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {}, getHeaders());
     } catch (err) {
-      console.error("❌ Ошибка записи посещения блока:", err.message);
+      console.error(" Błąd rekordu wizyty w bloku:", err.message);
     }
   };
 
@@ -112,10 +112,10 @@ const MainPage = () => {
     <div className="main-page">
       <div className="block-container">
         <div className="block-header-row">
-          <div className="block-label">Название</div>
-          <div className="progress-label">Прогресс</div>
+          <div className="block-label">Tytuł</div>
+          <div className="progress-label">Progress</div>
           <div className="percentage-label">%</div>
-          <div className="dostep-label">Доступ</div>
+          <div className="dostep-label">Dostęp</div>
         </div>
 
         {blocks.map((block, index) => {

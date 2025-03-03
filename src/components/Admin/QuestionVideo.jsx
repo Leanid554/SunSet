@@ -27,19 +27,19 @@ const QuestionVideo = ({ lectureId }) => {
 
     try {
       const response = await axios.post(`${API_BASE_URL}/questions`, questionData);
-      alert("Вопрос успешно добавлен!");
+      alert("Pytanie zostało pomyślnie dodane!");
     } catch (error) {
       console.error("Ошибка при добавлении вопроса:", error);
-      alert("Ошибка при добавлении вопроса");
+      alert("Błąd podczas dodawania pytania");
     }
   };
 
   return (
     <div>
-      <h3>Добавить вопрос к лекции</h3>
+      <h3>Dodaj pytanie do wykładu</h3>
       <input
         type="text"
-        placeholder="Введите вопрос"
+        placeholder="Wprowadź pytanie"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
       />
@@ -47,25 +47,25 @@ const QuestionVideo = ({ lectureId }) => {
         <input
           key={index}
           type="text"
-          placeholder={`Опция ${index + 1}`}
+          placeholder={`Opcja ${index + 1}`}
           value={option}
           onChange={(e) => handleOptionChange(index, e.target.value)}
         />
       ))}
       <input
         type="text"
-        placeholder="Правильный ответ"
+        placeholder="Prawidłowa odpowiedź"
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />
       {/* Добавляем поле для времени в секундах */}
       <input
         type="number"
-        placeholder="Время в секундах"
+        placeholder="Czas w sekundach"
         value={timeInSeconds}
         onChange={(e) => setTimeInSeconds(parseInt(e.target.value) || 0)} // Преобразуем в целое число
       />
-      <button onClick={handleSubmit}>Добавить вопрос</button>
+      <button onClick={handleSubmit}>Dodaj pytanie</button>
     </div>
   );
 };

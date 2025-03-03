@@ -11,7 +11,7 @@ const UserStats = ({ users }) => {
 
   const fetchStats = async () => {
     if (!selectedEmail) {
-      alert("Выберите пользователя!");
+      alert("Wybierz użytkownika!");
       return;
     }
 
@@ -35,13 +35,13 @@ const UserStats = ({ users }) => {
 
   return (
     <div className="user-stats">
-      <h3>📊 Статистика пользователя</h3>
+      <h3>📊 Statystyka użytkowników</h3>
 
       {/* Выбор пользователя */}
       <label>
-        Выберите пользователя:
+      Wybierz użytkownika:
         <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)}>
-          <option value="">-- Выберите --</option>
+          <option value="">-- Wybierz --</option>
           {users.map((user) => (
             <option key={user.id} value={user.email}>
               {user.email}
@@ -49,47 +49,47 @@ const UserStats = ({ users }) => {
           ))}
         </select>
       </label>
-      <button onClick={fetchStats}>📩 Получить статистику</button>
+      <button onClick={fetchStats}>📩 Uzyskaj statystyki</button>
 
       {/* Статус загрузки и ошибки */}
-      {loading && <p>Загрузка...</p>}
+      {loading && <p>Ładowanie...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* Отображение статистики */}
       {stats && (
         <div className="stats-data">
-          <h4>📅 Визиты:</h4>
+          <h4>📅 Wizyty:</h4>
           <ul>
             {stats.visits.map((visit, index) => (
               <li key={index}>
-                Вход: {new Date(visit.entryTime).toLocaleString()} | Выход: {visit.exitTime ? new Date(visit.exitTime).toLocaleString() : "Еще в системе"}
+                Wejście: {new Date(visit.entryTime).toLocaleString()} | Выход: {visit.exitTime ? new Date(visit.exitTime).toLocaleString() : "Nadal w systemie"}
               </li>
             ))}
           </ul>
 
-          <h4>📦 Блоки:</h4>
+          <h4>📦 Bloki:</h4>
           <ul>
             {stats.blockVisits.map((block) => (
               <li key={block.blockId}>
-                {block.block.title} (Посещений: {block.count})
+                {block.block.title} (Wizyty: {block.count})
               </li>
             ))}
           </ul>
 
-          <h4>📚 Лекции:</h4>
+          <h4>📚 Wykłady:</h4>
           <ul>
             {stats.lectureVisits.map((lecture) => (
               <li key={lecture.lectureId}>
-                {lecture.lecture.title} (Посещений: {lecture.count})
+                {lecture.lecture.title} (Wizyty:{lecture.count})
               </li>
             ))}
           </ul>
 
-          <h4>✅ Прогресс:</h4>
+          <h4>✅ Progress:</h4>
           <ul>
             {stats.lectureProgress.map((progress) => (
               <li key={progress.lectureId}>
-                {progress.lecture.title} - {progress.passed ? "Пройдено" : "Не пройдено"} (Попыток: {progress.attempts})
+                {progress.lecture.title} - {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby: {progress.attempts})
               </li>
             ))}
           </ul>

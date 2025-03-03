@@ -47,7 +47,7 @@ const AddLecture = ({ lectures, setLectures }) => {
 
   return (
     <div className="admin-section">
-      <h3>📖 Добавить лекцию</h3>
+      <h3>📖 Dodaj wykład</h3>
       
       {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -55,7 +55,7 @@ const AddLecture = ({ lectures, setLectures }) => {
         value={newLecture.blockId}
         onChange={(e) => setNewLecture({ ...newLecture, blockId: e.target.value })}
       >
-        <option value="">Выберите блок</option>
+        <option value="">Wybierz blok</option>
         {blocks.length > 0 ? (
           blocks.map((block) => (
             <option key={block.id} value={block.id}>
@@ -63,19 +63,19 @@ const AddLecture = ({ lectures, setLectures }) => {
             </option>
           ))
         ) : (
-          <option disabled>Загрузка блоков...</option>
+          <option disabled>Ładowanie bloków...</option>
         )}
       </select>
 
       <input
         type="text"
-        placeholder="Название лекции"
+        placeholder="Tytuł wykładu"
         value={newLecture.title}
         onChange={(e) => setNewLecture({ ...newLecture, title: e.target.value })}
       />
 
       <button onClick={addLecture} disabled={loading}>
-        {loading ? "Добавление..." : "➕ Добавить"}
+      {loading ? "Dodatek..." : "➕ Dodać"}
       </button>
     </div>
   );

@@ -41,23 +41,23 @@ const VideoPlayer = React.forwardRef((props, ref) => {
     fetchLectureDetails();
   }, [id]);
 
-  if (loading) return <p>Загрузка видео...</p>;
+  if (loading) return <p>Pobieranie wideo....</p>;
   if (error) return <p>{error}</p>;
-  if (!selectedLecture) return <p>Лекция не найдена.</p>;
+  if (!selectedLecture) return <p>Nie znaleziono wykładu.</p>;
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <h1>{selectedLecture.title}</h1>
       {selectedLecture.videoUrl ? (
-        <video ref={ref} {...props} width="600" controls>
+        <video ref={ref} {...props} style={{ width: "50%", display: "block" }} controls>
           <source
             src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
             type="video/mp4"
           />
-          Ваш браузер не поддерживает видео.
+          Twoja przeglądarka nie obsługuje wideo.
         </video>
       ) : (
-        <p>Видео не загружено.</p>
+        <p>Nie przesłano żadnego materiału wideo.</p>
       )}
     </div>
   );

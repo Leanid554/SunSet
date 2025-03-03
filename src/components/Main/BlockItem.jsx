@@ -14,7 +14,7 @@ const BlockItem = ({ block, blockProgress = 0, isEnabled = true }) => {
           alert("Этот блок ещё не доступен! 🔒");
         }
       }}
-      title={isEnabled ? `Перейти в ${block.title}` : "Блок закрыт 🔒"}
+      title={isEnabled ? `Przejdź do ${block.title}` : "Blok jest zamknięty 🔒"}
     >
       <div className="block-content">
         <div className="block-row">

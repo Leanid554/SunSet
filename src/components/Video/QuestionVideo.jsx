@@ -85,7 +85,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
       {activeQuestion && (
         <div className="question-modal">
           <div className="modal-content">
-            <p><strong>Вопрос:</strong> {activeQuestion.question}</p>
+            <p><strong>Pytanie:</strong> {activeQuestion.question}</p>
             <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
                 <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>

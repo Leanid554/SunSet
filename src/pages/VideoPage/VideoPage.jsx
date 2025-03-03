@@ -73,7 +73,7 @@ function VideoPage() {
 
   return (
     <div className="video-page">
-      <VideoPlayer ref={videoRef} />
+      <VideoPlayer ref={videoRef} className="video-center" />
       <QuestionVideo 
         lectureId={id} 
         videoRef={videoRef} 
@@ -84,11 +84,11 @@ function VideoPage() {
       {isVideoCompleted && (
         correctAnswers >= 2 ? (
           <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
-            ✅ Пройти
+            ✅ Zaliczone
           </button>
         ) : (
           <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
-            ❌ Не пройдено
+            ❌ Nie zaliczone
           </button>
         )
       )}

@@ -45,18 +45,18 @@ const AddUser = ({ users, setUsers }) => {
 
   return (
     <div className="admin-section">
-      <h3>👤 Добавить пользователя</h3>
-      <input type="text" name="name" placeholder="Имя" value={newUser.name} onChange={handleChange} />
+      <h3>👤 Dodaj użytkownika</h3>
+      <input type="text" name="name" placeholder="Imie" value={newUser.name} onChange={handleChange} />
       <input type="email" name="email" placeholder="E-mail" value={newUser.email} onChange={handleChange} />
-      <input type="password" name="password" placeholder="Пароль" value={newUser.password} onChange={handleChange} />
+      <input type="password" name="password" placeholder="Hasło" value={newUser.password} onChange={handleChange} />
 
-      <label>Выберите роль:</label>
+      <label>Wybierz rolę:</label>
       <select name="role" value={newUser.role} onChange={handleChange}>
-        <option value="użytkownik">użytkownik (Пользователь)</option>
-        <option value="administrator">administrator (Администратор)</option>
+        <option value="użytkownik">użytkownik (Użytkownik)</option>
+        <option value="administrator">administrator (Administrator)</option>
       </select>
 
-      <button onClick={addUser} disabled={loading}>{loading ? "Добавление..." : "➕ Добавить"}</button>
+      <button onClick={addUser} disabled={loading}>{loading ? "Dodatek..." : "➕ Dodać"}</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

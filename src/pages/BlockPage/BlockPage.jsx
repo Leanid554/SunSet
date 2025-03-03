@@ -55,8 +55,8 @@ function BlockPages() {
 
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Ошибка загрузки лекций");
-        console.error("Ошибка:", err.response?.data || err.message);
+        setError("❌ Błąd pobierania wykładów");
+        console.error("Błąd:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
@@ -65,7 +65,7 @@ function BlockPages() {
     fetchVideos();
   }, [id, blockId, userId, token]);
 
-  if (loading) return <p>⏳ Загрузка...</p>;
+  if (loading) return <p>⏳ Ładowanie...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return <Block videos={videos} mainPath="/main" />;
