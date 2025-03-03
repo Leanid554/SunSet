@@ -11,6 +11,7 @@ const MainPage = () => {
   const [progress, setProgress] = useState({});
   const [selectedBlock, setSelectedBlock] = useState(null);
   const [lecturesStatus, setLecturesStatus] = useState({});
+  const [visitedBlocks, setVisitedBlocks] = useState(new Set()); // Для отслеживания посещенных блоков
 
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
@@ -28,16 +29,23 @@ const MainPage = () => {
       const { data: blocksData } = await axios.get(API_URL, getHeaders());
       const progressData = {};
       const lectureStatusData = {};
+      const visitedSet = new Set();
 
       for (const block of blocksData) {
         const lectures = await fetchBlockLectures(block.id);
         progressData[block.id] = calculateProgress(lectures);
         lectureStatusData[block.id] = lectures;
+
+        // Если у блока есть хоть один прогресс, считаем его посещенным
+        if (progressData[block.id] > 0) {
+          visitedSet.add(block.id);
+        }
       }
 
       setBlocks(blocksData);
       setProgress(progressData);
       setLecturesStatus(lectureStatusData);
+      setVisitedBlocks(visitedSet);
     } catch (err) {
       console.error("Błąd ładowania bloku:", err.message);
     }
@@ -45,38 +53,12 @@ const MainPage = () => {
 
   const fetchBlockLectures = async (blockId) => {
     try {
-      console.log(`Żądanie API: ${LECTURES_URL}/user/${userId}/block/${blockId}`);
-
       const response = await axios.get(`${LECTURES_URL}/user/${userId}/block/${blockId}`, getHeaders());
       let lectures = response.data;
 
-      if (!Array.isArray(lectures) || lectures.length === 0) {
-        console.warn(`Nie ma odczytów dla bloku ${blockId} lub interfejs API zwrócił nieprawidłowy format.`);
+      if (!Array.isArray(lectures)) {
+        console.warn(`Nieprawidłowy format odpowiedzi dla bloku ${blockId}.`);
         return [];
-      }
-
-      // 2️⃣ Проверяем статус каждой лекции
-      for (let i = 0; i < lectures.length; i++) {
-        try {
-          const progressResponse = await axios.post(
-            `${LECTURES_URL}/${lectures[i].id}/complete/${userId}`,
-            {}, // Пустое тело запроса
-            getHeaders()
-          );
-
-          lectures[i].passed = progressResponse.data.passed || false;
-          console.log(` ID wykładu: ${lectures[i].id} | Przyjęto: ${lectures[i].passed}`);
-
-          // Если текущая лекция пройдена, разблокируем следующую
-          if (lectures[i].passed && lectures[i + 1]) {
-            lectures[i + 1].locked = false;
-          } else if (i > 0) {
-            lectures[i].locked = !lectures[i - 1].passed;
-          }
-        } catch (progressError) {
-          console.error(`Błąd sprawdzania statusu lekcji ${lectures[i].id}:`, progressError.response?.data || progressError.message);
-          lectures[i].passed = false;
-        }
       }
 
       return lectures;
@@ -96,11 +78,19 @@ const MainPage = () => {
   };
 
   const handleBlockClick = async (blockId) => {
+    // Если блок уже посещен, не отправляем запрос
+    if (visitedBlocks.has(blockId)) {
+      console.warn(`Blok ${blockId} już był odwiedzony, pomijam zapis.`);
+      return;
+    }
+
     setSelectedBlock(blockId);
+    setVisitedBlocks(prev => new Set(prev).add(blockId)); // Помечаем блок как посещенный
+
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {}, getHeaders());
     } catch (err) {
-      console.error(" Błąd rekordu wizyty w bloku:", err.message);
+      console.error("Błąd rekordu wizyty w bloku:", err.message);
     }
   };
 

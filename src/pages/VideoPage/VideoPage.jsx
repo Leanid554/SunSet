@@ -48,17 +48,14 @@ function VideoPage() {
   const handleLectureComplete = async (passed) => {
     try {
       const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
+   
 
-      if (!userId || !token) {
-        setError("Ошибка: пользователь не авторизован!");
-        return;
-      }
+     
 
       await axios.post(
         `${API_BASE_URL}/lectures/${id}/complete/${userId}`,
-        { passed },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { "passed" : isVideoCompleted },
+     
       );
 
       console.log(`✅ Лекция ${id} завершена. Статус: ${passed}`);

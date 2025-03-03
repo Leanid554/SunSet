@@ -20,7 +20,7 @@ function BlockPages() {
     const fetchVideos = async () => {
       try {
         // 1️⃣ Получаем список лекций
-        const response = await axios.get(`${API_BASE_URL}/lectures/user/${id}/block/${blockId}`, {
+        const response = await axios.get(`${API_BASE_URL}/lectures/user/${userId}/block/${blockId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
