@@ -8,7 +8,7 @@ function LessonList({ lessons, onLectureClick }) {
       <div className="block-header-row">
         <div className="block-label">Tytuł</div>
         <div className="position-label">Pozycja</div>
-        <div className="progress-label">Progress</div>
+        {/* <div className="progress-label">Progress</div> */}
         <div className="access-label">Dostęp</div>
       </div>
 
@@ -21,7 +21,7 @@ function LessonList({ lessons, onLectureClick }) {
                   <div className="block-row">
                     <div className="block-title">{video.title}</div>
                     <div className="position1">{video.position || "Call-Center"}</div>
-                    <span className="progress-text">{video.progress}%</span>
+                    {/* <span className="progress-text">{video.progress}%</span> */}
                     <span className="access-text">🔒</span>
                   </div>
                 </div>
@@ -32,7 +32,7 @@ function LessonList({ lessons, onLectureClick }) {
                   <div className="block-row">
                     <div className="block-title">{video.title}</div>
                     <div className="position1">{video.position || "Call-Center"}</div>
-                    <span className="progress-text">{video.progress}%</span>
+                    {/* <span className="progress-text">{video.progress}%</span> */}
                     <span className="access-text">🔓</span>
                   </div>
                 </div>

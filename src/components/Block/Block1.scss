@@ -22,11 +22,14 @@
   z-index: 10; 
   padding-top: 10px;
   .progress-label{
-    margin-left: 0px;
+    margin-left: 50px;
   }
   .access-label{
     margin-right: 40px;
   }
+  .position-label{
+    padding-right: 40px;
+}
 
 }
 
@@ -39,9 +42,7 @@
 
  
 }
-.position-label{
-    padding-left: 20px;
-}
+
 .block-label{
   width: 240px;
 }

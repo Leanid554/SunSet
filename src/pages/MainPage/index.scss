@@ -12,6 +12,13 @@
   gap: 20px;
   width: 100%;
   max-width: 70%;
+ 
+  .percentage-label{
+    padding-right: 80px;
+  }
+  .progress-label{
+    padding-right: 100px;
+  }
 }
 
 .block-header-row {
@@ -29,12 +36,9 @@
   color: #777;
   padding-right: 10px;
 }
-.progress-label{
-  padding-right: 30px;
-}
-.percentage-label{
-  padding-right: 40px;
-}
+
+
+
 .block-item {
   display: flex;
   background-color: #ffffff;
