@@ -21,6 +21,13 @@
   background-color: #f5f5f5; 
   z-index: 10; 
   padding-top: 10px;
+  .progress-label{
+    margin-left: 0px;
+  }
+  .access-label{
+    margin-right: 40px;
+  }
+
 }
 
 .block-label,
@@ -29,8 +36,11 @@
 .access-label {
   font-size: 14px;
   color: #777;
-  min-width: 100px;
-  text-align: left;
+
+ 
+}
+.position-label{
+    padding-left: 20px;
 }
 .block-label{
   width: 240px;
