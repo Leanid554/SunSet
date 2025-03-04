@@ -5,95 +5,82 @@ import "./index.scss";
 
 const API_URL =
   "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
-const LECTURES_URL =
-  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures";
 
 const MainPage = () => {
   const [blocks, setBlocks] = useState([]);
   const [progress, setProgress] = useState({});
   const [selectedBlock, setSelectedBlock] = useState(null);
-  const [lecturesStatus, setLecturesStatus] = useState({});
   const [visitedBlocks, setVisitedBlocks] = useState(new Set());
 
-  const userId = localStorage.getItem("userId");
-
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
     if (!userId) {
-      console.error("Błąd: brak identyfikatora użytkownika w localStorage!");
+      console.error("Ошибка: userId не найден в localStorage!");
       return;
     }
-    fetchBlocks();
+
+    fetchBlocks(userId);
   }, []);
 
-  const fetchBlocks = async () => {
+  const fetchBlocks = async (userId) => {
     try {
-      const { data: blocksData } = await axios.get(API_URL);
+      const response = await axios.get(`${API_URL}/user/${userId}`);
+      if (!Array.isArray(response.data)) {
+        console.error("Ошибка: API вернуло не массив блоков!", response.data);
+        return;
+      }
+
+      const blocksData = response.data;
       const progressData = {};
-      const lectureStatusData = {};
       const visitedSet = new Set();
 
-      for (const block of blocksData) {
-        const lectures = await fetchBlockLectures(block.id);
+      blocksData.forEach((block) => {
+        const lectures = block.lectures || [];
         progressData[block.id] = calculateProgress(lectures);
-        lectureStatusData[block.id] = lectures;
 
-        // Если у блока есть хоть один прогресс, считаем его посещенным
         if (progressData[block.id] > 0) {
           visitedSet.add(block.id);
         }
-      }
+      });
 
       setBlocks(blocksData);
       setProgress(progressData);
-      setLecturesStatus(lectureStatusData);
       setVisitedBlocks(visitedSet);
     } catch (err) {
-      console.error("Błąd ładowania bloku:", err.message);
-    }
-  };
-
-  const fetchBlockLectures = async (blockId) => {
-    try {
-      const response = await axios.get(
-        `${LECTURES_URL}/user/${userId}/block/${blockId}`
-      );
-      let lectures = response.data;
-
-      if (!Array.isArray(lectures)) {
-        console.warn(`Nieprawidłowy format odpowiedzi dla bloku ${blockId}.`);
-        return [];
-      }
-
-      return lectures;
-    } catch (error) {
-      console.error("Błąd pobierania wykładów:", {
-        status: error.response?.status,
-        message: error.message,
-        details: error.response?.data,
-      });
-      return [];
+      console.error("Ошибка загрузки блоков:", err.message);
     }
   };
 
   const calculateProgress = (lectures) => {
-    const passedLectures = lectures.filter((lecture) => lecture.passed).length;
-    return lectures.length > 0 ? (passedLectures / lectures.length) * 100 : 0;
+    const passedLectures = lectures.filter(
+      (lecture) => lecture.isCompleted
+    ).length;
+    return lectures.length > 0
+      ? Math.floor((passedLectures / lectures.length) * 100)
+      : 0;
   };
 
   const handleBlockClick = async (blockId) => {
-    // Если блок уже посещен, не отправляем запрос
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      console.error("Ошибка: userId не найден в localStorage!");
+      return;
+    }
+
     if (visitedBlocks.has(blockId)) {
-      console.warn(`Blok ${blockId} już był odwiedzony, pomijam zapis.`);
+      console.warn(`Блок ${blockId} уже посещен, пропускаю.`);
       return;
     }
 
     setSelectedBlock(blockId);
-    setVisitedBlocks((prev) => new Set(prev).add(blockId)); // Помечаем блок как посещенный
+    setVisitedBlocks((prev) => new Set(prev).add(blockId));
 
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
     } catch (err) {
-      console.error("Błąd rekordu wizyty w bloku:", err.message);
+      console.error("Ошибка записи посещения блока:", err.message);
     }
   };
 
@@ -101,30 +88,34 @@ const MainPage = () => {
     <div className="main-page">
       <div className="block-container">
         <div className="block-header-row">
-          <div className="block-label">Tytuł</div>
-          <div className="progress-label">Progress</div>
+          <div className="block-label">Название</div>
+          <div className="progress-label">Прогресс</div>
           <div className="percentage-label">%</div>
-          <div className="dostep-label">Dostęp</div>
+          <div className="dostep-label">Доступ</div>
         </div>
 
-        {blocks.map((block, index) => {
-          const previousBlockId = blocks[index - 1]?.id;
-          const previousBlockPassed = previousBlockId
-            ? (progress[previousBlockId] || 0) >= 80
-            : true;
+        {blocks.length === 0 ? (
+          <p>Нет доступных блоков</p>
+        ) : (
+          blocks.map((block, index) => {
+            const previousBlockId = blocks[index - 1]?.id;
+            const previousBlockCompleted = previousBlockId
+              ? (progress[previousBlockId] || 0) === 100
+              : true; // Только первый блок доступен по умолчанию
 
-          return (
-            <BlockItem
-              key={block.id}
-              block={block}
-              blockProgress={progress[block.id] || 0}
-              lectures={lecturesStatus[block.id] || []}
-              isEnabled={index === 0 || previousBlockPassed}
-              isActive={selectedBlock === block.id}
-              onClick={() => handleBlockClick(block.id)}
-            />
-          );
-        })}
+            return (
+              <BlockItem
+                key={block.id}
+                block={block}
+                blockProgress={progress[block.id] || 0}
+                lectures={block.lectures || []}
+                isEnabled={index === 0 || previousBlockCompleted}
+                isActive={selectedBlock === block.id}
+                onClick={() => handleBlockClick(block.id)}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );
