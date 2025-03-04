@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL =
+  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
 
 const UserStats = ({ users }) => {
   const [selectedEmail, setSelectedEmail] = useState("");
@@ -33,14 +34,28 @@ const UserStats = ({ users }) => {
     }
   };
 
+  // Function to find the block for each lecture, assuming there's a relation
+  const getBlockForLecture = (lectureId, blockVisits) => {
+    for (const block of blockVisits) {
+      // Assuming that the lecture is part of the block
+      if (block.completed) {
+        return block.block.title;
+      }
+    }
+    return "Nie przypisano do żadnego bloku";
+  };
+
   return (
     <div className="user-stats">
       <h3>📊 Statystyka użytkowników</h3>
 
-      {/* Выбор пользователя */}
+      {/* Wybor użytkownika */}
       <label>
-      Wybierz użytkownika:
-        <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)}>
+        Wybierz użytkownika:
+        <select
+          value={selectedEmail}
+          onChange={(e) => setSelectedEmail(e.target.value)}
+        >
           <option value="">-- Wybierz --</option>
           {users.map((user) => (
             <option key={user.id} value={user.email}>
@@ -51,18 +66,21 @@ const UserStats = ({ users }) => {
       </label>
       <button onClick={fetchStats}>📩 Uzyskaj statystyki</button>
 
-      {/* Статус загрузки и ошибки */}
+      {/* Status загрузки i ошибки */}
       {loading && <p>Ładowanie...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Отображение статистики */}
+      {/* Wyświetlenie statystyk */}
       {stats && (
         <div className="stats-data">
           <h4>📅 Wizyty:</h4>
           <ul>
             {stats.visits.map((visit, index) => (
               <li key={index}>
-                Wejście: {new Date(visit.entryTime).toLocaleString()} | Выход: {visit.exitTime ? new Date(visit.exitTime).toLocaleString() : "Nadal w systemie"}
+                Wejście: {new Date(visit.entryTime).toLocaleString()} | Wyjście:{" "}
+                {visit.exitTime
+                  ? new Date(visit.exitTime).toLocaleString()
+                  : "Nadal w systemie"}
               </li>
             ))}
           </ul>
@@ -71,25 +89,20 @@ const UserStats = ({ users }) => {
           <ul>
             {stats.blockVisits.map((block) => (
               <li key={block.blockId}>
-                {block.block.title} (Wizyty: {block.count})
+                {block.block.title} (Wizyty: {block.count}) |{" "}
+                {block.completed ? "Zdany" : "Nie zdany"}
               </li>
             ))}
           </ul>
 
           <h4>📚 Wykłady:</h4>
           <ul>
-            {stats.lectureVisits.map((lecture) => (
-              <li key={lecture.lectureId}>
-                {lecture.lecture.title} (Wizyty:{lecture.count})
-              </li>
-            ))}
-          </ul>
-
-          <h4>✅ Progress:</h4>
-          <ul>
             {stats.lectureProgress.map((progress) => (
               <li key={progress.lectureId}>
-                {progress.lecture.title} - {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby: {progress.attempts})
+                {progress.lecture.title} -{" "}
+                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby:{" "}
+                {progress.attempts}) | Blok:{" "}
+                {getBlockForLecture(progress.lectureId, stats.blockVisits)}
               </li>
             ))}
           </ul>
