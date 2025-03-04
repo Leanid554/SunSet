@@ -25,8 +25,8 @@ const AddBlock = ({ blocks, setBlocks }) => {
       setBlocks([...blocks, newBlock]); // Добавляем блок с path
       setNewBlockName("");
     } catch (err) {
-      setError("Ошибка при добавлении блока");
-      console.error("Ошибка:", err);
+      setError("Błąd podczas dodawania bloku");
+      console.error("Błąd:", err);
     } finally {
       setLoading(false);
     }

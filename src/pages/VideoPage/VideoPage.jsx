@@ -57,8 +57,8 @@ function VideoPage() {
 
       navigate(`/blocks/${id}`);
     } catch (error) {
-      console.error("❌ Ошибка при сохранении завершения лекции:", error.response?.data || error.message);
-      setError("Ошибка при сохранении завершения лекции!");
+      console.error("❌ Błąd podczas zapisywania ukończenia lekcji:", error.response?.data || error.message);
+      setError("Błąd podczas zapisywania ukończenia lekcji!");
     }
   };
 

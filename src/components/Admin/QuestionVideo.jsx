@@ -29,7 +29,7 @@ const QuestionVideo = ({ lectureId }) => {
       const response = await axios.post(`${API_BASE_URL}/questions`, questionData);
       alert("Pytanie zostało pomyślnie dodane!");
     } catch (error) {
-      console.error("Ошибка при добавлении вопроса:", error);
+      console.error("Błąd podczas dodawania pytania:", error);
       alert("Błąd podczas dodawania pytania");
     }
   };

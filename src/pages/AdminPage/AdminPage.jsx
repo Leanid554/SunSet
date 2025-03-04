@@ -33,7 +33,7 @@ const AdminPage = () => {
       setUsers(response.data);
       localStorage.setItem("users", JSON.stringify(response.data));
     } catch (error) {
-      console.error("Ошибка при получении пользователей:", error);
+      console.error("Błąd podczas pobierania użytkowników:", error);
       const storedUsers = localStorage.getItem("users");
       if (storedUsers) {
         setUsers(JSON.parse(storedUsers));
@@ -46,7 +46,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
       setBlocks(response.data);
     } catch (error) {
-      console.error("Ошибка при получении блоков:", error);
+      console.error("Błąd podczas odbierania bloków:", error);
     }
   };
 
@@ -55,7 +55,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/lectures`);
       setLectures(response.data);
     } catch (error) {
-      console.error("Ошибка при получении лекций:", error);
+      console.error("Nie udalo sie otrzymac lekcje:", error);
     }
   };
 
@@ -63,10 +63,10 @@ const AdminPage = () => {
     try {
       await axios.delete(`${API_BASE_URL}/lectures/${lectureId}`);
       setLectures(lectures.filter((lecture) => lecture.id !== lectureId));
-      alert("Лекция успешно удалена");
+      alert("Lekcja usunieta");
     } catch (error) {
-      console.error("Ошибка при удалении лекции:", error);
-      alert("Ошибка при удалении лекции");
+      console.error("Blad przy usuniensciu Lekcji:", error);
+      alert("Blad przy usuniensciu Lekcji");
     }
   };
 
@@ -74,10 +74,10 @@ const AdminPage = () => {
     try {
       await axios.delete(`${API_BASE_URL}/blocks/${blockId}`);
       setBlocks(blocks.filter((block) => block.id !== blockId));
-      alert("Блок успешно удален");
+      alert("Blok zostało pomyślnie usunięte");
     } catch (error) {
-      console.error("Ошибка при удалении блока:", error);
-      alert("Ошибка при удалении блока");
+      console.error("Blad przy usuniensciu bloku:", error);
+      alert("Blad przy usuniensciu bloku");
     }
   };
 

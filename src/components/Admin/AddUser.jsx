@@ -21,7 +21,7 @@ const AddUser = ({ users, setUsers }) => {
 
   const addUser = async () => {
     if (!newUser.name || !newUser.email || !newUser.password) {
-      setError("Все поля обязательны!");
+      setError("Wszystkie pola są wymagane!");
       return;
     }
 
@@ -34,10 +34,10 @@ const AddUser = ({ users, setUsers }) => {
         localStorage.setItem("users", JSON.stringify(updatedUsers));
         setNewUser({ name: "", email: "", password: "", role: "użytkownik" });
       } else {
-        setError("Ошибка сервера.");
+        setError("Błąd serwera.");
       }
     } catch (error) {
-      setError("Ошибка при добавлении пользователя.");
+      setError("Błąd podczas dodawania użytkownika.");
     } finally {
       setLoading(false);
     }

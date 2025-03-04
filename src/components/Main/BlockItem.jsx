@@ -12,7 +12,7 @@ const BlockItem = ({ block, blockProgress = 0, isEnabled = true }) => {
       onClick={(e) => {
         if (!isEnabled) {
           e.preventDefault();
-          alert("Этот блок ещё не доступен! 🔒");
+          alert("Blok jest zamknięty🔒");
         }
       }}
       title={isEnabled ? `Przejdź do ${block.title}` : "Blok jest zamknięty 🔒"}

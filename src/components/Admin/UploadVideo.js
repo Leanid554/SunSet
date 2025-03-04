@@ -15,7 +15,7 @@ const UploadVideo = ({ lectureId }) => {
   // Обработчик загрузки видео
   const handleUpload = async () => {
     if (!video) {
-      alert("Выберите видео для загрузки.");
+      alert("Wybierz wideo do pobrania.");
       return;
     }
 
@@ -37,11 +37,11 @@ const UploadVideo = ({ lectureId }) => {
       );
 
       // Успешная загрузка
-      alert("Видео загружено успешно!");
+      alert("Wideo przesłane pomyślnie!");
     } catch (error) {
       // Обработка ошибок
-      console.error("Ошибка при загрузке видео:", error);
-      alert("Ошибка при загрузке видео");
+      console.error("Błąd podczas przesyłania wideo:", error);
+      alert("Błąd podczas przesyłania wideo");
     } finally {
       setUploading(false);
     }
@@ -51,7 +51,7 @@ const UploadVideo = ({ lectureId }) => {
     <div>
       <input type="file" accept="video/*" onChange={handleFileChange} />
       <button onClick={handleUpload} disabled={uploading}>
-        {uploading ? "Загрузка..." : "Загрузить видео"}
+        {uploading ? "Ładowanie..." : "Przesyłanie wideo"}
       </button>
     </div>
   );

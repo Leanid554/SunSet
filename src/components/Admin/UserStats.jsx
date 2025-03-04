@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./UserStats.css";
+
 
 const API_BASE_URL =
   "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
@@ -24,11 +26,11 @@ const UserStats = ({ users }) => {
         email: selectedEmail,
       });
 
-      console.log("Статистика пользователя:", response.data);
+      console.log("Statystyki użytkowników:", response.data);
       setStats(response.data);
     } catch (err) {
-      console.error("Ошибка при получении статистики:", err);
-      setError("Не удалось загрузить статистику.");
+      console.error("Błąd podczas pobierania statystyk:", err);
+      setError("Nie udało się załadować statystyk.");
     } finally {
       setLoading(false);
     }

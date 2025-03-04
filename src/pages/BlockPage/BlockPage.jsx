@@ -14,9 +14,9 @@ function BlockPages() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log(`🆔 Текущий пользователь ID: ${userId}`);
+    console.log(`🆔 Aktualny identyfikator użytkownika: ${userId}`);
     console.log(
-      `📚 Запрашиваем лекции для пользователя ID: ${userId}, Блок ID: ${blockId}`
+      `📚 Żądanie wykładów dla identyfikatora użytkownika: ${userId}, Block ID: ${blockId}`
     );
 
     const fetchVideos = async () => {
@@ -25,7 +25,7 @@ function BlockPages() {
           `${API_BASE_URL}/lectures/user/${userId}/block/${blockId}`
         );
 
-        console.log("✅ Полученные лекции:", response.data);
+        console.log("✅ Otrzymane wykłady:", response.data);
 
         let updatedVideos = response.data.map((lecture, index) => ({
           ...lecture,
@@ -48,8 +48,8 @@ function BlockPages() {
 
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Ошибка загрузки лекций");
-        console.error("Ошибка:", err.response?.data || err.message);
+        setError("❌ Błąd pobierania wykładów");
+        console.error("Błąd:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }

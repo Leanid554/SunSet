@@ -18,8 +18,8 @@ const AddLecture = ({ lectures, setLectures }) => {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
       setBlocks(response.data);
     } catch (err) {
-      console.error("Ошибка при загрузке блоков:", err);
-      setError("Не удалось загрузить блоки");
+      console.error("Błąd podczas ładowania bloków:", err);
+      setError("Nie udało się załadować bloków");
     }
   };
 
@@ -38,8 +38,8 @@ const AddLecture = ({ lectures, setLectures }) => {
       setLectures([...lectures, response.data]); // Добавляем новую лекцию в состояние
       setNewLecture({ blockId: "", title: "" });
     } catch (err) {
-      setError("Ошибка при добавлении лекции");
-      console.error("Ошибка:", err);
+      setError("Błąd podczas dodawania lekcji");
+      console.error("Błąd:", err);
     } finally {
       setLoading(false);
     }

@@ -69,12 +69,12 @@ function LoginPage() {
         }, 500);
       }
     } catch (error) {
-      console.error("Ошибка авторизации:", error);
+      console.error("Błąd autoryzacji:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
         server: error.message.includes("ERR_NETWORK")
-          ? "Ошибка сети. Попробуйте позже."
-          : error.response?.data?.message || "Неверный email или пароль.",
+          ? "Błąd sieci. Spróbuj ponownie później."
+          : error.response?.data?.message || "Nieprawidłowy adres e-mail lub hasło.",
       }));
       setLoading(false);
     }
@@ -129,7 +129,7 @@ export const decodeToken = (token) => {
   try {
     return jwtDecode(token);
   } catch (error) {
-    console.error("Ошибка декодирования токена:", error);
+    console.error("Błąd dekodowania tokena:", error);
     return null;
   }
 };

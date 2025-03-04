@@ -16,7 +16,7 @@ const MainPage = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      console.error("Ошибка: userId не найден в localStorage!");
+      console.error("Błąd: identyfikator użytkownika nie został znaleziony w localStorage!");
       return;
     }
 
@@ -27,7 +27,7 @@ const MainPage = () => {
     try {
       const response = await axios.get(`${API_URL}/user/${userId}`);
       if (!Array.isArray(response.data)) {
-        console.error("Ошибка: API вернуло не массив блоков!", response.data);
+        console.error("Błąd: API nie zwróciło tablicy bloków!", response.data);
         return;
       }
 
@@ -48,7 +48,7 @@ const MainPage = () => {
       setProgress(progressData);
       setVisitedBlocks(visitedSet);
     } catch (err) {
-      console.error("Ошибка загрузки блоков:", err.message);
+      console.error("Błąd ładowania bloku:", err.message);
     }
   };
 
@@ -65,12 +65,12 @@ const MainPage = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      console.error("Ошибка: userId не найден в localStorage!");
+      console.error("Błąd: identyfikator użytkownika nie został znaleziony w localStorage!");
       return;
     }
 
     if (visitedBlocks.has(blockId)) {
-      console.warn(`Блок ${blockId} уже посещен, пропускаю.`);
+      console.warn(`Block ${blockId} już odwiedziłem, pomijam.`);
       return;
     }
 
@@ -80,7 +80,7 @@ const MainPage = () => {
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
     } catch (err) {
-      console.error("Ошибка записи посещения блока:", err.message);
+      console.error("Błąd zapisu wizyty blokującej:", err.message);
     }
   };
 
