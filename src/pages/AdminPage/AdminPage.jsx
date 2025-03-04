@@ -90,7 +90,6 @@ const AdminPage = () => {
     <div className="admin-page">
       <h2>📌 Panel administratora</h2>
 
-      {/* Добавление */}
       <div className="dodawanie-container">
         <h3>🛠 Uzupełnienie</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
@@ -98,11 +97,9 @@ const AdminPage = () => {
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
-      {/* Управление */}
       <div className="zarzadzanie-container">
         <h3>⚙ Zarządzanie</h3>
 
-        {/* Блоки */}
         <div className="admin-section">
           <h3>📦 Bloki</h3>
           <button onClick={() => setBlocksVisible(!blocksVisible)}>
@@ -120,7 +117,6 @@ const AdminPage = () => {
           )}
         </div>
 
-        {/* Лекции */}
         <div className="admin-section">
           <h3>📚 Wykłady</h3>
           <button onClick={() => setLecturesVisible(!lecturesVisible)}>
@@ -130,20 +126,23 @@ const AdminPage = () => {
             <ul>
               {lectures.map((lecture) => (
                 <li key={lecture.id}>
-                  <strong>{lecture.title}</strong> (ID: {lecture.id}) | Block: {getBlockTitle(lecture.blockId)}
-                  <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
-                  <UploadVideo lectureId={lecture.id} />
-                  <button onClick={() => setSelectedLectureId(lecture.id)}>
-                  Dodaj pytania
+                  <button onClick={() => setSelectedLectureId(selectedLectureId === lecture.id ? null : lecture.id)}>
+                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"} {lecture.title}
                   </button>
-                  {selectedLectureId === lecture.id && <QuestionVideo lectureId={lecture.id} />}
+                  {selectedLectureId === lecture.id && (
+                    <div>
+                      <strong>{lecture.title}</strong> (ID: {lecture.id}) | Block: {getBlockTitle(lecture.blockId)}
+                      <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
+                      <UploadVideo lectureId={lecture.id} />
+                      <QuestionVideo lectureId={lecture.id} />
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>
           )}
         </div>
 
-        {/* Пользователи */}
         <div className="admin-section">
           <h3>👤 Użytkowniki</h3>
           <button onClick={() => setUsersVisible(!usersVisible)}>
@@ -152,7 +151,6 @@ const AdminPage = () => {
           {usersVisible && <UserList users={users} />}
         </div>
 
-        {/* Статистика пользователей */}
         <div className="admin-section">
           <h3>📊 Statystyki użytkownika</h3>
           <button onClick={() => setStatsVisible(!statsVisible)}>
