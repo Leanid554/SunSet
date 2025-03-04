@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import LoginForm from "../../components/Login/LoginForm";
+import { setUserId } from "../../store/userSlice";
 import "./index.scss";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -28,11 +31,11 @@ function LoginPage() {
       [name]: value,
     }));
 
-    setErrors({
-      ...errors,
+    setErrors((prevErrors) => ({
+      ...prevErrors,
       [name]: "",
       server: "",
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -53,9 +56,12 @@ function LoginPage() {
 
       if (response.status === 201) {
         const { accessToken } = response.data;
-
         setToken(accessToken);
-        console.log("Decoded Token:", decodeToken(accessToken));
+
+        const decoded = decodeToken(accessToken);
+        if (decoded?.sub) {
+          dispatch(setUserId(decoded.sub)); // Обновляем userId в Redux
+        }
 
         setTimeout(() => {
           setLoading(false);
@@ -64,18 +70,12 @@ function LoginPage() {
       }
     } catch (error) {
       console.error("Ошибка авторизации:", error);
-
-      if (error.message.includes("ERR_NETWORK")) {
-        setErrors({
-          ...errors,
-          server: "Ошибка сети. Попробуйте позже.",
-        });
-      } else {
-        setErrors({
-          ...errors,
-          server: error.response?.data?.message || "Неверный email или пароль.",
-        });
-      }
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        server: error.message.includes("ERR_NETWORK")
+          ? "Ошибка сети. Попробуйте позже."
+          : error.response?.data?.message || "Неверный email или пароль.",
+      }));
       setLoading(false);
     }
   };
@@ -102,31 +102,21 @@ export const setToken = (accessToken) => {
   if (accessToken) {
     localStorage.setItem("accessToken", accessToken);
 
-    // Расшифровка токена и сохранение userId
     const decoded = decodeToken(accessToken);
-    if (decoded && decoded.sub) {
+    if (decoded?.sub) {
       localStorage.setItem("userId", decoded.sub);
     }
   }
 };
 
-// Получение access-токена
-export const getAccessToken = () => {
-  return localStorage.getItem("accessToken");
-};
+export const getAccessToken = () => localStorage.getItem("accessToken");
+export const getUserId = () => localStorage.getItem("userId");
 
-// Получение userId
-export const getUserId = () => {
-  return localStorage.getItem("userId");
-};
-
-// Удаление токенов и userId
 export const removeTokens = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("userId");
 };
 
-// Проверка аутентификации
 export const isAuthenticated = () => {
   const token = getAccessToken();
   if (!token) return false;
@@ -135,7 +125,6 @@ export const isAuthenticated = () => {
   return decoded && decoded.exp * 1000 > Date.now();
 };
 
-// Функция расшифровки токена
 export const decodeToken = (token) => {
   try {
     return jwtDecode(token);

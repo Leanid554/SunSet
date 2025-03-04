@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import axios from "axios";
 import { store } from "./store/store";
-import { setUserId } from "./store/userSlice";
-import { incrementVisit } from "./store/visitsSlice";
 import Navbar from "./components/Navbar/Navbar";
 import MainPage from "./pages/MainPage/MainPage";
 import reportWebVitals from "./reportWebVitals";
@@ -20,16 +16,16 @@ import BlockPage from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import LoginPage from "./pages/Login/LoginPage";
+import WebSocket from "./components/WebSocket";
 
 function App() {
   const userId = useSelector((state) => state.user.userId);
+  const visitCount = useSelector((state) => state.visits.count);
 
   return (
     <>
-      <Navbar
-        count={useSelector((state) => state.visits.count)}
-        userId={userId}
-      />
+      {userId && <WebSocket />}
+      <Navbar count={visitCount} userId={userId} />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
