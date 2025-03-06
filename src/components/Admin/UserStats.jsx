@@ -3,8 +3,7 @@ import axios from "axios";
 import "./UserStats.css";
 
 
-const API_BASE_URL =
-  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 const UserStats = ({ users }) => {
   const [selectedEmail, setSelectedEmail] = useState("");

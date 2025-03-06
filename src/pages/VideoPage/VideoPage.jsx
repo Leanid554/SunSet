@@ -6,7 +6,7 @@ import QuestionVideo from "../../components/Video/QuestionVideo";
 import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
 
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 function VideoPage() {
   const { id } = useParams();

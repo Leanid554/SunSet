@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Block from "../../components/Block/Block";
 
-const API_BASE_URL =
-  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 function BlockPages() {
   const { id, blockId } = useParams();

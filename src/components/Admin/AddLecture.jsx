@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 const AddLecture = ({ lectures, setLectures }) => {
   const [blocks, setBlocks] = useState([]); 

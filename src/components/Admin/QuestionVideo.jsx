@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 // Добавим API_BASE_URL в этот компонент
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 const QuestionVideo = ({ lectureId }) => {
   const [question, setQuestion] = useState("");

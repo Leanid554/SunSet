@@ -3,8 +3,7 @@ import BlockItem from "../../components/Main/BlockItem";
 import axios from "axios";
 import "./index.scss";
 
-const API_URL =
-  "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/blocks";
+const API_URL = process.env.BASE_URL;
 
 const MainPage = () => {
   const [blocks, setBlocks] = useState([]);

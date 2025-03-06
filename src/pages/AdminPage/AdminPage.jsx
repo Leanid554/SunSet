@@ -9,7 +9,7 @@ import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
 import UserStats from "../../components/Admin/UserStats";
 import "./index.scss";
 
-const API_BASE_URL = "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me";
+const API_BASE_URL = process.env.BASE_URL;
 
 const AdminPage = () => {
   const [blocks, setBlocks] = useState([]);
