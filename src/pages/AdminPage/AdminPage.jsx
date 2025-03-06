@@ -9,7 +9,7 @@ import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
 import UserStats from "../../components/Admin/UserStats";
 import "./index.scss";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const AdminPage = () => {
   const [blocks, setBlocks] = useState([]);
@@ -31,13 +31,9 @@ const AdminPage = () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/users`);
       setUsers(response.data);
-      localStorage.setItem("users", JSON.stringify(response.data));
     } catch (error) {
       console.error("Błąd podczas pobierania użytkowników:", error);
-      const storedUsers = localStorage.getItem("users");
-      if (storedUsers) {
-        setUsers(JSON.parse(storedUsers));
-      }
+      // No need to store users in localStorage, we can just skip it
     }
   };
 
@@ -93,7 +89,11 @@ const AdminPage = () => {
       <div className="dodawanie-container">
         <h3>🛠 Uzupełnienie</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
-        <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
+        <AddLecture
+          blocks={blocks}
+          lectures={lectures}
+          setLectures={setLectures}
+        />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
@@ -126,13 +126,23 @@ const AdminPage = () => {
             <ul>
               {lectures.map((lecture) => (
                 <li key={lecture.id}>
-                  <button onClick={() => setSelectedLectureId(selectedLectureId === lecture.id ? null : lecture.id)}>
-                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"} {lecture.title}
+                  <button
+                    onClick={() =>
+                      setSelectedLectureId(
+                        selectedLectureId === lecture.id ? null : lecture.id
+                      )
+                    }
+                  >
+                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"}{" "}
+                    {lecture.title}
                   </button>
                   {selectedLectureId === lecture.id && (
                     <div>
-                      <strong>{lecture.title}</strong> (ID: {lecture.id}) | Block: {getBlockTitle(lecture.blockId)}
-                      <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
+                      <strong>{lecture.title}</strong> (ID: {lecture.id}) |
+                      Block: {getBlockTitle(lecture.blockId)}
+                      <button onClick={() => deleteLecture(lecture.id)}>
+                        Usuń
+                      </button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                     </div>

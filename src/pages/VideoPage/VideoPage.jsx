@@ -6,7 +6,7 @@ import QuestionVideo from "../../components/Video/QuestionVideo";
 import NavigationButtons from "../../components/Video/NavigationButtons";
 import "./index.scss";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 function VideoPage() {
   const { id } = useParams();
@@ -57,7 +57,10 @@ function VideoPage() {
 
       navigate(`/blocks/${id}`);
     } catch (error) {
-      console.error("❌ Błąd podczas zapisywania ukończenia lekcji:", error.response?.data || error.message);
+      console.error(
+        "❌ Błąd podczas zapisywania ukończenia lekcji:",
+        error.response?.data || error.message
+      );
       setError("Błąd podczas zapisywania ukończenia lekcji!");
     }
   };
@@ -65,28 +68,36 @@ function VideoPage() {
   return (
     <div className="video-page">
       <VideoPlayer ref={videoRef} className="video-center" />
-      <QuestionVideo 
-        lectureId={id} 
-        videoRef={videoRef} 
-        onAnswerChange={handleAnswerChange} 
+      <QuestionVideo
+        lectureId={id}
+        videoRef={videoRef}
+        onAnswerChange={handleAnswerChange}
         onVideoCompleted={handleVideoCompleted}
       />
 
-      {isVideoCompleted && (
-        correctAnswers >= 2 ? (
-          <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
+      {isVideoCompleted &&
+        (correctAnswers >= 2 ? (
+          <button
+            className="complete-lecture-btn"
+            onClick={() => handleLectureComplete(true)}
+          >
             ✅ Zaliczone
           </button>
         ) : (
-          <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
+          <button
+            className="retry-lecture-btn"
+            onClick={() => handleLectureComplete(false)}
+          >
             ❌ Nie zaliczone
           </button>
-        )
-      )}
+        ))}
 
       {error && <div className="error-message">{error}</div>}
 
-      <NavigationButtons videoId={id} onNext={() => navigate(`/video/${+id + 1}`)} />
+      <NavigationButtons
+        videoId={id}
+        onNext={() => navigate(`/video/${+id + 1}`)}
+      />
     </div>
   );
 }

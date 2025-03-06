@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const AddBlock = ({ blocks, setBlocks }) => {
   const [newBlockName, setNewBlockName] = useState("");
@@ -10,18 +10,20 @@ const AddBlock = ({ blocks, setBlocks }) => {
 
   const addBlock = async () => {
     if (newBlockName.trim() === "") return;
-  
+
     setLoading(true);
     setError(null);
-  
+
     try {
-      const response = await axios.post(`${API_BASE_URL}/blocks`, { title: newBlockName });
-  
+      const response = await axios.post(`${API_BASE_URL}/blocks`, {
+        title: newBlockName,
+      });
+
       const newBlock = {
         ...response.data,
-        path: response.data.path || `/blocks/${response.data.id}` // Если path нет, создаём свой
+        path: response.data.path || `/blocks/${response.data.id}`, // Если path нет, создаём свой
       };
-  
+
       setBlocks([...blocks, newBlock]); // Добавляем блок с path
       setNewBlockName("");
     } catch (err) {
@@ -31,7 +33,6 @@ const AddBlock = ({ blocks, setBlocks }) => {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="admin-section">

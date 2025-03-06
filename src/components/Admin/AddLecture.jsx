@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const AddLecture = ({ lectures, setLectures }) => {
-  const [blocks, setBlocks] = useState([]); 
+  const [blocks, setBlocks] = useState([]);
   const [newLecture, setNewLecture] = useState({ blockId: "", title: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,12 +48,14 @@ const AddLecture = ({ lectures, setLectures }) => {
   return (
     <div className="admin-section">
       <h3>📖 Dodaj wykład</h3>
-      
+
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <select
         value={newLecture.blockId}
-        onChange={(e) => setNewLecture({ ...newLecture, blockId: e.target.value })}
+        onChange={(e) =>
+          setNewLecture({ ...newLecture, blockId: e.target.value })
+        }
       >
         <option value="">Wybierz blok</option>
         {blocks.length > 0 ? (
@@ -71,11 +73,13 @@ const AddLecture = ({ lectures, setLectures }) => {
         type="text"
         placeholder="Tytuł wykładu"
         value={newLecture.title}
-        onChange={(e) => setNewLecture({ ...newLecture, title: e.target.value })}
+        onChange={(e) =>
+          setNewLecture({ ...newLecture, title: e.target.value })
+        }
       />
 
       <button onClick={addLecture} disabled={loading}>
-      {loading ? "Dodatek..." : "➕ Dodać"}
+        {loading ? "Dodatek..." : "➕ Dodać"}
       </button>
     </div>
   );

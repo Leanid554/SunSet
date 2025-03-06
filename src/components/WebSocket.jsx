@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 const WebSocket = () => {
   const [status, setStatus] = useState("Connecting...");
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    const socket = io(
-      "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/",
-      {
-        query: { userId },
-      }
-    );
+    const socket = io(`${API_BASE_URL}`, {
+      query: { userId },
+    });
 
     socket.on("connect", () => {
       setStatus("Connected");

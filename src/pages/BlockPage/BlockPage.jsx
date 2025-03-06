@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Block from "../../components/Block/Block";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 function BlockPages() {
   const { id, blockId } = useParams();

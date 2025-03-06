@@ -3,7 +3,7 @@ import BlockItem from "../../components/Main/BlockItem";
 import axios from "axios";
 import "./index.scss";
 
-const API_URL = process.env.BASE_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const MainPage = () => {
   const [blocks, setBlocks] = useState([]);
@@ -15,7 +15,9 @@ const MainPage = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      console.error("Błąd: identyfikator użytkownika nie został znaleziony w localStorage!");
+      console.error(
+        "Błąd: identyfikator użytkownika nie został znaleziony w localStorage!"
+      );
       return;
     }
 
@@ -24,7 +26,7 @@ const MainPage = () => {
 
   const fetchBlocks = async (userId) => {
     try {
-      const response = await axios.get(`${API_URL}/user/${userId}`);
+      const response = await axios.get(`${API_URL}/blocks/user/${userId}`);
       if (!Array.isArray(response.data)) {
         console.error("Błąd: API nie zwróciło tablicy bloków!", response.data);
         return;
@@ -64,7 +66,9 @@ const MainPage = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      console.error("Błąd: identyfikator użytkownika nie został znaleziony w localStorage!");
+      console.error(
+        "Błąd: identyfikator użytkownika nie został znaleziony w localStorage!"
+      );
       return;
     }
 

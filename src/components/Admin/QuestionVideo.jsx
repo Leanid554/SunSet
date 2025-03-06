@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 // Добавим API_BASE_URL в этот компонент
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const QuestionVideo = ({ lectureId }) => {
   const [question, setQuestion] = useState("");
@@ -26,7 +26,10 @@ const QuestionVideo = ({ lectureId }) => {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/questions`, questionData);
+      const response = await axios.post(
+        `${API_BASE_URL}/questions`,
+        questionData
+      );
       alert("Pytanie zostało pomyślnie dodane!");
     } catch (error) {
       console.error("Błąd podczas dodawania pytania:", error);

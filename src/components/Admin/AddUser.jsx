@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_BASE_URL = process.env.BASE_URL;
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const AddUser = ({ users, setUsers }) => {
   const [newUser, setNewUser] = useState({
@@ -27,7 +27,10 @@ const AddUser = ({ users, setUsers }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/create`, newUser);
+      const response = await axios.post(
+        `${API_BASE_URL}/users/create`,
+        newUser
+      );
       if (response.status === 201) {
         const updatedUsers = [...users, response.data];
         setUsers(updatedUsers);
@@ -46,9 +49,27 @@ const AddUser = ({ users, setUsers }) => {
   return (
     <div className="admin-section">
       <h3>👤 Dodaj użytkownika</h3>
-      <input type="text" name="name" placeholder="Imie" value={newUser.name} onChange={handleChange} />
-      <input type="email" name="email" placeholder="E-mail" value={newUser.email} onChange={handleChange} />
-      <input type="password" name="password" placeholder="Hasło" value={newUser.password} onChange={handleChange} />
+      <input
+        type="text"
+        name="name"
+        placeholder="Imie"
+        value={newUser.name}
+        onChange={handleChange}
+      />
+      <input
+        type="email"
+        name="email"
+        placeholder="E-mail"
+        value={newUser.email}
+        onChange={handleChange}
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Hasło"
+        value={newUser.password}
+        onChange={handleChange}
+      />
 
       <label>Wybierz rolę:</label>
       <select name="role" value={newUser.role} onChange={handleChange}>
@@ -56,7 +77,9 @@ const AddUser = ({ users, setUsers }) => {
         <option value="administrator">administrator (Administrator)</option>
       </select>
 
-      <button onClick={addUser} disabled={loading}>{loading ? "Dodatek..." : "➕ Dodać"}</button>
+      <button onClick={addUser} disabled={loading}>
+        {loading ? "Dodatek..." : "➕ Dodać"}
+      </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

@@ -7,6 +7,8 @@ import LoginForm from "../../components/Login/LoginForm";
 import { setUserId } from "../../store/userSlice";
 import "./index.scss";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,15 +46,11 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/auth/login",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-          mode: "cors",
-        }
-      );
+      const response = await axios.post(`${API_URL}/auth/login`, formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+        mode: "cors",
+      });
 
       if (response.status === 201) {
         const { accessToken } = response.data;
@@ -74,7 +72,8 @@ function LoginPage() {
         ...prevErrors,
         server: error.message.includes("ERR_NETWORK")
           ? "Błąd sieci. Spróbuj ponownie później."
-          : error.response?.data?.message || "Nieprawidłowy adres e-mail lub hasło.",
+          : error.response?.data?.message ||
+            "Nieprawidłowy adres e-mail lub hasło.",
       }));
       setLoading(false);
     }
