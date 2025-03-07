@@ -7,6 +7,8 @@ import UserList from "../../components/Admin/UserList";
 import UploadVideo from "../../components/Admin/UploadVideo";
 import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
 import UserStats from "../../components/Admin/UserStats";
+import UtworzTest from "../../components/Admin/UtworzTest";
+import TestQuestion from "../../components/Admin/TestQuestion";
 import "./index.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -20,6 +22,8 @@ const AdminPage = () => {
   const [blocksVisible, setBlocksVisible] = useState(false);
   const [usersVisible, setUsersVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
+  const [testManagementVisible, setTestManagementVisible] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -33,7 +37,6 @@ const AdminPage = () => {
       setUsers(response.data);
     } catch (error) {
       console.error("Błąd podczas pobierania użytkowników:", error);
-      // No need to store users in localStorage, we can just skip it
     }
   };
 
@@ -42,7 +45,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
       setBlocks(response.data);
     } catch (error) {
-      console.error("Błąd podczas odbierania bloków:", error);
+      console.error("Błąd при odbierania bloków:", error);
     }
   };
 
@@ -51,7 +54,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/lectures`);
       setLectures(response.data);
     } catch (error) {
-      console.error("Nie udalo sie otrzymac lekcje:", error);
+      console.error("Nie udało się otrzymać lekcji:", error);
     }
   };
 
@@ -59,10 +62,10 @@ const AdminPage = () => {
     try {
       await axios.delete(`${API_BASE_URL}/lectures/${lectureId}`);
       setLectures(lectures.filter((lecture) => lecture.id !== lectureId));
-      alert("Lekcja usunieta");
+      alert("Lekcja usunięta");
     } catch (error) {
-      console.error("Blad przy usuniensciu Lekcji:", error);
-      alert("Blad przy usuniensciu Lekcji");
+      console.error("Błąd przy usunięciu lekcji:", error);
+      alert("Błąd przy usunięciu lekcji");
     }
   };
 
@@ -70,16 +73,16 @@ const AdminPage = () => {
     try {
       await axios.delete(`${API_BASE_URL}/blocks/${blockId}`);
       setBlocks(blocks.filter((block) => block.id !== blockId));
-      alert("Blok zostało pomyślnie usunięte");
+      alert("Blok został pomyślnie usunięty");
     } catch (error) {
-      console.error("Blad przy usuniensciu bloku:", error);
-      alert("Blad przy usuniensciu bloku");
+      console.error("Błąd при usunięciu bloku:", error);
+      alert("Błąd przy usunięciu bloku");
     }
   };
 
   const getBlockTitle = (blockId) => {
     const block = blocks.find((block) => block.id === blockId);
-    return block ? block.title : "Неизвестный блок";
+    return block ? block.title : "Неизвестny blok";
   };
 
   return (
@@ -89,11 +92,7 @@ const AdminPage = () => {
       <div className="dodawanie-container">
         <h3>🛠 Uzupełnienie</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
-        <AddLecture
-          blocks={blocks}
-          lectures={lectures}
-          setLectures={setLectures}
-        />
+        <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
@@ -133,16 +132,12 @@ const AdminPage = () => {
                       )
                     }
                   >
-                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"}{" "}
-                    {lecture.title}
+                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"} {lecture.title}
                   </button>
                   {selectedLectureId === lecture.id && (
                     <div>
-                      <strong>{lecture.title}</strong> (ID: {lecture.id}) |
-                      Block: {getBlockTitle(lecture.blockId)}
-                      <button onClick={() => deleteLecture(lecture.id)}>
-                        Usuń
-                      </button>
+                      <strong>{lecture.title}</strong> (ID: {lecture.id}) | Block: {getBlockTitle(lecture.blockId)}
+                      <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                     </div>
@@ -167,6 +162,22 @@ const AdminPage = () => {
             {statsVisible ? "Ukryj" : "Pokaz"}
           </button>
           {statsVisible && <UserStats users={users} />}
+        </div>
+
+        {/* Test management section */}
+        <div className="admin-section">
+          <h3>📝 Testy</h3>
+          <button onClick={() => setTestManagementVisible(!testManagementVisible)}>
+            {testManagementVisible ? "Ukryj testy" : "Pokaz testy"}
+          </button>
+          {testManagementVisible && (
+            <div>
+              {/* Test creation section */}
+              <UtworzTest blocks={blocks} setSelectedBlockTestId={setSelectedBlockTestId} />
+              {/* Add questions to the test */}
+              {selectedBlockTestId && <TestQuestion blockTestId={selectedBlockTestId} />}
+            </div>
+          )}
         </div>
       </div>
     </div>
