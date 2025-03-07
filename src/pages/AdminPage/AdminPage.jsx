@@ -60,13 +60,18 @@ const AdminPage = () => {
       for (const block of blocks) {
         try {
           // Делаем запросы для каждого блока по его ID
-          const response = await axios.get(`${API_BASE_URL}/block-test/${block.id}`);
+          const response = await axios.get(
+            `${API_BASE_URL}/block-test/${block.id}`
+          );
           console.log(`Тест для блока ${block.id}:`, response.data); // Логируем тесты
           if (response.data) {
             tests.push(response.data); // Добавляем тест в список
           }
         } catch (error) {
-          console.error(`Ошибка при загрузке теста для блока ${block.id}:`, error);
+          console.error(
+            `Ошибка при загрузке теста для блока ${block.id}:`,
+            error
+          );
           // Если возникла ошибка для конкретного блока, пропускаем этот блок
         }
       }
@@ -105,12 +110,16 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      <h2>📌 Панель администратора</h2>
+      <h2>📌 Panel Administratora</h2>
 
       <div className="dodawanie-container">
         <h3>🛠 Заполнение</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
-        <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
+        <AddLecture
+          blocks={blocks}
+          lectures={lectures}
+          setLectures={setLectures}
+        />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
@@ -150,12 +159,16 @@ const AdminPage = () => {
                       )
                     }
                   >
-                    {selectedLectureId === lecture.id ? "Скрыть" : "Показать"} {lecture.title}
+                    {selectedLectureId === lecture.id ? "Скрыть" : "Показать"}{" "}
+                    {lecture.title}
                   </button>
                   {selectedLectureId === lecture.id && (
                     <div>
-                      <strong>{lecture.title}</strong> (ID: {lecture.id}) | Block: {getBlockTitle(lecture.blockId)}
-                      <button onClick={() => deleteLecture(lecture.id)}>Удалить</button>
+                      <strong>{lecture.title}</strong> (ID: {lecture.id}) |
+                      Block: {getBlockTitle(lecture.blockId)}
+                      <button onClick={() => deleteLecture(lecture.id)}>
+                        Удалить
+                      </button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                     </div>
@@ -184,12 +197,17 @@ const AdminPage = () => {
 
         <div className="admin-section">
           <h3>📝 Тесты</h3>
-          <button onClick={() => setTestManagementVisible(!testManagementVisible)}>
+          <button
+            onClick={() => setTestManagementVisible(!testManagementVisible)}
+          >
             {testManagementVisible ? "Скрыть тесты" : "Показать тесты"}
           </button>
           {testManagementVisible && (
             <div>
-              <UtworzTest blocks={blocks} setSelectedBlockTestId={setSelectedBlockTestId} />
+              <UtworzTest
+                blocks={blocks}
+                setSelectedBlockTestId={setSelectedBlockTestId}
+              />
               <div>
                 <h4>Выберите тест для добавления вопросов</h4>
                 <select
@@ -208,7 +226,9 @@ const AdminPage = () => {
                   )}
                 </select>
               </div>
-              {selectedBlockTestId && <TestQuestion blockTestId={selectedBlockTestId} />}
+              {selectedBlockTestId && (
+                <TestQuestion blockTestId={selectedBlockTestId} />
+              )}
             </div>
           )}
         </div>
