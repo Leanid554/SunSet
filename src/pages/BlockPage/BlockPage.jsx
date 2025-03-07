@@ -15,7 +15,7 @@ function BlockPages() {
   useEffect(() => {
     console.log(`🆔 Aktualny identyfikator użytkownika: ${userId}`);
     console.log(
-      `📚 Żądanie wykładów dla identyfikatora użytkownika: ${userId}, Block ID: ${blockId}`
+      `📚 Żądanie wykładów для идентификатора пользователя: ${userId}, Block ID: ${blockId}`
     );
 
     const fetchVideos = async () => {
@@ -24,7 +24,7 @@ function BlockPages() {
           `${API_BASE_URL}/lectures/user/${userId}/block/${blockId}`
         );
 
-        console.log("✅ Otrzymane wykłady:", response.data);
+        console.log("✅ Полученные лекции:", response.data);
 
         let updatedVideos = response.data.map((lecture, index) => ({
           ...lecture,
@@ -38,17 +38,28 @@ function BlockPages() {
             const prevLecture = updatedVideos[i - 1];
             const currentLecture = updatedVideos[i];
 
-            // Если предыдущая лекция пройдена и текущая доступна, разблокируем
             if (prevLecture.isAccessible && currentLecture.isAccessible) {
               updatedVideos[i].locked = false;
             }
           }
         }
 
+        // Проверяем, завершены ли все лекции
+        const allLecturesCompleted = updatedVideos.every((video) => video.isCompleted);
+
+        // Добавляем тест в конец списка
+        updatedVideos.push({
+          id: "test",
+          title: "📌 Финальный тест",
+          type: "test",
+          locked: !allLecturesCompleted, // Тест разблокируется, если все лекции завершены
+          url: `/test/${blockId}`,
+        });
+
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Błąd pobierania wykładów");
-        console.error("Błąd:", err.response?.data || err.message);
+        setError("❌ Ошибка загрузки лекций");
+        console.error("Ошибка:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
@@ -57,7 +68,7 @@ function BlockPages() {
     fetchVideos();
   }, [id, blockId, userId]);
 
-  if (loading) return <p>⏳ Ładowanie...</p>;
+  if (loading) return <p>⏳ Загрузка...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return <Block videos={videos} mainPath="/main" />;
