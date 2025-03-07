@@ -22,62 +22,62 @@ const AdminPage = () => {
   const [blocksVisible, setBlocksVisible] = useState(false);
   const [usersVisible, setUsersVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
-  const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
   const [testManagementVisible, setTestManagementVisible] = useState(false);
-  const [testList, setTestList] = useState([]); // Список тестов для всех блоков
+  const [testList, setTestList] = useState([]);
+  const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
     fetchBlocks();
+    fetchLectures();
   }, []);
 
-  // Загружаем данные о пользователях
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/users`);
       setUsers(response.data);
     } catch (error) {
-      console.error("Ошибка при загрузке пользователей:", error);
+      console.error("Błąd podczas pobierania użytkowników:", error);
     }
   };
 
-  // Загружаем блоки
   const fetchBlocks = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
-      console.log("Загруженные блоки:", response.data); // Логируем блоки
       setBlocks(response.data);
-      fetchTests(response.data); // После загрузки блоков, загружаем тесты
+      fetchTests(response.data);  // Загружаем тесты после получения блоков
     } catch (error) {
-      console.error("Ошибка при загрузке блоков:", error);
+      console.error("Błąd podczas odbierania bloków:", error);
     }
   };
 
-  // Загружаем тесты для каждого блока
+  const fetchLectures = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/lectures`);
+      setLectures(response.data);
+    } catch (error) {
+      console.error("Nie udało się otrzymać lekcji:", error);
+    }
+  };
+
   const fetchTests = async (blocks) => {
     try {
       const tests = [];
       for (const block of blocks) {
         try {
-          // Делаем запросы для каждого блока по его ID
           const response = await axios.get(
             `${API_BASE_URL}/block-test/${block.id}`
           );
-          console.log(`Тест для блока ${block.id}:`, response.data); // Логируем тесты
           if (response.data) {
-            tests.push(response.data); // Добавляем тест в список
+            tests.push(response.data);
           }
         } catch (error) {
-          console.error(
-            `Ошибка при загрузке теста для блока ${block.id}:`,
-            error
-          );
-          // Если возникла ошибка для конкретного блока, пропускаем этот блок
+          console.error(`Błąd podczas pobierania testu dla bloku ${block.id}:`, error);
         }
       }
-      setTestList(tests); // Обновляем список тестов
+      setTestList(tests);
     } catch (error) {
-      console.error("Ошибка при загрузке тестов:", error);
+      console.error("Błąd przy pobieraniu testów:", error);
     }
   };
 
@@ -87,8 +87,8 @@ const AdminPage = () => {
       setLectures(lectures.filter((lecture) => lecture.id !== lectureId));
       alert("Lekcja usunięta");
     } catch (error) {
-      console.error("Ошибка при удалении лекции:", error);
-      alert("Ошибка при удалении лекции");
+      console.error("Błąd przy usunięciu lekcji:", error);
+      alert("Błąd przy usunięciu lekcji");
     }
   };
 
@@ -96,57 +96,55 @@ const AdminPage = () => {
     try {
       await axios.delete(`${API_BASE_URL}/blocks/${blockId}`);
       setBlocks(blocks.filter((block) => block.id !== blockId));
-      alert("Блок успешно удалён");
+      alert("Blok został pomyślnie usunięty");
     } catch (error) {
-      console.error("Ошибка при удалении блока:", error);
-      alert("Ошибка при удалении блока");
+      console.error("Błąd przy usunięciu bloku:", error);
+      alert("Błąd przy usunięciu bloku");
     }
   };
 
   const getBlockTitle = (blockId) => {
     const block = blocks.find((block) => block.id === blockId);
-    return block ? block.title : "Неизвестный блок";
+    return block ? block.title : "Nieznany blok";
   };
 
   return (
     <div className="admin-page">
-      <h2>📌 Panel Administratora</h2>
+      <h2>📌 Panel administratora</h2>
 
       <div className="dodawanie-container">
-        <h3>🛠 Заполнение</h3>
+        <h3>🛠 Uzupełnienie</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
-        <AddLecture
-          blocks={blocks}
-          lectures={lectures}
-          setLectures={setLectures}
-        />
+        <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
       <div className="zarzadzanie-container">
-        <h3>⚙ Управление</h3>
+        <h3>⚙ Zarządzanie</h3>
 
+        {/* Блоки */}
         <div className="admin-section">
-          <h3>📦 Блоки</h3>
+          <h3>📦 Bloki</h3>
           <button onClick={() => setBlocksVisible(!blocksVisible)}>
-            {blocksVisible ? "Скрыть" : "Показать"}
+            {blocksVisible ? "Ukryj" : "Pokaz"}
           </button>
           {blocksVisible && blocks.length > 0 && (
             <ul>
               {blocks.map((block) => (
                 <li key={block.id}>
                   <strong>{block.title}</strong> (ID: {block.id})
-                  <button onClick={() => deleteBlock(block.id)}>Удалить</button>
+                  <button onClick={() => deleteBlock(block.id)}>Usuń</button>
                 </li>
               ))}
             </ul>
           )}
         </div>
 
+        {/* Лекции */}
         <div className="admin-section">
-          <h3>📚 Лекции</h3>
+          <h3>📚 Wykłady</h3>
           <button onClick={() => setLecturesVisible(!lecturesVisible)}>
-            {lecturesVisible ? "Скрыть" : "Показать"}
+            {lecturesVisible ? "Ukryj" : "Pokaz"}
           </button>
           {lecturesVisible && lectures.length > 0 && (
             <ul>
@@ -159,16 +157,13 @@ const AdminPage = () => {
                       )
                     }
                   >
-                    {selectedLectureId === lecture.id ? "Скрыть" : "Показать"}{" "}
-                    {lecture.title}
+                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"} {lecture.title}
                   </button>
                   {selectedLectureId === lecture.id && (
                     <div>
                       <strong>{lecture.title}</strong> (ID: {lecture.id}) |
                       Block: {getBlockTitle(lecture.blockId)}
-                      <button onClick={() => deleteLecture(lecture.id)}>
-                        Удалить
-                      </button>
+                      <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                     </div>
@@ -179,28 +174,29 @@ const AdminPage = () => {
           )}
         </div>
 
+        {/* Пользователи */}
         <div className="admin-section">
-          <h3>👤 Пользователи</h3>
+          <h3>👤 Użytkowniki</h3>
           <button onClick={() => setUsersVisible(!usersVisible)}>
-            {usersVisible ? "Скрыть" : "Показать"}
+            {usersVisible ? "Ukryj" : "Pokaz"}
           </button>
           {usersVisible && <UserList users={users} />}
         </div>
 
+        {/* Статистика */}
         <div className="admin-section">
-          <h3>📊 Статистика пользователя</h3>
+          <h3>📊 Statystyki użytkownika</h3>
           <button onClick={() => setStatsVisible(!statsVisible)}>
-            {statsVisible ? "Скрыть" : "Показать"}
+            {statsVisible ? "Ukryj" : "Pokaz"}
           </button>
           {statsVisible && <UserStats users={users} />}
         </div>
 
+        {/* Тесты */}
         <div className="admin-section">
-          <h3>📝 Тесты</h3>
-          <button
-            onClick={() => setTestManagementVisible(!testManagementVisible)}
-          >
-            {testManagementVisible ? "Скрыть тесты" : "Показать тесты"}
+          <h3>📝 Testy</h3>
+          <button onClick={() => setTestManagementVisible(!testManagementVisible)}>
+            {testManagementVisible ? "Ukryj testy" : "Pokaz testy"}
           </button>
           {testManagementVisible && (
             <div>
@@ -209,12 +205,12 @@ const AdminPage = () => {
                 setSelectedBlockTestId={setSelectedBlockTestId}
               />
               <div>
-                <h4>Выберите тест для добавления вопросов</h4>
+                <h4>Wybierz test do dodania pytań</h4>
                 <select
                   onChange={(e) => setSelectedBlockTestId(e.target.value)}
                   value={selectedBlockTestId || ""}
                 >
-                  <option value="">Выберите тест</option>
+                  <option value="">Wybierz test</option>
                   {testList.length > 0 ? (
                     testList.map((test) => (
                       <option key={test.id} value={test.id}>
@@ -222,7 +218,7 @@ const AdminPage = () => {
                       </option>
                     ))
                   ) : (
-                    <option value="">Нет доступных тестов</option>
+                    <option value="">Brak dostępnych testów</option>
                   )}
                 </select>
               </div>
