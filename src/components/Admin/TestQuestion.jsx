@@ -4,88 +4,102 @@ import axios from "axios";
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const TestQuestion = ({ blockTestId }) => {
-  const [questions, setQuestions] = useState(
-    Array(20).fill({ question: "", options: ["", "", "", ""], answer: "" })
-  );
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState(["", "", "", ""]);
+  const [answer, setAnswer] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false); // для индикации загрузки
+  const [loading, setLoading] = useState(false);
 
-  const handleOptionChange = (index, optionIndex, event) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].options[optionIndex] = event.target.value;
-    setQuestions(updatedQuestions);
+  // Обработчик изменения текста вопроса
+  const handleQuestionChange = (event) => {
+    setQuestion(event.target.value);
   };
 
-  const handleQuestionChange = (index, event) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].question = event.target.value;
-    setQuestions(updatedQuestions);
+  // Обработчик изменения вариантов ответа
+  const handleOptionChange = (index, event) => {
+    const updatedOptions = [...options];
+    updatedOptions[index] = event.target.value;
+    setOptions(updatedOptions);
   };
 
-  const handleAnswerChange = (index, event) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions[index].answer = event.target.value;
-    setQuestions(updatedQuestions);
+  // Обработчик изменения правильного ответа
+  const handleAnswerChange = (event) => {
+    setAnswer(event.target.value);
   };
 
+  // Обработчик отправки данных на сервер
   const handleSubmit = async () => {
-    // Ensure all questions are filled
-    if (questions.some((q) => !q.question || q.options.some((opt) => !opt) || !q.answer)) {
-      setError("Please fill all fields!");
+    // Проверка, все ли поля заполнены
+    if (!question.trim() || options.some((opt) => !opt.trim()) || !answer.trim()) {
+      setError("Пожалуйста, заполните все поля.");
       return;
     }
 
-    setLoading(true); // начинаем загрузку
-    setError("");
-    setSuccess("");
+    setLoading(true);
+    setError(""); // Очищаем ошибки
+    setSuccess(""); // Очищаем успешные сообщения
 
     try {
-      await axios.post(`${API_BASE_URL}/block-test/${blockTestId}/questions`, questions);
-      setSuccess("Questions added successfully!");
+      const newQuestion = {
+        question,
+        options,
+        answer,
+      };
+
+      const response = await axios.post(
+        `${API_BASE_URL}/block-test/${blockTestId}/questions`,
+        [newQuestion], // Отправляем вопрос как массив
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setSuccess("Вопрос успешно добавлен!");
+      // Очистка формы после добавления вопроса
+      setQuestion("");
+      setOptions(["", "", "", ""]);
+      setAnswer("");
     } catch (err) {
-      console.error("Error adding questions:", err);
-      setError("Error adding questions. Please try again.");
+      console.error("Ошибка при добавлении вопроса:", err);
+      setError("Ошибка при добавлении вопроса. Пожалуйста, попробуйте снова.");
     } finally {
-      setLoading(false); // завершили загрузку
+      setLoading(false);
     }
   };
 
   return (
     <div className="test-question">
-      <h3>❓ Dodaj pytania do testu</h3>
-      {questions.map((question, index) => (
-        <div key={index} className="question-form">
+      <h3>❓ Добавить новый вопрос</h3>
+      <div className="question-form">
+        <input
+          type="text"
+          value={question}
+          onChange={handleQuestionChange}
+          placeholder="Введите текст вопроса"
+        />
+        {options.map((option, index) => (
           <input
+            key={index}
             type="text"
-            value={question.question}
-            onChange={(e) => handleQuestionChange(index, e)}
-            placeholder={`Pytanie ${index + 1}`}
+            value={option}
+            onChange={(e) => handleOptionChange(index, e)}
+            placeholder={`Ответ ${index + 1}`}
           />
-          {question.options.map((option, optionIndex) => (
-            <input
-              key={optionIndex}
-              type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, optionIndex, e)}
-              placeholder={`Odpowiedź ${optionIndex + 1}`}
-            />
+        ))}
+        <select value={answer} onChange={handleAnswerChange}>
+          <option value="">Выберите правильный ответ</option>
+          {options.map((option, index) => (
+            <option key={index} value={option}>
+              {`Ответ ${index + 1}: ${option}`}
+            </option>
           ))}
-          <select
-            value={question.answer}
-            onChange={(e) => handleAnswerChange(index, e)}
-            placeholder="Poprawna odpowiedź"
-          >
-            {question.options.map((option, optionIndex) => (
-              <option key={optionIndex} value={optionIndex}>
-                {`Odpowiedź ${optionIndex + 1}: ${option}`}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
+        </select>
+      </div>
       <button onClick={handleSubmit} disabled={loading}>
-        {loading ? "Wysyłanie..." : "Dodaj pytania"}
+        {loading ? "Отправка..." : "Добавить вопрос"}
       </button>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}
