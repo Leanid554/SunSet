@@ -1,40 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Test.scss";
+import Question from "../../components/Test/Question";
 
-function Test({ questions }) {
-  const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState(null);
+function Test({ questions, blockId }) {
+  const navigate = useNavigate();
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [testFinished, setTestFinished] = useState(false);
+  const [successPercentage, setSuccessPercentage] = useState(null);
 
-  const handleAnswer = (questionId, answer) => {
-    setAnswers({ ...answers, [questionId]: answer });
+  useEffect(() => {
+    setUserAnswers(Array(questions.length).fill(null)); // Инициализация массива ответов
+  }, [questions]);
+
+  const handleAnswerChange = (index, answer) => {
+    setUserAnswers((prev) => {
+      const updated = [...prev];
+      updated[index] = answer;
+      return updated;
+    });
   };
 
-  const submitTest = () => {
-    let correctAnswers = questions.filter(
-      (q) => answers[q.id] === q.correctAnswer
+  const handleFinishTest = () => {
+    const correctCount = userAnswers.filter(
+      (ans, idx) => ans === questions[idx].answer
     ).length;
-    setResult(`Вы ответили правильно на ${correctAnswers} из ${questions.length}`);
+    const score = Math.round((correctCount / questions.length) * 100);
+    setSuccessPercentage(score);
+    setTestFinished(true);
   };
+
+  if (testFinished) {
+    return (
+      <div className="result">
+        <p>Твой результат: {successPercentage}%</p>
+        {successPercentage >= 80 ? (
+          <>
+            <p>Тест пройден! 🎉</p>
+            <button onClick={() => navigate("/main")} className="go-to-main">
+              Завершить блок
+            </button>
+          </>
+        ) : (
+          <>
+            <p>Попробуй еще раз!</p>
+            <button
+              onClick={() => navigate(`/block/${blockId}`)}
+              className="go-to-video"
+            >
+              Вернуться к видео
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <div>
-      {questions.map((question) => (
-        <div key={question.id}>
-          <h3>{question.text}</h3>
-          {question.options.map((option) => (
-            <label key={option}>
-              <input
-                type="radio"
-                name={question.id}
-                value={option}
-                onChange={() => handleAnswer(question.id, option)}
-              />
-              {option}
-            </label>
-          ))}
-        </div>
-      ))}
-      <button onClick={submitTest}>Отправить</button>
-      {result && <p>{result}</p>}
+    <div className="test">
+      <h3>Тест для блока {blockId}</h3>
+      <form>
+        {questions.map((q, idx) => (
+          <Question
+            key={idx}
+            question={q.question}
+            options={q.options} // Передаем опции как массив
+            selectedAnswer={userAnswers[idx]}
+            onAnswerChange={(answer) => handleAnswerChange(idx, answer)}
+          />
+        ))}
+      </form>
+      <button onClick={handleFinishTest} className="finish-button">
+        Завершить тест
+      </button>
     </div>
   );
 }

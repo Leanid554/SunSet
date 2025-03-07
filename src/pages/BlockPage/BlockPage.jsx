@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Block from "../../components/Block/Block";
+import Block from "../../components/Block/Block"; // Компонент для отображения блока
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 function BlockPages() {
-  const { id, blockId } = useParams();
+  const { blockId } = useParams(); // Получаем blockId из параметров URL
   const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [testAvailable, setTestAvailable] = useState(false); // Стейт для проверки доступности теста
 
   useEffect(() => {
-    console.log(`🆔 Aktualny identyfikator użytkownika: ${userId}`);
-    console.log(
-      `📚 Żądanie wykładów для идентификатора пользователя: ${userId}, Block ID: ${blockId}`
-    );
+    if (!blockId) {
+      setError("❌ Неверный идентификатор блока");
+      setLoading(false);
+      return;
+    }
 
     const fetchVideos = async () => {
       try {
         const response = await axios.get(
           `${API_BASE_URL}/lectures/user/${userId}/block/${blockId}`
         );
-
-        console.log("✅ Полученные лекции:", response.data);
+        console.log("✅ Otrzymane wykłady:", response.data);
 
         let updatedVideos = response.data.map((lecture, index) => ({
           ...lecture,
@@ -44,34 +46,50 @@ function BlockPages() {
           }
         }
 
-        // Проверяем, завершены ли все лекции
-        const allLecturesCompleted = updatedVideos.every((video) => video.isCompleted);
-
-        // Добавляем тест в конец списка
-        updatedVideos.push({
-          id: "test",
-          title: "📌 Финальный тест",
-          type: "test",
-          locked: !allLecturesCompleted, // Тест разблокируется, если все лекции завершены
-          url: `/test/${blockId}`,
-        });
-
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Ошибка загрузки лекций");
-        console.error("Ошибка:", err.response?.data || err.message);
+        setError("❌ Бłąд pobierania wykładów");
+        console.error("Błąd:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchTestForBlock = async () => {
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/block-test/${blockId}`
+        );
+        if (response.data?.questions?.length > 0) {
+          setTestAvailable(true);
+        }
+      } catch (err) {
+        console.error("Ошибка при получении теста:", err.response?.data || err.message);
+      }
+    };
+
     fetchVideos();
-  }, [id, blockId, userId]);
+    fetchTestForBlock();
+  }, [blockId, userId]);
 
   if (loading) return <p>⏳ Загрузка...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
-  return <Block videos={videos} mainPath="/main" />;
+  return (
+    <div>
+      <Block videos={videos} mainPath="/main" />
+      {testAvailable && (
+        <div className="test-link">
+          <button
+            onClick={() => navigate(`/test/${blockId}`)} // Передаем blockId как часть URL
+            className="go-to-test-button"
+          >
+            Пройти тест для этого блока
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default BlockPages;
