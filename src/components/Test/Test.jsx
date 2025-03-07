@@ -1,78 +1,40 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Test.scss";
-import videosData, { updateProgress, saveTestResult } from "../../data/videosData";
-import testsData from "../../data/testsData"; 
-import Question from "../../components/Test/Question";
 
-function Test({ testId }) {
-  const test = testsData[testId];
-  const navigate = useNavigate();
-  const [userAnswers, setUserAnswers] = useState(Array(test.questions.length).fill(null));
-  const [currentPage, setCurrentPage] = useState(0);
-  const [testFinished, setTestFinished] = useState(false);
-  const [successPercentage, setSuccessPercentage] = useState(null);
+function Test({ questions }) {
+  const [answers, setAnswers] = useState({});
+  const [result, setResult] = useState(null);
 
-  const handleAnswerChange = (index, answer) => {
-    setUserAnswers((prev) => {
-      const updated = [...prev];
-      updated[index] = answer;
-      return updated;
-    });
+  const handleAnswer = (questionId, answer) => {
+    setAnswers({ ...answers, [questionId]: answer });
   };
 
-  const handleFinishTest = () => {
-    const correctCount = userAnswers.filter((ans, idx) => ans === test.questions[idx].answer).length;
-    const score = Math.round((correctCount / test.questions.length) * 100);
-    setSuccessPercentage(score);
-    saveTestResult("user1", testId, score);
-
-    if (score >= 80) {
-      if (videosData[test.blockId]) {
-        videosData[test.blockId].forEach((video) => updateProgress(test.blockId, video.id, 100));
-      }
-      if (videosData[test.nextBlockId]) {
-        videosData[test.nextBlockId].forEach((video) => updateProgress(test.nextBlockId, video.id, 0));
-      }
-    }
-
-    setTestFinished(true);
+  const submitTest = () => {
+    let correctAnswers = questions.filter(
+      (q) => answers[q.id] === q.correctAnswer
+    ).length;
+    setResult(`Вы ответили правильно на ${correctAnswers} из ${questions.length}`);
   };
 
   return (
-    <div className="test">
-      <h3>{test.title}</h3>
-      {!testFinished ? (
-        <>
-          <form>
-            {test.questions.map((q, idx) => (
-              <Question
-                key={idx}
-                question={q.question}
-                options={q.options}
-                selectedAnswer={userAnswers[idx]}
-                onAnswerChange={(answer) => handleAnswerChange(idx, answer)}
+    <div>
+      {questions.map((question) => (
+        <div key={question.id}>
+          <h3>{question.text}</h3>
+          {question.options.map((option) => (
+            <label key={option}>
+              <input
+                type="radio"
+                name={question.id}
+                value={option}
+                onChange={() => handleAnswer(question.id, option)}
               />
-            ))}
-          </form>
-          <button onClick={handleFinishTest} className="finish-button">Zakończ</button>
-        </>
-      ) : (
-        <div className="result">
-          <p>Twój wynik: {successPercentage}%</p>
-          {successPercentage >= 80 ? (
-            <>
-              <p>Test zdany! 🎉</p>
-              <button onClick={() => navigate("/main")} className="go-to-main">Zakończ blok</button>
-            </>
-          ) : (
-            <>
-              <p>Przejdź kurs ponownie</p>
-              <button onClick={() => navigate("/block/1")} className="go-to-video">Wróć do wyboru видео</button>
-            </>
-          )}
+              {option}
+            </label>
+          ))}
         </div>
-      )}
+      ))}
+      <button onClick={submitTest}>Отправить</button>
+      {result && <p>{result}</p>}
     </div>
   );
 }

@@ -18,6 +18,7 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import LoginPage from "./pages/Login/LoginPage";
 import WebSocket from "./components/WebSocket";
 
+
 function App() {
   const userId = useSelector((state) => state.user.userId);
   const visitCount = useSelector((state) => state.visits.count);
@@ -36,6 +37,7 @@ function App() {
         <Route path="/test/:id" element={<TestPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/main" replace />} />
+        <Route path="/test-debug" element={<TestPage />} />
       </Routes>
     </>
   );
