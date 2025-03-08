@@ -207,20 +207,21 @@ const AdminPage = () => {
               <div>
                 <h4>Wybierz test do dodania pytań</h4>
                 <select
-                  onChange={(e) => setSelectedBlockTestId(e.target.value)}
-                  value={selectedBlockTestId || ""}
-                >
-                  <option value="">Wybierz test</option>
-                  {testList.length > 0 ? (
-                    testList.map((test) => (
-                      <option key={test.id} value={test.id}>
-                        {test.title}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="">Brak dostępnych testów</option>
-                  )}
-                </select>
+  onChange={(e) => setSelectedBlockTestId(e.target.value)}
+  value={selectedBlockTestId || ""}
+>
+  <option value="">Wybierz test</option>
+  {testList.length > 0 ? (
+    testList.map((test) => (
+      <option key={test.id} value={test.id}>
+        {getBlockTitle(test.blockId)} - {test.title} (ID: {test.id})
+      </option>
+    ))
+  ) : (
+    <option value="">Brak dostępnych testów</option>
+  )}
+</select>
+
               </div>
               {selectedBlockTestId && (
                 <TestQuestion blockTestId={selectedBlockTestId} />
