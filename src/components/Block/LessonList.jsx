@@ -5,7 +5,7 @@ import "./Block1.scss";
 function LessonList({ blockId, lessons, onLectureClick }) {
   const navigate = useNavigate();
 
-  // Проверка, все ли лекции завершены
+  // Sprawdzenie, czy wszystkie wykłady zostały ukończone
   const areAllLecturesCompleted = lessons.every((video) => video.passed);
 
   return (
@@ -18,7 +18,7 @@ function LessonList({ blockId, lessons, onLectureClick }) {
 
       <div className="video-list-container">
         {lessons.map((video, index) => {
-          // Блокировка лекции, если она недоступна (isAccessible === false)
+          // Blokowanie wykładu, jeśli jest niedostępny (isAccessible === false)
           const locked = !video.isAccessible;
 
           return (
@@ -59,16 +59,16 @@ function LessonList({ blockId, lessons, onLectureClick }) {
           );
         })}
 
-        {/* Кнопка теста доступна только если все лекции завершены */}
+        {/* Przycisk testu dostępny tylko wtedy, gdy wszystkie wykłady zostały ukończone */}
         <div className="test-link">
           <button
-            onClick={() => navigate(`/test/${blockId}`)} // Передаем blockId как часть URL
+            onClick={() => navigate(`/test/${blockId}`)} // Przekazujemy blockId jako część URL
             className={`go-to-test-button ${
               areAllLecturesCompleted ? "active" : "disabled"
-            }`} // Добавляем класс в зависимости от завершенности лекций
-            disabled={!areAllLecturesCompleted} // Делаем кнопку неактивной, если не все лекции завершены
+            }`} // Dodajemy klasę w zależności od ukończenia wykładów
+            disabled={!areAllLecturesCompleted} // Uczynienie przycisku nieaktywnym, jeśli nie wszystkie wykłady zostały ukończone
           >
-            Пройти тест для этого блока
+            Zrób test dla tego bloku
           </button>
         </div>
       </div>

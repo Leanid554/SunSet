@@ -16,7 +16,7 @@ const MainPage = () => {
 
     if (!userId) {
       console.error(
-        "Ошибка: идентификатор пользователя не найден в localStorage!"
+        "Błąd: Identyfikator użytkownika nie znaleziony w localStorage!"
       );
       return;
     }
@@ -28,7 +28,7 @@ const MainPage = () => {
     try {
       const response = await axios.get(`${API_URL}/blocks/user/${userId}`);
       if (!Array.isArray(response.data)) {
-        console.error("Ошибка: API не вернуло массив блоков!", response.data);
+        console.error("Błąd: API nie zwróciło tablicy bloków!", response.data);
         return;
       }
 
@@ -47,7 +47,7 @@ const MainPage = () => {
       setProgress(progressData);
       setVisitedBlocks(visitedSet);
     } catch (err) {
-      console.error("Ошибка загрузки блоков:", err.message);
+      console.error("Błąd podczas ładowania bloków:", err.message);
     }
   };
 
@@ -60,7 +60,7 @@ const MainPage = () => {
 
     const isTestPassed = block.test?.userProgress?.passed || false;
 
-    // Если ВСЕ лекции и тест пройдены — 100%
+    // Jeśli wszystkie wykłady i test są ukończone — 100%
     if (
       totalLectures > 0 &&
       completedLectures === totalLectures &&
@@ -69,12 +69,12 @@ const MainPage = () => {
       return 100;
     }
 
-    // Прогресс лекций в %
+    // Postęp wykładów w %
     const lectureProgress =
       totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
     const testProgress = isTestPassed ? 100 : 0;
 
-    // Вес лекций 70%, вес теста 30%
+    // Waga wykładów 70%, waga testu 30%
     return Math.floor(lectureProgress * 0.7 + testProgress * 0.3);
   };
 
@@ -83,13 +83,13 @@ const MainPage = () => {
 
     if (!userId) {
       console.error(
-        "Ошибка: идентификатор пользователя не найден в localStorage!"
+        "Błąd: Identyfikator użytkownika nie znaleziony w localStorage!"
       );
       return;
     }
 
     if (visitedBlocks.has(blockId)) {
-      console.warn(`Блок ${blockId} уже посещен, пропускаю.`);
+      console.warn(`Blok ${blockId} już odwiedzony, pomijam.`);
       return;
     }
 
@@ -99,7 +99,7 @@ const MainPage = () => {
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
     } catch (err) {
-      console.error("Ошибка сохранения посещения блока:", err.message);
+      console.error("Błąd zapisu odwiedzenia bloku:", err.message);
     }
   };
 
@@ -107,20 +107,20 @@ const MainPage = () => {
     <div className="main-page">
       <div className="block-container">
         <div className="block-header-row">
-          <div className="block-label">Название</div>
-          <div className="progress-label">Прогресс</div>
+          <div className="block-label">Nazwa</div>
+          <div className="progress-label">Postęp</div>
           <div className="percentage-label">%</div>
-          <div className="dostep-label">Доступ</div>
+          <div className="dostep-label">Dostęp</div>
         </div>
 
         {blocks.length === 0 ? (
-          <p>Нет доступных блоков</p>
+          <p>Brak dostępnych bloków</p>
         ) : (
           blocks.map((block, index) => {
             const previousBlockId = blocks[index - 1]?.id;
             const previousBlockCompleted = previousBlockId
               ? (progress[previousBlockId] || 0) === 100
-              : true; // Первый блок доступен всегда
+              : true; // Pierwszy blok jest zawsze dostępny
 
             return (
               <BlockItem

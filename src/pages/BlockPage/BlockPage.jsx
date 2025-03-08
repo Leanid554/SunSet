@@ -82,17 +82,6 @@ function BlockPages() {
   return (
     <div>
       <Block blockId={blockId} videos={videos} mainPath="/main" />
-      {/* Показываем кнопку для теста только если все лекции доступны */}
-      {isTestEnabled && (
-        <div className="test-link">
-          <button
-            onClick={() => navigate(`/test/${blockId}`)} // Передаем blockId как часть URL
-            className="go-to-test-button"
-          >
-            Пройти тест для этого блока
-          </button>
-        </div>
-      )}
     </div>
   );
 }

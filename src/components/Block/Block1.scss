@@ -173,7 +173,8 @@
 
 .test-link {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Центрирование кнопки по горизонтали */
+  align-items: center; /* Центрирование кнопки по вертикали */
   margin-top: 20px; /* добавим отступ сверху */
 }
 
@@ -187,9 +188,10 @@
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
   max-width: 250px; /* Максимальная ширина кнопки */
-  width: auto; /* Кнопка будет занимать только нужную ширину */
+  width: 100%; /* Кнопка будет занимать всю ширину контейнера */
   text-align: center; /* Выравнивание текста по центру */
 }
+
 /* Когда кнопка активна */
 .go-to-test-button.active {
   background-color: #4caf50; /* Зеленый цвет */

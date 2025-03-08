@@ -45,7 +45,7 @@ const AdminPage = () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
       setBlocks(response.data);
-      fetchTests(response.data);  // Загружаем тесты после получения блоков
+      fetchTests(response.data); // Загружаем тесты после получения блоков
     } catch (error) {
       console.error("Błąd podczas odbierania bloków:", error);
     }
@@ -72,7 +72,10 @@ const AdminPage = () => {
             tests.push(response.data);
           }
         } catch (error) {
-          console.error(`Błąd podczas pobierania testu dla bloku ${block.id}:`, error);
+          console.error(
+            `Błąd podczas pobierania testu dla bloku ${block.id}:`,
+            error
+          );
         }
       }
       setTestList(tests);
@@ -108,6 +111,10 @@ const AdminPage = () => {
     return block ? block.title : "Nieznany blok";
   };
 
+  const addTestToList = (test) => {
+    setTestList((prevTestList) => [...prevTestList, test]);
+  };
+
   return (
     <div className="admin-page">
       <h2>📌 Panel administratora</h2>
@@ -115,7 +122,11 @@ const AdminPage = () => {
       <div className="dodawanie-container">
         <h3>🛠 Uzupełnienie</h3>
         <AddBlock blocks={blocks} setBlocks={setBlocks} />
-        <AddLecture blocks={blocks} lectures={lectures} setLectures={setLectures} />
+        <AddLecture
+          blocks={blocks}
+          lectures={lectures}
+          setLectures={setLectures}
+        />
         <AddUser users={users} setUsers={setUsers} />
       </div>
 
@@ -157,13 +168,16 @@ const AdminPage = () => {
                       )
                     }
                   >
-                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"} {lecture.title}
+                    {selectedLectureId === lecture.id ? "Ukryj" : "Pokaz"}{" "}
+                    {lecture.title}
                   </button>
                   {selectedLectureId === lecture.id && (
                     <div>
                       <strong>{lecture.title}</strong> (ID: {lecture.id}) |
                       Block: {getBlockTitle(lecture.blockId)}
-                      <button onClick={() => deleteLecture(lecture.id)}>Usuń</button>
+                      <button onClick={() => deleteLecture(lecture.id)}>
+                        Usuń
+                      </button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                     </div>
@@ -195,7 +209,9 @@ const AdminPage = () => {
         {/* Тесты */}
         <div className="admin-section">
           <h3>📝 Testy</h3>
-          <button onClick={() => setTestManagementVisible(!testManagementVisible)}>
+          <button
+            onClick={() => setTestManagementVisible(!testManagementVisible)}
+          >
             {testManagementVisible ? "Ukryj testy" : "Pokaz testy"}
           </button>
           {testManagementVisible && (
@@ -203,25 +219,26 @@ const AdminPage = () => {
               <UtworzTest
                 blocks={blocks}
                 setSelectedBlockTestId={setSelectedBlockTestId}
+                addTestToList={addTestToList}
               />
               <div>
                 <h4>Wybierz test do dodania pytań</h4>
                 <select
-  onChange={(e) => setSelectedBlockTestId(e.target.value)}
-  value={selectedBlockTestId || ""}
->
-  <option value="">Wybierz test</option>
-  {testList.length > 0 ? (
-    testList.map((test) => (
-      <option key={test.id} value={test.id}>
-        {getBlockTitle(test.blockId)} - {test.title} (ID: {test.id})
-      </option>
-    ))
-  ) : (
-    <option value="">Brak dostępnych testów</option>
-  )}
-</select>
-
+                  onChange={(e) => setSelectedBlockTestId(e.target.value)}
+                  value={selectedBlockTestId || ""}
+                >
+                  <option value="">Wybierz test</option>
+                  {testList.length > 0 ? (
+                    testList.map((test) => (
+                      <option key={test.id} value={test.id}>
+                        {getBlockTitle(test.blockId)} - {test.title} (ID:{" "}
+                        {test.id})
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">Brak dostępnych testów</option>
+                  )}
+                </select>
               </div>
               {selectedBlockTestId && (
                 <TestQuestion blockTestId={selectedBlockTestId} />

@@ -10,7 +10,6 @@ import {
 import { store } from "./store/store";
 import Navbar from "./components/Navbar/Navbar";
 import MainPage from "./pages/MainPage/MainPage";
-import reportWebVitals from "./reportWebVitals";
 import VideoPage from "./pages/VideoPage/VideoPage";
 import BlockPage from "./pages/BlockPage/BlockPage";
 import TestPage from "./pages/TestPage/TestPage";
@@ -20,12 +19,11 @@ import WebSocket from "./components/WebSocket";
 
 function App() {
   const userId = useSelector((state) => state.user.userId);
-  const visitCount = useSelector((state) => state.visits.count);
 
   return (
     <>
       {userId && <WebSocket />}
-      <Navbar count={visitCount} userId={userId} />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
@@ -49,5 +47,3 @@ root.render(
     </Router>
   </Provider>
 );
-
-reportWebVitals();
