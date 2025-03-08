@@ -1,45 +1,76 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Block1.scss";
 
-function LessonList({ lessons, onLectureClick }) {
+function LessonList({ blockId, lessons, onLectureClick }) {
+  const navigate = useNavigate();
+
+  // Проверка, все ли лекции завершены
+  const areAllLecturesCompleted = lessons.every((video) => video.passed);
+
   return (
     <div className="block-container block-height">
       <div className="block-header-row">
         <div className="block-label">Tytuł</div>
         <div className="position-label">Pozycja</div>
-        {/* <div className="progress-label">Progress</div> */}
         <div className="access-label">Dostęp</div>
       </div>
 
       <div className="video-list-container">
-        {lessons.map((video) => (
-          <div key={video.id} className={`video-item-wrapper ${video.locked ? "locked" : ""}`}>
-            {video.locked ? (
-              <div className="video-item locked">
-                <div className="video-content">
-                  <div className="block-row">
-                    <div className="block-title">{video.title}</div>
-                    <div className="position1">{video.position || "Call-Center"}</div>
-                    {/* <span className="progress-text">{video.progress}%</span> */}
-                    <span className="access-text">🔒</span>
+        {lessons.map((video, index) => {
+          // Блокировка лекции, если она недоступна (isAccessible === false)
+          const locked = !video.isAccessible;
+
+          return (
+            <div
+              key={video.id}
+              className={`video-item-wrapper ${locked ? "locked" : ""}`}
+            >
+              {locked ? (
+                <div className="video-item locked">
+                  <div className="video-content">
+                    <div className="block-row">
+                      <div className="block-title">{video.title}</div>
+                      <div className="position1">
+                        {video.position || "Call-Center"}
+                      </div>
+                      <span className="access-text">🔒</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <Link to={`/video/${video.id}`} className="video-item" onClick={() => onLectureClick(video)}>
-                <div className="video-content">
-                  <div className="block-row">
-                    <div className="block-title">{video.title}</div>
-                    <div className="position1">{video.position || "Call-Center"}</div>
-                    {/* <span className="progress-text">{video.progress}%</span> */}
-                    <span className="access-text">🔓</span>
+              ) : (
+                <Link
+                  to={`/video/${video.id}`}
+                  className="video-item"
+                  onClick={() => onLectureClick(video)}
+                >
+                  <div className="video-content">
+                    <div className="block-row">
+                      <div className="block-title">{video.title}</div>
+                      <div className="position1">
+                        {video.position || "Call-Center"}
+                      </div>
+                      <span className="access-text">🔓</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            )}
-          </div>
-        ))}
+                </Link>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Кнопка теста доступна только если все лекции завершены */}
+        <div className="test-link">
+          <button
+            onClick={() => navigate(`/test/${blockId}`)} // Передаем blockId как часть URL
+            className={`go-to-test-button ${
+              areAllLecturesCompleted ? "active" : "disabled"
+            }`} // Добавляем класс в зависимости от завершенности лекций
+            disabled={!areAllLecturesCompleted} // Делаем кнопку неактивной, если не все лекции завершены
+          >
+            Пройти тест для этого блока
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -26,30 +26,25 @@ function BlockPages() {
         const response = await axios.get(
           `${API_BASE_URL}/lectures/user/${userId}/block/${blockId}`
         );
-        console.log("✅ Otrzymane wykłady:", response.data);
+        console.log("✅ Полученные лекции:", response.data);
 
-        let updatedVideos = response.data.map((lecture, index) => ({
-          ...lecture,
-          locked: index !== 0,
-        }));
+        let updatedVideos = response.data.map((lecture, index) => {
+          const isPreviousLectureCompleted =
+            index === 0 || response.data[index - 1]?.isCompleted; // Проверка завершенности предыдущей лекции
 
-        for (let i = 0; i < updatedVideos.length; i++) {
-          if (i === 0) {
-            updatedVideos[i].locked = false;
-          } else {
-            const prevLecture = updatedVideos[i - 1];
-            const currentLecture = updatedVideos[i];
+          // Если лекция доступна по isAccessible, но предыдущая не завершена, она будет заблокирована
+          const locked = !isPreviousLectureCompleted || !lecture.isAccessible;
 
-            if (prevLecture.isAccessible && currentLecture.isAccessible) {
-              updatedVideos[i].locked = false;
-            }
-          }
-        }
+          return {
+            ...lecture,
+            locked, // Блокируем лекцию, если предыдущая не завершена или эта лекция недоступна
+          };
+        });
 
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Бłąд pobierania wykładów");
-        console.error("Błąd:", err.response?.data || err.message);
+        setError("❌ Ошибка загрузки лекций");
+        console.error("Ошибка:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
@@ -64,7 +59,10 @@ function BlockPages() {
           setTestAvailable(true);
         }
       } catch (err) {
-        console.error("Ошибка при получении теста:", err.response?.data || err.message);
+        console.error(
+          "Ошибка при получении теста:",
+          err.response?.data || err.message
+        );
       }
     };
 
@@ -72,13 +70,20 @@ function BlockPages() {
     fetchTestForBlock();
   }, [blockId, userId]);
 
+  // Функция для проверки, все ли лекции пройдены
+  const areAllLecturesAccessible = videos.every((video) => video.isCompleted);
+
+  // Если все лекции пройдены, тест становится доступным
+  const isTestEnabled = areAllLecturesAccessible && testAvailable;
+
   if (loading) return <p>⏳ Загрузка...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <div>
-      <Block videos={videos} mainPath="/main" />
-      {testAvailable && (
+      <Block blockId={blockId} videos={videos} mainPath="/main" />
+      {/* Показываем кнопку для теста только если все лекции доступны */}
+      {isTestEnabled && (
         <div className="test-link">
           <button
             onClick={() => navigate(`/test/${blockId}`)} // Передаем blockId как часть URL

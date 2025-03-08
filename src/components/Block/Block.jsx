@@ -1,15 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LessonList from "./LessonList";
 import "./Block1.scss";
 
-function Block({ videos, mainPath = "/main", onLectureClick }) {
+function Block({ blockId, videos, mainPath = "/main", onLectureClick }) {
   return (
     <div>
-      <LessonList lessons={videos} onLectureClick={onLectureClick} />
-
+      <LessonList
+        blockId={blockId}
+        lessons={videos}
+        onLectureClick={onLectureClick}
+      />
       <div className="back-button-container">
-        <Link to={mainPath} className="back-button">Powrót do bloków</Link>
+        <Link to={mainPath} className="back-button">
+          Powrót do bloków
+        </Link>
       </div>
     </div>
   );
