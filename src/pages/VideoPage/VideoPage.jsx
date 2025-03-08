@@ -4,6 +4,8 @@ import axios from "axios";
 import VideoPlayer from "../../components/Video/VideoPlayer";
 import QuestionVideo from "../../components/Video/QuestionVideo";
 import NavigationButtons from "../../components/Video/NavigationButtons";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import "./index.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -15,7 +17,12 @@ function VideoPage() {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000);
+  }, []);
 
   useEffect(() => {
     const updateTime = () => {
@@ -64,6 +71,14 @@ function VideoPage() {
       setError("Błąd podczas zapisywania ukończenia lekcji!");
     }
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div className="video-page">

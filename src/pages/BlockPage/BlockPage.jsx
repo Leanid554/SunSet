@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Block from "../../components/Block/Block"; // Компонент для отображения блока
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -76,7 +78,14 @@ function BlockPages() {
   // Если все лекции пройдены, тест становится доступным
   const isTestEnabled = areAllLecturesAccessible && testAvailable;
 
-  if (loading) return <p>⏳ Загрузка...</p>;
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
