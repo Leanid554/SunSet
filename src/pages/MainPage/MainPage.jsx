@@ -16,7 +16,7 @@ const MainPage = () => {
 
     if (!userId) {
       console.error(
-        "Błąd: identyfikator użytkownika nie został znaleziony w localStorage!"
+        "Ошибка: идентификатор пользователя не найден в localStorage!"
       );
       return;
     }
@@ -28,7 +28,7 @@ const MainPage = () => {
     try {
       const response = await axios.get(`${API_URL}/blocks/user/${userId}`);
       if (!Array.isArray(response.data)) {
-        console.error("Błąd: API nie zwróciło tablicy bloków!", response.data);
+        console.error("Ошибка: API не вернуло массив блоков!", response.data);
         return;
       }
 
@@ -37,9 +37,7 @@ const MainPage = () => {
       const visitedSet = new Set();
 
       blocksData.forEach((block) => {
-        const lectures = block.lectures || [];
-        progressData[block.id] = calculateProgress(lectures);
-
+        progressData[block.id] = calculateProgress(block);
         if (progressData[block.id] > 0) {
           visitedSet.add(block.id);
         }
@@ -49,17 +47,35 @@ const MainPage = () => {
       setProgress(progressData);
       setVisitedBlocks(visitedSet);
     } catch (err) {
-      console.error("Błąd ładowania bloku:", err.message);
+      console.error("Ошибка загрузки блоков:", err.message);
     }
   };
 
-  const calculateProgress = (lectures) => {
-    const passedLectures = lectures.filter(
+  const calculateProgress = (block) => {
+    const lectures = block.lectures || [];
+    const totalLectures = lectures.length;
+    const completedLectures = lectures.filter(
       (lecture) => lecture.isCompleted
     ).length;
-    return lectures.length > 0
-      ? Math.floor((passedLectures / lectures.length) * 100)
-      : 0;
+
+    const isTestPassed = block.test?.userProgress?.passed || false;
+
+    // Если ВСЕ лекции и тест пройдены — 100%
+    if (
+      totalLectures > 0 &&
+      completedLectures === totalLectures &&
+      isTestPassed
+    ) {
+      return 100;
+    }
+
+    // Прогресс лекций в %
+    const lectureProgress =
+      totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+    const testProgress = isTestPassed ? 100 : 0;
+
+    // Вес лекций 70%, вес теста 30%
+    return Math.floor(lectureProgress * 0.7 + testProgress * 0.3);
   };
 
   const handleBlockClick = async (blockId) => {
@@ -67,13 +83,13 @@ const MainPage = () => {
 
     if (!userId) {
       console.error(
-        "Błąd: identyfikator użytkownika nie został znaleziony w localStorage!"
+        "Ошибка: идентификатор пользователя не найден в localStorage!"
       );
       return;
     }
 
     if (visitedBlocks.has(blockId)) {
-      console.warn(`Block ${blockId} już odwiedziłem, pomijam.`);
+      console.warn(`Блок ${blockId} уже посещен, пропускаю.`);
       return;
     }
 
@@ -83,7 +99,7 @@ const MainPage = () => {
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
     } catch (err) {
-      console.error("Błąd zapisu wizyty blokującej:", err.message);
+      console.error("Ошибка сохранения посещения блока:", err.message);
     }
   };
 
@@ -104,7 +120,7 @@ const MainPage = () => {
             const previousBlockId = blocks[index - 1]?.id;
             const previousBlockCompleted = previousBlockId
               ? (progress[previousBlockId] || 0) === 100
-              : true; // Только первый блок доступен по умолчанию
+              : true; // Первый блок доступен всегда
 
             return (
               <BlockItem
