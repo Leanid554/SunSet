@@ -194,12 +194,12 @@
 
 /* Когда кнопка активна */
 .go-to-test-button.active {
-  background-color: #4caf50; /* Зеленый цвет */
+  background-color: #e70000; /* Зеленый цвет */
   cursor: pointer;
 }
 
 .go-to-test-button.active:hover {
-  background-color: #45a049; /* Немного темнее при наведении */
+  background-color: #b30202; /* Немного темнее при наведении */
   transform: scale(1.05); /* Легкое увеличение кнопки при наведении */
 }
 

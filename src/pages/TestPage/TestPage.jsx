@@ -124,7 +124,7 @@ function TestPage() {
     setResultMessage("");
   };
 
-  if (loading) return <div className="loader">⏳ Загрузка теста...</div>;
+  if (loading) return <div className="loader">⏳ Ladowanie testu...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
@@ -136,17 +136,17 @@ function TestPage() {
         <div className="finish-message">
           <h3>{resultMessage}</h3>
           <p>
-            Правильных ответов: {correctAnswersCount} из {questions.length} (
+            Prawidlowe odpiwiedzi {correctAnswersCount} z {questions.length} (
             {((correctAnswersCount / questions.length) * 100).toFixed(2)}%)
           </p>
 
           {isPassed ? (
             <button className="finish-button" onClick={() => navigate("/main")}>
-              Перейти на главную
+              Glowna strona
             </button>
           ) : (
             <button className="retry-button" onClick={restartTest}>
-              🔄 Попробовать снова
+              🔄 Sproboj znowu
             </button>
           )}
         </div>
@@ -173,8 +173,8 @@ function TestPage() {
               disabled={selectedOption === null}
             >
               {currentQuestionIndex === questions.length - 1
-                ? "Завершить"
-                : "Далее"}
+                ? "Skonczyc"
+                : "Dalej"}
             </button>
           </div>
         )

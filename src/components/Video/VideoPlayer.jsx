@@ -46,7 +46,7 @@ const VideoPlayer = React.forwardRef((props, ref) => {
         <video
           ref={ref}
           {...props}
-          style={{ width: "50%", display: "block" }}
+          style={{ width: "100%", display: "block" }}
           controls
         >
           <source

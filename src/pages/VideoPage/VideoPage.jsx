@@ -60,7 +60,7 @@ function VideoPage() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log(`✅ Лекция ${id} завершена. Статус: ${passed}`);
+      console.log(`✅ Lekcja ${id} Skonczona. Status: ${passed}`);
 
       navigate(`/blocks/${id}`);
     } catch (error) {
