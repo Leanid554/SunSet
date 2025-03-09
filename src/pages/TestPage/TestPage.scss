@@ -6,28 +6,30 @@
   height: 100vh;
   background-color: #f8f9fa;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  padding: 20px;
 }
 
-.loader,
-.error {
-  font-size: 18px;
-  color: #dc3545;
+.question-card,
+.finish-message {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 100%;
+  max-width: 480px;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 h2 {
   color: #343a40;
   margin-bottom: 20px;
-}
-
-.question-card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 90%;
-  max-width: 500px;
-  transition: all 0.3s ease-in-out;
 }
 
 h3 {
@@ -40,72 +42,67 @@ h3 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  width: 100%;
 }
 
 .option {
   background: #e9ecef;
   color: #343a40;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
   text-align: center;
   font-size: 16px;
-}
+  font-weight: 500;
+  width: 90%;
 
-.option:hover {
-  background: #ced4da;
-  transform: translateY(-2px);
-}
+  &:hover {
+    background: #d6d9de;
+    transform: translateY(-2px);
+  }
 
-.option.selected {
-  background: #28a745;
-  color: white;
+  &.selected {
+    background: #767872;
+    color: white;
+  }
 }
 
 .next-button,
-.finish-button {
+.finish-button,
+.retry-button {
   margin-top: 20px;
-  padding: 12px 20px;
-  background-color: #007bff;
+  padding: 14px 24px;
+  background-color: #ac0e0b;
   color: white;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
+  width: 100%;
+  max-width: 250px;
 
-.next-button:hover,
-.finish-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
+  &:hover {
+    background-color: #d80906;
+    transform: translateY(-2px);
+  }
 
-.next-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 }
 
 .finish-message {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 90%;
-  max-width: 500px;
   color: #28a745;
-}
+  font-size: 18px;
 
-.finish-message h3 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.finish-message p {
-  font-size: 16px;
-  color: #6c757d;
+  p {
+    font-size: 16px;
+    color: #6c757d;
+    margin-top: 8px;
+  }
 }

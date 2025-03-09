@@ -129,7 +129,8 @@ function TestPage() {
 
   return (
     <div className="test-container">
-      <h2>Тест блока {blockId}</h2>
+     <h2>Test po bloku ({blockId})</h2>
+
 
       {isFinished ? (
         <div className="finish-message">
