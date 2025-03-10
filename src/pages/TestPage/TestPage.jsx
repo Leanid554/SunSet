@@ -17,7 +17,7 @@ function TestPage() {
   const [isFinished, setIsFinished] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
   const [isPassed, setIsPassed] = useState(false);
-  const [blockTestId, setblockTestId] = useState(0);
+  const [blockTestId, setBlockTestId] = useState(0);
 
   useEffect(() => {
     if (!blockId) {
@@ -28,19 +28,19 @@ function TestPage() {
 
     const fetchTestQuestions = async () => {
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/block-test/${blockId}`
-        );
+        const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
         console.log("Полученные данные:", response.data);
-        setblockTestId(response.data.id);
-        if (
-          response.data?.questions &&
-          Array.isArray(response.data.questions)
-        ) {
-          const formattedQuestions = response.data.questions.map((q) => ({
+
+        setBlockTestId(response.data.id);
+
+        if (response.data?.questions && Array.isArray(response.data.questions)) {
+          let formattedQuestions = response.data.questions.map((q) => ({
             ...q,
-            options: JSON.parse(q.options), // Преобразуем строку в массив
+            options: shuffleArray(JSON.parse(q.options)), // Перемешиваем варианты ответов
           }));
+
+          formattedQuestions = shuffleArray(formattedQuestions); // Перемешиваем сами вопросы
+
           setQuestions(formattedQuestions);
         } else {
           setError("❌ Ошибка: Вопросы не найдены или неверный формат данных");
@@ -56,13 +56,16 @@ function TestPage() {
     fetchTestQuestions();
   }, [blockId]);
 
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
   const handleNext = () => {
     if (selectedOption === null) return;
 
     const currentQuestion = questions[currentQuestionIndex];
     let updatedCorrectAnswers = correctAnswersCount;
 
-    // Проверяем правильность ответа
     if (currentQuestion.options[selectedOption] === currentQuestion.answer) {
       updatedCorrectAnswers += 1;
       setCorrectAnswersCount(updatedCorrectAnswers);
@@ -84,13 +87,11 @@ function TestPage() {
     setIsPassed(passed);
     setResultMessage(
       passed
-        ? "🎉 Поздравляем! Вы успешно прошли тест."
-        : "❌ Недостаточно правильных ответов. Попробуйте еще раз."
+        ? "Gratulacje! Pomyślnie ukończyłeś test."
+        : "❌ Za mało poprawnych odpowiedzi. Spróbuj ponownie."
     );
 
     setIsFinished(true);
-
-    // Сохраняем прогресс, даже если тест не сдан
     saveTestProgress(passed);
   };
 
@@ -103,16 +104,13 @@ function TestPage() {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/block-test/progress`, {
-        userId: userId,
-        blockTestId: blockTestId,
-        passed: passed, // отправляем false, если не сдано
+      await axios.post(`${API_BASE_URL}/block-test/progress`, {
+        userId,
+        blockTestId,
+        passed,
       });
     } catch (err) {
-      console.error(
-        "Ошибка при сохранении результата теста:",
-        err.response?.data || err.message
-      );
+      console.error("Ошибка при сохранении результата теста:", err.response?.data || err.message);
     }
   };
 
@@ -122,31 +120,31 @@ function TestPage() {
     setSelectedOption(null);
     setIsFinished(false);
     setResultMessage("");
+    setQuestions(shuffleArray(questions.map((q) => ({ ...q, options: shuffleArray(q.options) }))));
   };
 
-  if (loading) return <div className="loader">⏳ Ladowanie testu...</div>;
+  if (loading) return <div className="loader">⏳ Ładowanie testu...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="test-container">
-     <h2>Test po bloku ({blockId})</h2>
-
+      <h2>Test po bloku ({blockId})</h2>
 
       {isFinished ? (
         <div className="finish-message">
           <h3>{resultMessage}</h3>
           <p>
-            Prawidlowe odpiwiedzi {correctAnswersCount} z {questions.length} (
+            Prawidłowe odpowiedzi: {correctAnswersCount} z {questions.length} (
             {((correctAnswersCount / questions.length) * 100).toFixed(2)}%)
           </p>
 
           {isPassed ? (
             <button className="finish-button" onClick={() => navigate("/main")}>
-              Glowna strona
+              Główna strona
             </button>
           ) : (
             <button className="retry-button" onClick={restartTest}>
-              🔄 Sproboj znowu
+              🔄 Spróbuj ponownie
             </button>
           )}
         </div>
@@ -158,23 +156,15 @@ function TestPage() {
               {questions[currentQuestionIndex].options.map((option, index) => (
                 <li
                   key={index}
-                  className={`option ${
-                    selectedOption === index ? "selected" : ""
-                  }`}
+                  className={`option ${selectedOption === index ? "selected" : ""}`}
                   onClick={() => setSelectedOption(index)}
                 >
                   {option}
                 </li>
               ))}
             </ul>
-            <button
-              className="next-button"
-              onClick={handleNext}
-              disabled={selectedOption === null}
-            >
-              {currentQuestionIndex === questions.length - 1
-                ? "Skonczyc"
-                : "Dalej"}
+            <button className="next-button" onClick={handleNext} disabled={selectedOption === null}>
+              {currentQuestionIndex === questions.length - 1 ? "Skończyć" : "Dalej"}
             </button>
           </div>
         )

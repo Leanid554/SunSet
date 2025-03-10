@@ -7,6 +7,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
 const UserStats = ({ users }) => {
   const [selectedEmail, setSelectedEmail] = useState("");
   const [stats, setStats] = useState(null);
+  const [testResults, setTestResults] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -24,8 +25,29 @@ const UserStats = ({ users }) => {
         email: selectedEmail,
       });
 
-      console.log("Statystyki użytkowników:", response.data);
+      console.log("Statystyki użytkownika:", response.data);
       setStats(response.data);
+
+      // Загружаем результаты тестов для каждого блока
+      if (response.data.blockVisits) {
+        const testResultsData = {};
+
+        for (const block of response.data.blockVisits) {
+          try {
+            const testResponse = await axios.get(
+              `${API_BASE_URL}/block-test/progress/${response.data.userId}/${block.blockId}`
+            );
+            testResultsData[block.blockId] = testResponse.data.passed
+              ? "✅ Zdany"
+              : "❌ Nie zdany";
+          } catch (err) {
+            console.error(`Błąd pobierania testu dla bloku ${block.blockId}:`, err);
+            testResultsData[block.blockId] = "⏳ Brak danych";
+          }
+        }
+
+        setTestResults(testResultsData);
+      }
     } catch (err) {
       console.error("Błąd podczas pobierania statystyk:", err);
       setError("Nie udało się załadować statystyk.");
@@ -34,28 +56,14 @@ const UserStats = ({ users }) => {
     }
   };
 
-  // Function to find the block for each lecture, assuming there's a relation
-  const getBlockForLecture = (lectureId, blockVisits) => {
-    for (const block of blockVisits) {
-      // Assuming that the lecture is part of the block
-      if (block.completed) {
-        return block.block.title;
-      }
-    }
-    return "Nie przypisano do żadnego bloku";
-  };
-
   return (
     <div className="user-stats">
       <h3>📊 Statystyka użytkowników</h3>
 
-      {/* Wybor użytkownika */}
+      {/* Wybór użytkownika */}
       <label>
         Wybierz użytkownika:
-        <select
-          value={selectedEmail}
-          onChange={(e) => setSelectedEmail(e.target.value)}
-        >
+        <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)}>
           <option value="">-- Wybierz --</option>
           {users.map((user) => (
             <option key={user.id} value={user.email}>
@@ -66,7 +74,7 @@ const UserStats = ({ users }) => {
       </label>
       <button onClick={fetchStats}>📩 Uzyskaj statystyki</button>
 
-      {/* Status загрузки i ошибки */}
+      {/* Status ładowania i błędy */}
       {loading && <p>Ładowanie...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -78,9 +86,7 @@ const UserStats = ({ users }) => {
             {stats.visits.map((visit, index) => (
               <li key={index}>
                 Wejście: {new Date(visit.entryTime).toLocaleString()} | Wyjście:{" "}
-                {visit.exitTime
-                  ? new Date(visit.exitTime).toLocaleString()
-                  : "Nadal w systemie"}
+                {visit.exitTime ? new Date(visit.exitTime).toLocaleString() : "Nadal w systemie"}
               </li>
             ))}
           </ul>
@@ -90,7 +96,8 @@ const UserStats = ({ users }) => {
             {stats.blockVisits.map((block) => (
               <li key={block.blockId}>
                 {block.block.title} (Wizyty: {block.count}) |{" "}
-                {block.completed ? "Zdany" : "Nie zdany"}
+                {block.completed ? "Zdany" : "Nie zdany"} | Test:{" "}
+                {testResults[block.blockId] || "⏳ Pobieranie..."}
               </li>
             ))}
           </ul>
@@ -100,9 +107,7 @@ const UserStats = ({ users }) => {
             {stats.lectureProgress.map((progress) => (
               <li key={progress.lectureId}>
                 {progress.lecture.title} -{" "}
-                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby:{" "}
-                {progress.attempts}) | Blok:{" "}
-                {getBlockForLecture(progress.lectureId, stats.blockVisits)}
+                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby: {progress.attempts})
               </li>
             ))}
           </ul>

@@ -91,7 +91,7 @@ function VideoPage() {
       />
 
       {isVideoCompleted &&
-        (correctAnswers >= 2 ? (
+        (correctAnswers >= 3 ? ( // Теперь нужно 3 правильных ответа
           <button
             className="complete-lecture-btn"
             onClick={() => handleLectureComplete(true)}

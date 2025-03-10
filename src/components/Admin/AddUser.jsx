@@ -52,7 +52,7 @@ const AddUser = ({ users, setUsers }) => {
       <input
         type="text"
         name="name"
-        placeholder="Imie"
+        placeholder="Imię"
         value={newUser.name}
         onChange={handleChange}
       />
@@ -73,8 +73,10 @@ const AddUser = ({ users, setUsers }) => {
 
       <label>Wybierz rolę:</label>
       <select name="role" value={newUser.role} onChange={handleChange}>
-        <option value="użytkownik">użytkownik (Użytkownik)</option>
-        <option value="administrator">administrator (Administrator)</option>
+        <option value="użytkownik">Użytkownik</option>
+        <option value="administrator">Administrator</option>
+        <option value="call-center">Call-Center</option>
+        <option value="dzial-sprzedazy">Dział Sprzedaży</option>
       </select>
 
       <button onClick={addUser} disabled={loading}>
