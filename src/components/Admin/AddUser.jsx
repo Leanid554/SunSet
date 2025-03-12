@@ -1,34 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const AddUser = ({ users, setUsers }) => {
+const AddUser = ({ roles = [], setRoles }) => {
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
     password: "",
-    role: "", // Initially empty, will be filled after fetching roles
+    role: "",
   });
 
-  const [roles, setRoles] = useState([]);
-  const [newRole, setNewRole] = useState(""); // For new role input
+  const [newRole, setNewRole] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // Fetch roles from the API
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/roles/all`);
-        setRoles(response.data); // Assuming response is an array of roles
-      } catch (error) {
-        setError("Błąd podczas pobierania ról.");
-      }
-    };
-
-    fetchRoles();
-  }, []);
 
   const handleChange = (e) => {
     setNewUser({ ...newUser, [e.target.name]: e.target.value });
@@ -52,9 +37,6 @@ const AddUser = ({ users, setUsers }) => {
         newUser
       );
       if (response.status === 201) {
-        const updatedUsers = [...users, response.data];
-        setUsers(updatedUsers);
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
         setNewUser({ name: "", email: "", password: "", role: "" });
       } else {
         setError("Błąd serwera.");
@@ -78,9 +60,10 @@ const AddUser = ({ users, setUsers }) => {
         name: newRole,
       });
       if (response.status === 201) {
-        setRoles([...roles, response.data]);
+        const updatedRoles = [...roles, response.data];
+        setRoles(updatedRoles); // Обновляем список ролей в AddBlock
         setNewRole("");
-        setError(""); // Reset any error message
+        setError("");
       } else {
         setError("Błąd serwera podczas dodawania roli.");
       }
