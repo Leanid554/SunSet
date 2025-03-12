@@ -17,7 +17,7 @@ const UserList = ({ users }) => {
             <tr key={user.id}>
               <td>{user.id}</td>
               <td>{user.email}</td>
-              <td>{user.role}</td>
+              <td>{user.role.name}</td>
             </tr>
           ))}
         </tbody>
