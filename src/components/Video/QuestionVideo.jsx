@@ -4,12 +4,7 @@ import "./QuestionVideo.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-function QuestionVideo({
-  lectureId,
-  videoRef,
-  onAnswerChange,
-  onVideoCompleted,
-}) {
+function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }) {
   const [questions, setQuestions] = useState([]);
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
@@ -19,11 +14,14 @@ function QuestionVideo({
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/questions/lecture/${lectureId}`
-        );
-
-        setQuestions(response.data);
+        const response = await axios.get(`${API_BASE_URL}/questions/lecture/${lectureId}`);
+        
+        if (response.data.length > 3) {
+          const shuffled = response.data.sort(() => 0.5 - Math.random());
+          setQuestions(shuffled.slice(0, 3)); // Выбираем три случайных вопроса
+        } else {
+          setQuestions(response.data); // Если вопросов ≤ 3, берём все
+        }
       } catch (err) {
         console.error("Ошибка загрузки вопросов:", err);
       }
@@ -50,7 +48,7 @@ function QuestionVideo({
 
     const handleVideoEnd = () => {
       setIsVideoCompleted(true);
-      onVideoCompleted(); // Уведомляем родителя, что видео завершено
+      onVideoCompleted();
     };
 
     const videoElement = videoRef.current;
@@ -76,8 +74,7 @@ function QuestionVideo({
     setActiveQuestion(null);
     if (videoRef.current) videoRef.current.play();
 
-    // Передаем правильные ответы после их обновления
-    onAnswerChange(correctAnswers + (isCorrect ? 1 : 0)); // Увеличиваем правильные ответы только если ответ правильный
+    onAnswerChange(correctAnswers + (isCorrect ? 1 : 0));
   };
 
   return (
@@ -90,10 +87,7 @@ function QuestionVideo({
             </p>
             <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleAnswer(activeQuestion.id, option)}
-                >
+                <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>
                   {option}
                 </li>
               ))}

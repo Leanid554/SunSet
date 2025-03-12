@@ -11,24 +11,27 @@ const AddBlock = ({ blocks, setBlocks }) => {
   const [error, setError] = useState(null);
   const [roleLoading, setRoleLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      setRoleLoading(true);
-      try {
-        const response = await axios.get(`${API_BASE_URL}/roles/all`);
-        setRoles(response.data);
-        setRole(response.data.length > 0 ? response.data[0].name : ""); // Ustawiamy pierwszą rolę domyślnie
-      } catch (err) {
-        setError("Błąd podczas pobierania listy ról");
-        console.error("Błąd ładowania ról:", err);
-      } finally {
-        setRoleLoading(false);
-      }
-    };
+  // Function to fetch roles
+  const fetchRoles = async () => {
+    setRoleLoading(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/roles/all`);
+      setRoles(response.data);
+      setRole(response.data.length > 0 ? response.data[0].name : ""); // Set the first role as default
+    } catch (err) {
+      setError("Błąd podczas pobierania listy ról");
+      console.error("Błąd ładowania ról:", err);
+    } finally {
+      setRoleLoading(false);
+    }
+  };
 
+  // Fetch roles on initial load
+  useEffect(() => {
     fetchRoles();
   }, []);
 
+  // Function to add a new block
   const addBlock = async () => {
     if (newBlockName.trim() === "" || !role) return;
 
@@ -48,7 +51,10 @@ const AddBlock = ({ blocks, setBlocks }) => {
 
       setBlocks([...blocks, newBlock]);
       setNewBlockName("");
-      setRole(roles.length > 0 ? roles[0].name : ""); // Resetujemy rolę
+      setRole(roles.length > 0 ? roles[0].name : ""); // Reset the role
+
+      // Re-fetch the roles after creating the block to update the list
+      fetchRoles();
     } catch (err) {
       setError("Błąd podczas dodawania bloku");
       console.error("Błąd:", err);
