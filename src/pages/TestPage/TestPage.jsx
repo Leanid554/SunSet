@@ -34,14 +34,14 @@ function TestPage() {
         setBlockTestId(response.data.id);
 
         if (response.data?.questions && Array.isArray(response.data.questions)) {
-          let formattedQuestions = response.data.questions.map((q) => ({
+          let shuffledQuestions = shuffleArray(response.data.questions).slice(0, 20); // Берем 20 случайных вопросов
+
+          shuffledQuestions = shuffledQuestions.map((q) => ({
             ...q,
             options: shuffleArray(JSON.parse(q.options)), // Перемешиваем варианты ответов
           }));
 
-          formattedQuestions = shuffleArray(formattedQuestions); // Перемешиваем сами вопросы
-
-          setQuestions(formattedQuestions);
+          setQuestions(shuffledQuestions);
         } else {
           setError("❌ Ошибка: Вопросы не найдены или неверный формат данных");
         }
@@ -120,7 +120,7 @@ function TestPage() {
     setSelectedOption(null);
     setIsFinished(false);
     setResultMessage("");
-    setQuestions(shuffleArray(questions.map((q) => ({ ...q, options: shuffleArray(q.options) }))));
+    setQuestions(shuffleArray(questions.map((q) => ({ ...q, options: shuffleArray(q.options) })))); // Перемешивание вопросов и ответов при перезапуске
   };
 
   if (loading) return <div className="loader">⏳ Ładowanie testu...</div>;
