@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const VideoPlayer = React.forwardRef((props, ref) => {
   const { id } = useParams();
   const [selectedLecture, setSelectedLecture] = useState(null);
@@ -18,7 +20,7 @@ const VideoPlayer = React.forwardRef((props, ref) => {
     const fetchLectureDetails = async () => {
       try {
         const response = await axios.get(
-          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/lectures/${id}/details`
+          `${API_BASE_URL}/lectures/${id}/details`
         );
 
         setSelectedLecture(response.data);
@@ -50,7 +52,7 @@ const VideoPlayer = React.forwardRef((props, ref) => {
           controls
         >
           <source
-            src={`https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me${selectedLecture.videoUrl}`}
+            src={`${API_BASE_URL}${selectedLecture.videoUrl}`}
             type="video/mp4"
           />
           Twoja przeglądarka nie obsługuje wideo.

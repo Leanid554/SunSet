@@ -1,0 +1,221 @@
+@charset "UTF-8";
+.block-container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+}
+
+.block-height {
+  margin-top: 60px;
+}
+
+.block-header-row {
+  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  background-color: #f5f5f5;
+  z-index: 10;
+  padding-top: 10px;
+}
+.block-header-row .progress-label {
+  margin-left: 50px;
+}
+.block-header-row .access-label {
+  margin-right: 40px;
+}
+.block-header-row .position-label {
+  padding-right: 40px;
+}
+
+.block-label,
+.position-label,
+.progress-label,
+.access-label {
+  font-size: 14px;
+  color: #777;
+}
+
+.block-label {
+  width: 240px;
+}
+
+.access-label1 {
+  padding-right: 40px;
+  font-size: 14px;
+  color: #777;
+}
+
+.progress-label1 {
+  font-size: 14px;
+  color: #777;
+  padding-right: 10px;
+}
+
+.position-label1 {
+  padding-right: 50px;
+  font-size: 14px;
+  color: #777;
+}
+
+.video-list-container {
+  max-height: 400px;
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+
+.video-item-wrapper {
+  align-items: center;
+}
+
+.video-item {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  justify-content: space-between;
+  margin-top: 10px; /* Отступ сверху, чтобы материал не был впритык к заголовкам */
+}
+
+.video-item1 {
+  display: flex;
+  background-color: #e4e4e4;
+  border-radius: 10px;
+  padding: 15px;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.video-item:hover,
+.video-item1:hover {
+  transform: translateY(-5px);
+}
+
+.video-item.disabled {
+  pointer-events: none;
+  background-color: #ddd;
+}
+
+.video-link {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.video-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.block-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.block-title {
+  font-size: 16px;
+  font-weight: bold;
+  width: 200px;
+}
+
+.position {
+  font-size: 14px;
+  color: #777;
+}
+
+.progress-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.access-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  min-width: 30px;
+}
+
+.test-container {
+  padding-top: 40px;
+  padding-bottom: 20px;
+  width: 40%;
+  padding-left: 30%;
+}
+
+.back-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #f82d2d;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.2s ease-in-out;
+}
+.back-button:hover {
+  background-color: #f82d2d;
+}
+
+.test-link {
+  display: flex;
+  justify-content: center; /* Центрирование кнопки по горизонтали */
+  align-items: center; /* Центрирование кнопки по вертикали */
+  margin-top: 20px; /* добавим отступ сверху */
+}
+
+.go-to-test-button {
+  background-color: #4caf50; /* Зеленый цвет */
+  color: white;
+  font-size: 14px; /* Меньший шрифт */
+  padding: 10px 20px; /* Уменьшаем внутренние отступы */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  max-width: 250px; /* Максимальная ширина кнопки */
+  width: 100%; /* Кнопка будет занимать всю ширину контейнера */
+  text-align: center; /* Выравнивание текста по центру */
+}
+
+/* Когда кнопка активна */
+.go-to-test-button.active {
+  background-color: #e70000; /* Зеленый цвет */
+  cursor: pointer;
+}
+
+.go-to-test-button.active:hover {
+  background-color: #b30202; /* Немного темнее при наведении */
+  transform: scale(1.05); /* Легкое увеличение кнопки при наведении */
+}
+
+/* Когда кнопка неактивна */
+.go-to-test-button.disabled {
+  background-color: #ddd; /* Серый цвет */
+  cursor: not-allowed;
+  transform: none; /* Убираем увеличение при наведении */
+}/*# sourceMappingURL=Block1.css.map */

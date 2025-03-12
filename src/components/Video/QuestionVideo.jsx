@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./QuestionVideo.scss";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 function QuestionVideo({
   lectureId,
   videoRef,
@@ -18,7 +20,7 @@ function QuestionVideo({
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          `https://testapp-backend-eynpzx-3ec2cf-217-154-81-219.traefik.me/questions/lecture/${lectureId}`
+          `${API_BASE_URL}/questions/lecture/${lectureId}`
         );
 
         setQuestions(response.data);
