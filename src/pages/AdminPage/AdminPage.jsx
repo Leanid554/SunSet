@@ -127,7 +127,6 @@ const AdminPage = () => {
           lectures={lectures}
           setLectures={setLectures}
         />
-        <AddUser users={users} setUsers={setUsers} />
       </div>
 
       <div className="zarzadzanie-container">

@@ -89,7 +89,6 @@ const AddBlock = ({ blocks, setBlocks }) => {
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Передаем setRoles в AddUser */}
       <AddUser setRoles={setRoles} roles={roles} />
     </div>
   );
