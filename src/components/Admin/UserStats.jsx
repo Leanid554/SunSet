@@ -37,12 +37,21 @@ const UserStats = ({ users }) => {
             const testResponse = await axios.get(
               `${API_BASE_URL}/block-test/progress/${response.data.userId}/${block.blockId}`
             );
-            testResultsData[block.blockId] = testResponse.data.passed
-              ? "✅ Zdany"
-              : "❌ Nie zdany";
+
+            // Если тест завершён, сохраняем информацию о результатах
+            testResultsData[block.blockId] = {
+              passed: testResponse.data.passed ? "✅ Zdany" : "❌ Nie zdany",
+              attempts: testResponse.data.attempts || 0, // Ensure attempts are captured
+            };
           } catch (err) {
-            console.error(`Błąd pobierania testu dla bloku ${block.blockId}:`, err);
-            testResultsData[block.blockId] = "⏳ Brak danych";
+            console.error(
+              `Błąd pobierania testu dla bloku ${block.blockId}:`,
+              err
+            );
+            testResultsData[block.blockId] = {
+              passed: "⏳ Brak danych",
+              attempts: "N/A", // If no test data, show N/A for attempts
+            };
           }
         }
 
@@ -63,7 +72,10 @@ const UserStats = ({ users }) => {
       {/* Wybór użytkownika */}
       <label>
         Wybierz użytkownika:
-        <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)}>
+        <select
+          value={selectedEmail}
+          onChange={(e) => setSelectedEmail(e.target.value)}
+        >
           <option value="">-- Wybierz --</option>
           {users.map((user) => (
             <option key={user.id} value={user.email}>
@@ -86,7 +98,9 @@ const UserStats = ({ users }) => {
             {stats.visits.map((visit, index) => (
               <li key={index}>
                 Wejście: {new Date(visit.entryTime).toLocaleString()} | Wyjście:{" "}
-                {visit.exitTime ? new Date(visit.exitTime).toLocaleString() : "Nadal w systemie"}
+                {visit.exitTime
+                  ? new Date(visit.exitTime).toLocaleString()
+                  : "Nadal w systemie"}
               </li>
             ))}
           </ul>
@@ -96,8 +110,19 @@ const UserStats = ({ users }) => {
             {stats.blockVisits.map((block) => (
               <li key={block.blockId}>
                 {block.block.title} (Wizyty: {block.count}) |{" "}
-                {block.completed ? "Zdany" : "Nie zdany"} | Test:{" "}
-                {testResults[block.blockId] || "⏳ Pobieranie..."}
+                {block.completed ? "Zdany" : "Nie zdany"}
+              </li>
+            ))}
+          </ul>
+
+          <h4>📝 Testy:</h4>
+          <ul>
+            {stats.blockTestProgress.map((test) => (
+              <li key={test.blockTestId}>
+                {test.blockTest.block.title} -{" "}
+                {test.passed
+                  ? `✅ Zdany (Próby: ${test.attempts})`
+                  : `❌ Nie zdany (Próby: ${test.attempts})`}
               </li>
             ))}
           </ul>
@@ -107,7 +132,8 @@ const UserStats = ({ users }) => {
             {stats.lectureProgress.map((progress) => (
               <li key={progress.lectureId}>
                 {progress.lecture.title} -{" "}
-                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby: {progress.attempts})
+                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby:{" "}
+                {progress.attempts})
               </li>
             ))}
           </ul>
