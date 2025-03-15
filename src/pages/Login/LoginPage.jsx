@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import LoginForm from "../../components/Login/LoginForm";
 import { setUserId } from "../../store/userSlice";
 import "./index.scss";
+import { decodeToken, setToken } from "./TokenUtils";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -56,11 +57,6 @@ function LoginPage() {
         const { accessToken } = response.data;
         setToken(accessToken);
 
-        const decoded = decodeToken(accessToken);
-        if (decoded?.sub) {
-          dispatch(setUserId(decoded.sub)); // Обновляем userId в Redux
-        }
-
         setTimeout(() => {
           setLoading(false);
           navigate("/main");
@@ -95,40 +91,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
-// Функции для работы с токенами
-export const setToken = (accessToken) => {
-  if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
-
-    const decoded = decodeToken(accessToken);
-    if (decoded?.sub) {
-      localStorage.setItem("userId", decoded.sub);
-    }
-  }
-};
-
-export const getAccessToken = () => localStorage.getItem("accessToken");
-export const getUserId = () => localStorage.getItem("userId");
-
-export const removeTokens = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("userId");
-};
-
-export const isAuthenticated = () => {
-  const token = getAccessToken();
-  if (!token) return false;
-
-  const decoded = decodeToken(token);
-  return decoded && decoded.exp * 1000 > Date.now();
-};
-
-export const decodeToken = (token) => {
-  try {
-    return jwtDecode(token);
-  } catch (error) {
-    console.error("Błąd dekodowania tokena:", error);
-    return null;
-  }
-};

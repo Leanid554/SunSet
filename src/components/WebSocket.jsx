@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 const WebSocket = () => {
   const [status, setStatus] = useState("Connecting...");
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId"); // Changed from localStorage to sessionStorage
 
   useEffect(() => {
     const socket = io(`${API_BASE_URL}`, {

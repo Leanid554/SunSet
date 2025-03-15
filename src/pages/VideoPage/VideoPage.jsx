@@ -53,7 +53,8 @@ function VideoPage() {
 
   const handleLectureComplete = async (passed) => {
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = sessionStorage.getItem("userId");
+
       await axios.post(
         `${API_BASE_URL}/lectures/${id}/complete/${userId}`,
         { passed },
@@ -74,7 +75,12 @@ function VideoPage() {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="50vh"
+      >
         <CircularProgress />
       </Box>
     );

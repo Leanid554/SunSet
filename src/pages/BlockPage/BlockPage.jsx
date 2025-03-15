@@ -9,7 +9,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 function BlockPages() {
   const { blockId } = useParams(); // Получаем blockId из параметров URL
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
+
   const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +81,12 @@ function BlockPages() {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="50vh"
+      >
         <CircularProgress />
       </Box>
     );
