@@ -1,0 +1,102 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./QuestionVideo.scss";
+
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
+function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }) {
+  const [questions, setQuestions] = useState([]);
+  const [activeQuestion, setActiveQuestion] = useState(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/questions/lecture/${lectureId}`);
+        
+        if (response.data.length > 3) {
+          const shuffled = response.data.sort(() => 0.5 - Math.random());
+          setQuestions(shuffled.slice(0, 3)); // Выбираем три случайных вопроса
+        } else {
+          setQuestions(response.data); // Если вопросов ≤ 3, берём все
+        }
+      } catch (err) {
+        console.error("Ошибка загрузки вопросов:", err);
+      }
+    };
+
+    fetchQuestions();
+  }, [lectureId]);
+
+  useEffect(() => {
+    if (!videoRef.current || questions.length === 0) return;
+
+    const checkTime = () => {
+      const currentTime = Math.floor(videoRef.current.currentTime);
+
+      const questionToShow = questions.find(
+        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id)
+      );
+
+      if (questionToShow) {
+        videoRef.current.pause();
+        setActiveQuestion(questionToShow);
+      }
+    };
+
+    const handleVideoEnd = () => {
+      setIsVideoCompleted(true);
+      onVideoCompleted();
+    };
+
+    const videoElement = videoRef.current;
+    videoElement.addEventListener("timeupdate", checkTime);
+    videoElement.addEventListener("ended", handleVideoEnd);
+
+    return () => {
+      videoElement.removeEventListener("timeupdate", checkTime);
+      videoElement.removeEventListener("ended", handleVideoEnd);
+    };
+  }, [questions, answeredQuestions, videoRef, onVideoCompleted]);
+
+  const handleAnswer = (questionId, selectedOption) => {
+    const question = questions.find((q) => q.id === questionId);
+    if (!question) return;
+
+    const isCorrect = question.answer === selectedOption;
+    if (isCorrect) {
+      setCorrectAnswers((prev) => prev + 1);
+    }
+
+    setAnsweredQuestions((prev) => new Set([...prev, questionId]));
+    setActiveQuestion(null);
+    if (videoRef.current) videoRef.current.play();
+
+    onAnswerChange(correctAnswers + (isCorrect ? 1 : 0));
+  };
+
+  return (
+    <div>
+      {activeQuestion && (
+        <div className="question-modal">
+          <div className="modal-content">
+            <p>
+              <strong>Pytanie:</strong> {activeQuestion.question}
+            </p>
+            <ul className="answer-list">
+              {activeQuestion.options.map((option, index) => (
+                <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>
+                  {option}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default QuestionVideo;

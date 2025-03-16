@@ -1,0 +1,107 @@
+.test-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  padding: 20px;
+}
+
+.question-card,
+.finish-message {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 100%;
+  max-width: 480px;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  color: #343a40;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+h3 {
+  margin-bottom: 15px;
+  color: #495057;
+}
+
+.options-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.option {
+  background: #e9ecef;
+  color: #343a40;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  width: 90%;
+}
+.option:hover {
+  background: #d6d9de;
+  transform: translateY(-2px);
+}
+.option.selected {
+  background: #767872;
+  color: white;
+}
+
+.next-button,
+.finish-button,
+.retry-button {
+  margin-top: 20px;
+  padding: 14px 24px;
+  background-color: #ac0e0b;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 100%;
+  max-width: 250px;
+}
+.next-button:hover,
+.finish-button:hover,
+.retry-button:hover {
+  background-color: #d80906;
+  transform: translateY(-2px);
+}
+.next-button:disabled,
+.finish-button:disabled,
+.retry-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.finish-message {
+  color: #28a745;
+  font-size: 18px;
+}
+.finish-message p {
+  font-size: 16px;
+  color: #6c757d;
+  margin-top: 8px;
+}/*# sourceMappingURL=TestPage.css.map */

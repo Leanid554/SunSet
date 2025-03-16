@@ -1,0 +1,127 @@
+@charset "UTF-8";
+.video-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+}
+.video-page h3 {
+  font-size: 24px;
+}
+.video-page video {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #fff; /* Белая рамка */
+  border-radius: 5px;
+}
+.video-page .buttons-video {
+  display: flex;
+  gap: 20px;
+  padding-top: 20px;
+}
+.video-page .back-button1 {
+  background-color: #f82d2d;
+  color: #fff;
+  text-align: center;
+  padding: 15px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 18px;
+  margin-top: 20px;
+  transition: 0.3s all;
+}
+.video-page .back-button1:hover {
+  background-color: #d80202;
+}
+.video-page .next-button-video {
+  background-color: #f82d2d;
+  color: #fff;
+  padding: 15px 34px;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-top: 20px;
+  border: 0px;
+  transition: 0.3s all;
+}
+.video-page .next-button-video:hover {
+  background-color: #d80202;
+}
+.video-page .quiz-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 100;
+}
+.video-page .answers {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.video-page .answers button {
+  background-color: #f82d2d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.video-page .answers button:hover {
+  background-color: #d80202;
+}/*# sourceMappingURL=index.css.map */nd-color: #ddd; /* Gray part */
+}
+
+.progress-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.dostep-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  min-width: 30px;
+}/*# sourceMappingURL=index.css.map */nd: #fff;
+}
+
+input::-moz-placeholder {
+  color: #888;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Стили для таблицы */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background: #f1f1f1;
+  font-weight: bold;
+}
+
+.placeholder {
+  width: 100%; /* Убираем проблему выхода за границу */
+  max-width: 200px; /* Максимальная ширина */
+}/*# sourceMappingURL=index.css.map */
