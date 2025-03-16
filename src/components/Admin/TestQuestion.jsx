@@ -27,7 +27,7 @@ const TestQuestion = ({ blockTestId }) => {
 
   const handleSubmit = async () => {
     if (!question.trim() || options.some((opt) => !opt.trim()) || !answer.trim()) {
-      setError("Пожалуйста, заполните все поля.");
+      setError("Prosimy o wypełnienie wszystkich pól.");
       return;
     }
 
@@ -52,12 +52,12 @@ const TestQuestion = ({ blockTestId }) => {
         }
       );
 
-      setSuccess("Вопрос успешно добавлен!");
+      setSuccess("Pytanie zostało pomyślnie dodane!");
       setQuestion("");
       setOptions(["", "", "", ""]);
       setAnswer("");
     } catch (err) {
-      setError("Ошибка при добавлении вопроса. Пожалуйста, попробуйте снова.");
+      setError("Błąd podczas dodawania pytania. Spróbuj ponownie.");
     } finally {
       setLoading(false);
     }
@@ -65,13 +65,13 @@ const TestQuestion = ({ blockTestId }) => {
 
   return (
     <div className="test-question">
-      <h3>❓ Добавить новый вопрос</h3>
+      <h3>❓ Dodaj nowe pytanie</h3>
       <div className="question-form">
         <input
           type="text"
           value={question}
           onChange={handleQuestionChange}
-          placeholder="Введите текст вопроса"
+          placeholder="Wprowadź tekst pytania"
         />
         {options.map((option, index) => (
           <input
@@ -83,7 +83,7 @@ const TestQuestion = ({ blockTestId }) => {
           />
         ))}
         <select value={answer} onChange={handleAnswerChange}>
-          <option value="">Выберите правильный ответ</option>
+          <option value="">Wybierz poprawną odpowiedź</option>
           {options.map((option, index) => (
             <option key={index} value={option}>
               {`Ответ ${index + 1}: ${option}`}
@@ -92,7 +92,7 @@ const TestQuestion = ({ blockTestId }) => {
         </select>
       </div>
       <button onClick={handleSubmit} disabled={loading}>
-        {loading ? "Отправка..." : "Добавить вопрос"}
+        {loading ? "Wysyłka..." : "Dodaj pytanie..."}
       </button>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}

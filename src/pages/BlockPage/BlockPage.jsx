@@ -18,7 +18,7 @@ function BlockPages() {
 
   useEffect(() => {
     if (!blockId) {
-      setError("❌ Неверный идентификатор блока");
+      setError("❌ Nieprawidłowy identyfikator bloku");
       setLoading(false);
       return;
     }
@@ -43,7 +43,7 @@ function BlockPages() {
 
         setVideos(updatedVideos);
       } catch (err) {
-        setError("❌ Ошибка загрузки лекций");
+        setError("❌ Błąd pobierania wykładów");
       } finally {
         setLoading(false);
       }
