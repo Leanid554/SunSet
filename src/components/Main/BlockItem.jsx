@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const BlockItem = ({ block, blockProgress = 0, isEnabled = true }) => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
+
   const blockPath = block.path || `/lectures/${userId}/block/${block.id}`;
 
   return (

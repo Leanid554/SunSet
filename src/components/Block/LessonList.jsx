@@ -8,6 +8,8 @@ function LessonList({ blockId, lessons, onLectureClick }) {
   // Sprawdzenie, czy wszystkie wykłady zostały ukończone
   const areAllLecturesCompleted = lessons.every((video) => video.passed);
 
+  const userRole = sessionStorage.getItem("role");
+
   return (
     <div className="block-container block-height">
       <div className="block-header-row">
@@ -47,9 +49,7 @@ function LessonList({ blockId, lessons, onLectureClick }) {
                   <div className="video-content">
                     <div className="block-row">
                       <div className="block-title">{video.title}</div>
-                      <div className="position1">
-                        {video.position || "Call-Center"}
-                      </div>
+                      <div className="position1">{userRole}</div>
                       <span className="access-text">🔓</span>
                     </div>
                   </div>

@@ -12,7 +12,7 @@ const MainPage = () => {
   const [visitedBlocks, setVisitedBlocks] = useState(new Set());
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
 
     if (!userId) {
       console.error(
@@ -79,7 +79,7 @@ const MainPage = () => {
   };
 
   const handleBlockClick = async (blockId) => {
-    const userId = localStorage.getItem("userId");
+    const userId = sessionStorage.getItem("userId");
 
     if (!userId) {
       console.error(

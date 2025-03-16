@@ -1,4 +1,3 @@
-// Функции для работы с токенами
 import { jwtDecode } from "jwt-decode";
 
 export const setToken = (accessToken) => {
@@ -11,7 +10,6 @@ export const setToken = (accessToken) => {
     }
 
     if (decoded?.role) {
-      // Assuming the 'role' is in the decoded token
       sessionStorage.setItem("role", decoded.role);
     }
   }
@@ -19,20 +17,18 @@ export const setToken = (accessToken) => {
 
 export const getAccessToken = () => sessionStorage.getItem("accessToken");
 export const getUserId = () => sessionStorage.getItem("userId");
-export const getRole = () => sessionStorage.getItem("role"); // Function to get the role
+export const getRole = () => sessionStorage.getItem("role");
 
 export const removeTokens = () => {
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("userId");
-  sessionStorage.removeItem("role"); // Remove role as well
+  sessionStorage.removeItem("role");
 };
 
 export const isAuthenticated = () => {
-  const token = getAccessToken();
-  if (!token) return false;
-
-  const decoded = decodeToken(token);
-  return decoded && decoded.exp * 1000 > Date.now();
+  const userId = getUserId();
+  const role = getRole();
+  return Boolean(userId && role);
 };
 
 export const decodeToken = (token) => {
@@ -43,3 +39,8 @@ export const decodeToken = (token) => {
     return null;
   }
 };
+
+console.log("Токен:", getAccessToken());
+console.log("Пользователь ID:", getUserId());
+console.log("Роль:", getRole());
+console.log("isAuthenticated:", isAuthenticated());

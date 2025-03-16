@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import LoginForm from "../../components/Login/LoginForm";
-import { setUserId } from "../../store/userSlice";
+import { setToken } from "./TokenUtils"; // Убедись, что у тебя есть этот файл с функциями для работы с токеном
 import "./index.scss";
-import { decodeToken, setToken } from "./TokenUtils";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-function LoginPage() {
+function LoginPage({ setAuth }) {
+  // Получаем функцию для обновления состояния auth в App
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -50,17 +49,17 @@ function LoginPage() {
       const response = await axios.post(`${API_URL}/auth/login`, formData, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-        mode: "cors",
       });
 
       if (response.status === 201) {
         const { accessToken } = response.data;
-        setToken(accessToken);
+        setToken(accessToken); // Сохраняем токен в sessionStorage
 
-        setTimeout(() => {
-          setLoading(false);
-          navigate("/main");
-        }, 500);
+        // Обновляем состояние в родительском компоненте
+        setAuth(true);
+
+        // Переходим на главную страницу
+        navigate("/main");
       }
     } catch (error) {
       console.error("Błąd autoryzacji:", error);
