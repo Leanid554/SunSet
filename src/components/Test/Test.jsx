@@ -10,7 +10,7 @@ function Test({ questions, blockId }) {
   const [successPercentage, setSuccessPercentage] = useState(null);
 
   useEffect(() => {
-    setUserAnswers(Array(questions.length).fill(null)); // Инициализация массива ответов
+    setUserAnswers(Array(questions.length).fill(null));
   }, [questions]);
 
   const handleAnswerChange = (index, answer) => {

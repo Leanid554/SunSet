@@ -6,7 +6,6 @@ import "./index.scss";
 export default function Navbar() {
   const location = useLocation();
 
-  // Получаем роль из sessionStorage
   const userRole = sessionStorage.getItem("role");
 
   return (
@@ -21,7 +20,6 @@ export default function Navbar() {
         <div className="position">{userRole}</div>
       )}
 
-      {/* Кнопка "Admin Panel" отображается, если роль = admin */}
       {userRole === "administrator" && location.pathname !== "/admin" && (
         <Link to="/admin" className="admin-button">
           Admin Panel

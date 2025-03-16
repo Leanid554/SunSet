@@ -39,8 +39,3 @@ export const decodeToken = (token) => {
     return null;
   }
 };
-
-console.log("Токен:", getAccessToken());
-console.log("Пользователь ID:", getUserId());
-console.log("Роль:", getRole());
-console.log("isAuthenticated:", isAuthenticated());
