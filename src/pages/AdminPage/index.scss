@@ -1,0 +1,121 @@
+/* Основные стили */
+.admin-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Контейнер для добавления (Dodawanie) */
+.dodawanie-container {
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.dodawanie-container h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Контейнер для управления (Zarzadzanie) */
+.zarzadzanie-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.zarzadzanie-container h3 {
+  font-size: 20px;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+/* Секции управления (Блоки, Лекции, Пользователи) */
+.admin-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.admin-section h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #444;
+}
+
+/* Кнопка для открытия/закрытия списка */
+button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #c9302c;
+}
+
+/* Стили для input, select, button */
+input,
+select,
+button {
+  display: block;
+  width: 100%; /* Убираем проблему выхода за границы */
+  box-sizing: border-box; /* Учитываем padding в размере элемента */
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+/* Улучшенный стиль input */
+input,
+select {
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+input::placeholder {
+  color: #888;
+  font-size: 14px;
+}
+
+/* Стили для таблицы */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background: #f1f1f1;
+  font-weight: bold;
+}
+
+.placeholder {
+  width: 100%; /* Убираем проблему выхода за границу */
+  max-width: 200px; /* Максимальная ширина */
+}

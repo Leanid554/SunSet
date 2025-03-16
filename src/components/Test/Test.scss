@@ -1,0 +1,41 @@
+.test {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .question {
+    margin-bottom: 15px;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+    color: red;
+  }
+  
+  .next-button, .finish-button, .go-to-video {
+    padding: 10px 20px;
+    background-color: #af4c4c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .next-button:hover, .finish-button:hover, .go-to-video:hover {
+    background-color: #e70000;
+  }
+  
+  .result {
+    margin-top: 30px;
+  }
+  
+  .result p {
+    font-size: 18px;
+  }
+  
+  .result .go-to-video {
+    margin-top: 20px;
+  }
+  
