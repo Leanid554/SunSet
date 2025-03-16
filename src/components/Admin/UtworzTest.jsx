@@ -9,7 +9,7 @@ const UtworzTest = ({ blocks, setSelectedBlockTestId, addTestToList }) => {
 
   const handleCreateTest = async () => {
     if (!blockId) {
-      setError("Block ID is required");
+      setError("Wymagany jest identyfikator bloku");
       return;
     }
 
@@ -19,39 +19,39 @@ const UtworzTest = ({ blocks, setSelectedBlockTestId, addTestToList }) => {
       });
 
       if (response.status === 201) {
-        alert("Test created successfully!");
+        alert("Test został pomyślnie utworzony!");
         addTestToList(response.data);
         setSelectedBlockTestId(response.data.id);
         setBlockId("");
       } else {
-        setError(`Unexpected response status: ${response.status}`);
+        setError(`Błąd podczas tworzenia testu: ${response.status}`);
       }
     } catch (error) {
       if (error.response) {
         setError(
-          `Error creating test: ${error.response.status} - ${
+          `Błąd podczas tworzenia testu: ${error.response.status} - ${
             error.response.data.message || error.response.statusText
           }`
         );
       } else {
-        setError(`Error creating test: ${error.message}`);
+        setError(`Błąd podczas tworzenia testu: ${error.message}`);
       }
     }
   };
 
   return (
     <div>
-      <h3>📝 Create Test</h3>
-      <label>Select Block:</label>
+      <h3>📝 Utwórz test</h3>
+      <label>Wybierz blok:</label>
       <select onChange={(e) => setBlockId(e.target.value)} value={blockId}>
-        <option value="">Select Block</option>
+        <option value="">Wybierz blok</option>
         {blocks.map((block) => (
           <option key={block.id} value={block.id}>
             {block.title}
           </option>
         ))}
       </select>
-      <button onClick={handleCreateTest}>Create Test</button>
+      <button onClick={handleCreateTest}>Utwórz test</button>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
