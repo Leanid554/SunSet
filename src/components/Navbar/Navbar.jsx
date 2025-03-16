@@ -17,7 +17,9 @@ export default function Navbar() {
       </Link>
 
       {location.pathname !== "/login" && location.pathname !== "/admin" && (
-        <div className="position">{userRole}</div>
+        <div className="position-navbar">
+          {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+        </div>
       )}
 
       {userRole === "administrator" && location.pathname !== "/admin" && (
