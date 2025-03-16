@@ -7,12 +7,10 @@ const UploadVideo = ({ lectureId }) => {
   const [video, setVideo] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Обработчик выбора файла
   const handleFileChange = (e) => {
     setVideo(e.target.files[0]);
   };
 
-  // Обработчик загрузки видео
   const handleUpload = async () => {
     if (!video) {
       alert("Wybierz wideo do pobrania.");
@@ -25,9 +23,8 @@ const UploadVideo = ({ lectureId }) => {
     setUploading(true);
 
     try {
-      // Отправляем запрос на загрузку видео для конкретной лекции
-      const response = await axios.post(
-        `${API_BASE_URL}/lectures/${lectureId}/upload-video`, // URL с ID лекции
+      await axios.post(
+        `${API_BASE_URL}/lectures/${lectureId}/upload-video`,
         formData,
         {
           headers: {
@@ -36,11 +33,8 @@ const UploadVideo = ({ lectureId }) => {
         }
       );
 
-      // Успешная загрузка
       alert("Wideo przesłane pomyślnie!");
-    } catch (error) {
-      // Обработка ошибок
-      console.error("Błąd podczas przesyłania wideo:", error);
+    } catch {
       alert("Błąd podczas przesyłania wideo");
     } finally {
       setUploading(false);

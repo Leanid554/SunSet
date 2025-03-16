@@ -37,7 +37,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/users`);
       setUsers(response.data);
     } catch (error) {
-      console.error("Błąd podczas pobierania użytkowników:", error);
+      alert("Błąd podczas pobierania użytkowników");
     }
   };
 
@@ -45,9 +45,9 @@ const AdminPage = () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/blocks`);
       setBlocks(response.data);
-      fetchTests(response.data); // Загружаем тесты после получения блоков
+      fetchTests(response.data);
     } catch (error) {
-      console.error("Błąd podczas odbierania bloków:", error);
+      alert("Błąd podczas odbierania bloków");
     }
   };
 
@@ -56,7 +56,7 @@ const AdminPage = () => {
       const response = await axios.get(`${API_BASE_URL}/lectures`);
       setLectures(response.data);
     } catch (error) {
-      console.error("Nie udało się otrzymać lekcji:", error);
+      alert("Nie udało się otrzymać lekcji");
     }
   };
 
@@ -71,16 +71,11 @@ const AdminPage = () => {
           if (response.data) {
             tests.push(response.data);
           }
-        } catch (error) {
-          console.error(
-            `Błąd podczas pobierania testu dla bloku ${block.id}:`,
-            error
-          );
-        }
+        } catch (error) {}
       }
       setTestList(tests);
     } catch (error) {
-      console.error("Błąd przy pobieraniu testów:", error);
+      alert("Błąd przy pobieraniu testów");
     }
   };
 
@@ -90,7 +85,6 @@ const AdminPage = () => {
       setLectures(lectures.filter((lecture) => lecture.id !== lectureId));
       alert("Lekcja usunięta");
     } catch (error) {
-      console.error("Błąd przy usunięciu lekcji:", error);
       alert("Błąd przy usunięciu lekcji");
     }
   };
@@ -101,7 +95,6 @@ const AdminPage = () => {
       setBlocks(blocks.filter((block) => block.id !== blockId));
       alert("Blok został pomyślnie usunięty");
     } catch (error) {
-      console.error("Błąd przy usunięciu bloku:", error);
       alert("Błąd przy usunięciu bloku");
     }
   };
@@ -132,7 +125,6 @@ const AdminPage = () => {
       <div className="zarzadzanie-container">
         <h3>⚙ Zarządzanie</h3>
 
-        {/* Блоки */}
         <div className="admin-section">
           <h3>📦 Bloki</h3>
           <button onClick={() => setBlocksVisible(!blocksVisible)}>
@@ -150,7 +142,6 @@ const AdminPage = () => {
           )}
         </div>
 
-        {/* Лекции */}
         <div className="admin-section">
           <h3>📚 Wykłady</h3>
           <button onClick={() => setLecturesVisible(!lecturesVisible)}>
@@ -187,7 +178,6 @@ const AdminPage = () => {
           )}
         </div>
 
-        {/* Пользователи */}
         <div className="admin-section">
           <h3>👤 Użytkowniki</h3>
           <button onClick={() => setUsersVisible(!usersVisible)}>
@@ -196,7 +186,6 @@ const AdminPage = () => {
           {usersVisible && <UserList users={users} />}
         </div>
 
-        {/* Статистика */}
         <div className="admin-section">
           <h3>📊 Statystyki użytkownika</h3>
           <button onClick={() => setStatsVisible(!statsVisible)}>
@@ -205,7 +194,6 @@ const AdminPage = () => {
           {statsVisible && <UserStats users={users} />}
         </div>
 
-        {/* Тесты */}
         <div className="admin-section">
           <h3>📝 Testy</h3>
           <button

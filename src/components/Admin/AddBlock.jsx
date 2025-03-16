@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AddUser from "./AddUser"; // Импортируем AddUser
+import AddUser from "./AddUser";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
@@ -12,7 +12,6 @@ const AddBlock = ({ blocks, setBlocks }) => {
   const [error, setError] = useState(null);
   const [roleLoading, setRoleLoading] = useState(false);
 
-  // Функция загрузки ролей
   const fetchRoles = async () => {
     setRoleLoading(true);
     try {
@@ -23,7 +22,6 @@ const AddBlock = ({ blocks, setBlocks }) => {
       }
     } catch (err) {
       setError("Błąd podczas pobierania listy ról");
-      console.error("Błąd ładowania ról:", err);
     } finally {
       setRoleLoading(false);
     }
@@ -33,7 +31,6 @@ const AddBlock = ({ blocks, setBlocks }) => {
     fetchRoles();
   }, []);
 
-  // Функция добавления блока
   const addBlock = async () => {
     if (newBlockName.trim() === "" || !role) return;
 
@@ -55,10 +52,9 @@ const AddBlock = ({ blocks, setBlocks }) => {
       setNewBlockName("");
       setRole(roles.length > 0 ? roles[0].name : "");
 
-      fetchRoles(); // Обновляем роли после добавления блока
+      fetchRoles();
     } catch (err) {
       setError("Błąd podczas dodawania bloku");
-      console.error("Błąd:", err);
     } finally {
       setLoading(false);
     }

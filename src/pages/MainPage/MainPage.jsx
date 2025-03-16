@@ -13,24 +13,13 @@ const MainPage = () => {
 
   useEffect(() => {
     const userId = sessionStorage.getItem("userId");
-
-    if (!userId) {
-      console.error(
-        "Błąd: Identyfikator użytkownika nie znaleziony w localStorage!"
-      );
-      return;
-    }
-
-    fetchBlocks(userId);
+    if (userId) fetchBlocks(userId);
   }, []);
 
   const fetchBlocks = async (userId) => {
     try {
       const response = await axios.get(`${API_URL}/blocks/user/${userId}`);
-      if (!Array.isArray(response.data)) {
-        console.error("Błąd: API nie zwróciło tablicy bloków!", response.data);
-        return;
-      }
+      if (!Array.isArray(response.data)) return;
 
       const blocksData = response.data;
       const progressData = {};
@@ -38,69 +27,41 @@ const MainPage = () => {
 
       blocksData.forEach((block) => {
         progressData[block.id] = calculateProgress(block);
-        if (progressData[block.id] > 0) {
-          visitedSet.add(block.id);
-        }
+        if (progressData[block.id] > 0) visitedSet.add(block.id);
       });
 
       setBlocks(blocksData);
       setProgress(progressData);
       setVisitedBlocks(visitedSet);
-    } catch (err) {
-      console.error("Błąd podczas ładowania bloków:", err.message);
-    }
+    } catch (err) {}
   };
 
   const calculateProgress = (block) => {
     const lectures = block.lectures || [];
     const totalLectures = lectures.length;
-    const completedLectures = lectures.filter(
-      (lecture) => lecture.isCompleted
-    ).length;
-
+    const completedLectures = lectures.filter((lecture) => lecture.isCompleted).length;
     const isTestPassed = block.test?.userProgress?.passed || false;
 
-    // Jeśli wszystkie wykłady i test są ukończone — 100%
-    if (
-      totalLectures > 0 &&
-      completedLectures === totalLectures &&
-      isTestPassed
-    ) {
+    if (totalLectures > 0 && completedLectures === totalLectures && isTestPassed) {
       return 100;
     }
 
-    // Postęp wykładów w %
-    const lectureProgress =
-      totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
+    const lectureProgress = totalLectures > 0 ? (completedLectures / totalLectures) * 100 : 0;
     const testProgress = isTestPassed ? 100 : 0;
 
-    // Waga wykładów 70%, waga testu 30%
     return Math.floor(lectureProgress * 0.7 + testProgress * 0.3);
   };
 
   const handleBlockClick = async (blockId) => {
     const userId = sessionStorage.getItem("userId");
-
-    if (!userId) {
-      console.error(
-        "Błąd: Identyfikator użytkownika nie znaleziony w localStorage!"
-      );
-      return;
-    }
-
-    if (visitedBlocks.has(blockId)) {
-      console.warn(`Blok ${blockId} już odwiedzony, pomijam.`);
-      return;
-    }
+    if (!userId || visitedBlocks.has(blockId)) return;
 
     setSelectedBlock(blockId);
     setVisitedBlocks((prev) => new Set(prev).add(blockId));
 
     try {
       await axios.post(`${API_URL}/${blockId}/user/${userId}`, {});
-    } catch (err) {
-      console.error("Błąd zapisu odwiedzenia bloku:", err.message);
-    }
+    } catch (err) {}
   };
 
   return (
@@ -118,9 +79,7 @@ const MainPage = () => {
         ) : (
           blocks.map((block, index) => {
             const previousBlockId = blocks[index - 1]?.id;
-            const previousBlockCompleted = previousBlockId
-              ? (progress[previousBlockId] || 0) === 100
-              : true; // Pierwszy blok jest zawsze dostępny
+            const previousBlockCompleted = previousBlockId ? (progress[previousBlockId] || 0) === 100 : true;
 
             return (
               <BlockItem

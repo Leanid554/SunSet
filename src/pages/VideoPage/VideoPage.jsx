@@ -60,26 +60,15 @@ function VideoPage() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log(`✅ Lekcja ${id} Skonczona. Status: ${passed}`);
-
       navigate(`/blocks/${id}`);
     } catch (error) {
-      console.error(
-        "❌ Błąd podczas zapisywania ukończenia lekcji:",
-        error.response?.data || error.message
-      );
       setError("Błąd podczas zapisywania ukończenia lekcji!");
     }
   };
 
   if (loading) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="50vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" height="50vh">
         <CircularProgress />
       </Box>
     );
@@ -96,28 +85,19 @@ function VideoPage() {
       />
 
       {isVideoCompleted &&
-        (correctAnswers >= 3 ? ( // Теперь нужно 3 правильных ответа
-          <button
-            className="complete-lecture-btn"
-            onClick={() => handleLectureComplete(true)}
-          >
+        (correctAnswers >= 3 ? (
+          <button className="complete-lecture-btn" onClick={() => handleLectureComplete(true)}>
             ✅ Zaliczone
           </button>
         ) : (
-          <button
-            className="retry-lecture-btn"
-            onClick={() => handleLectureComplete(false)}
-          >
+          <button className="retry-lecture-btn" onClick={() => handleLectureComplete(false)}>
             ❌ Nie zaliczone
           </button>
         ))}
 
       {error && <div className="error-message">{error}</div>}
 
-      <NavigationButtons
-        videoId={id}
-        onNext={() => navigate(`/video/${+id + 1}`)}
-      />
+      <NavigationButtons videoId={id} onNext={() => navigate(`/video/${+id + 1}`)} />
     </div>
   );
 }

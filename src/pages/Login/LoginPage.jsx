@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import LoginForm from "../../components/Login/LoginForm";
-import { setToken } from "./TokenUtils"; // Убедись, что у тебя есть этот файл с функциями для работы с токеном
+import { setToken } from "./TokenUtils";
 import "./index.scss";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 function LoginPage({ setAuth }) {
-  // Получаем функцию для обновления состояния auth в App
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -53,16 +52,11 @@ function LoginPage({ setAuth }) {
 
       if (response.status === 201) {
         const { accessToken } = response.data;
-        setToken(accessToken); // Сохраняем токен в sessionStorage
-
-        // Обновляем состояние в родительском компоненте
+        setToken(accessToken);
         setAuth(true);
-
-        // Переходим на главную страницу
         navigate("/main");
       }
     } catch (error) {
-      console.error("Błąd autoryzacji:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
         server: error.message.includes("ERR_NETWORK")

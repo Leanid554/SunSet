@@ -31,7 +31,6 @@ function TestPage() {
         const response = await axios.get(
           `${API_BASE_URL}/block-test/${blockId}`
         );
-        console.log("Полученные данные:", response.data);
 
         setBlockTestId(response.data.id);
 
@@ -42,11 +41,11 @@ function TestPage() {
           let shuffledQuestions = shuffleArray(response.data.questions).slice(
             0,
             20
-          ); // Берем 20 случайных вопросов
+          );
 
           shuffledQuestions = shuffledQuestions.map((q) => ({
             ...q,
-            options: shuffleArray(JSON.parse(q.options)), // Перемешиваем варианты ответов
+            options: shuffleArray(JSON.parse(q.options)),
           }));
 
           setQuestions(shuffledQuestions);
@@ -55,7 +54,6 @@ function TestPage() {
         }
       } catch (err) {
         setError("❌ Ошибка загрузки теста");
-        console.error("Ошибка:", err.response?.data || err.message);
       } finally {
         setLoading(false);
       }
@@ -107,7 +105,6 @@ function TestPage() {
     const userId = sessionStorage.getItem("userId");
 
     if (!userId) {
-      console.error("❌ Не найден userId в localStorage");
       return;
     }
 
@@ -117,12 +114,7 @@ function TestPage() {
         blockTestId,
         passed,
       });
-    } catch (err) {
-      console.error(
-        "Ошибка при сохранении результата теста:",
-        err.response?.data || err.message
-      );
-    }
+    } catch (err) {}
   };
 
   const restartTest = () => {
@@ -135,7 +127,7 @@ function TestPage() {
       shuffleArray(
         questions.map((q) => ({ ...q, options: shuffleArray(q.options) }))
       )
-    ); // Перемешивание вопросов и ответов при перезапуске
+    );
   };
 
   if (loading) return <div className="loader">⏳ Ładowanie testu...</div>;

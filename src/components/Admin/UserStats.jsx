@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./UserStats.css";
 
@@ -25,10 +25,8 @@ const UserStats = ({ users }) => {
         email: selectedEmail,
       });
 
-      console.log("Statystyki użytkownika:", response.data);
       setStats(response.data);
 
-      // Загружаем результаты тестов для каждого блока
       if (response.data.blockVisits) {
         const testResultsData = {};
 
@@ -38,19 +36,14 @@ const UserStats = ({ users }) => {
               `${API_BASE_URL}/block-test/progress/${response.data.userId}/${block.blockId}`
             );
 
-            // Если тест завершён, сохраняем информацию о результатах
             testResultsData[block.blockId] = {
               passed: testResponse.data.passed ? "✅ Zdany" : "❌ Nie zdany",
-              attempts: testResponse.data.attempts || 0, // Ensure attempts are captured
+              attempts: testResponse.data.attempts || 0,
             };
           } catch (err) {
-            console.error(
-              `Błąd pobierania testu dla bloku ${block.blockId}:`,
-              err
-            );
             testResultsData[block.blockId] = {
               passed: "⏳ Brak danych",
-              attempts: "N/A", // If no test data, show N/A for attempts
+              attempts: "N/A",
             };
           }
         }
@@ -58,7 +51,6 @@ const UserStats = ({ users }) => {
         setTestResults(testResultsData);
       }
     } catch (err) {
-      console.error("Błąd podczas pobierania statystyk:", err);
       setError("Nie udało się załadować statystyk.");
     } finally {
       setLoading(false);
@@ -69,7 +61,6 @@ const UserStats = ({ users }) => {
     <div className="user-stats">
       <h3>📊 Statystyka użytkowników</h3>
 
-      {/* Wybór użytkownika */}
       <label>
         Wybierz użytkownika:
         <select
@@ -86,11 +77,9 @@ const UserStats = ({ users }) => {
       </label>
       <button onClick={fetchStats}>📩 Uzyskaj statystyki</button>
 
-      {/* Status ładowania i błędy */}
       {loading && <p>Ładowanie...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Wyświetlenie statystyk */}
       {stats && (
         <div className="stats-data">
           <h4>📅 Wizyty:</h4>

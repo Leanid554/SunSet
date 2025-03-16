@@ -11,34 +11,29 @@ const TestQuestion = ({ blockTestId }) => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Обработчик изменения текста вопроса
   const handleQuestionChange = (event) => {
     setQuestion(event.target.value);
   };
 
-  // Обработчик изменения вариантов ответа
   const handleOptionChange = (index, event) => {
     const updatedOptions = [...options];
     updatedOptions[index] = event.target.value;
     setOptions(updatedOptions);
   };
 
-  // Обработчик изменения правильного ответа
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value);
   };
 
-  // Обработчик отправки данных на сервер
   const handleSubmit = async () => {
-    // Проверка, все ли поля заполнены
     if (!question.trim() || options.some((opt) => !opt.trim()) || !answer.trim()) {
       setError("Пожалуйста, заполните все поля.");
       return;
     }
 
     setLoading(true);
-    setError(""); // Очищаем ошибки
-    setSuccess(""); // Очищаем успешные сообщения
+    setError("");
+    setSuccess("");
 
     try {
       const newQuestion = {
@@ -47,9 +42,9 @@ const TestQuestion = ({ blockTestId }) => {
         answer,
       };
 
-      const response = await axios.post(
+      await axios.post(
         `${API_BASE_URL}/block-test/${blockTestId}/questions`,
-        [newQuestion], // Отправляем вопрос как массив
+        [newQuestion],
         {
           headers: {
             "Content-Type": "application/json",
@@ -58,12 +53,10 @@ const TestQuestion = ({ blockTestId }) => {
       );
 
       setSuccess("Вопрос успешно добавлен!");
-      // Очистка формы после добавления вопроса
       setQuestion("");
       setOptions(["", "", "", ""]);
       setAnswer("");
     } catch (err) {
-      console.error("Ошибка при добавлении вопроса:", err);
       setError("Ошибка при добавлении вопроса. Пожалуйста, попробуйте снова.");
     } finally {
       setLoading(false);

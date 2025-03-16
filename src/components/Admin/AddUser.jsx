@@ -61,7 +61,7 @@ const AddUser = ({ roles = [], setRoles }) => {
       });
       if (response.status === 201) {
         const updatedRoles = [...roles, response.data];
-        setRoles(updatedRoles); // Обновляем список ролей в AddBlock
+        setRoles(updatedRoles);
         setNewRole("");
         setError("");
       } else {

@@ -13,26 +13,20 @@ const UtworzTest = ({ blocks, setSelectedBlockTestId, addTestToList }) => {
       return;
     }
 
-    console.log("Attempting to create test with Block ID:", blockId);
-
     try {
       const response = await axios.post(`${API_BASE_URL}/block-test`, {
         blockId,
       });
 
-      console.log("Response from server:", response);
-
       if (response.status === 201) {
         alert("Test created successfully!");
-        addTestToList(response.data); // Add the new test to the test list
+        addTestToList(response.data);
         setSelectedBlockTestId(response.data.id);
-        setBlockId(""); // Clear the block ID
+        setBlockId("");
       } else {
         setError(`Unexpected response status: ${response.status}`);
       }
     } catch (error) {
-      console.error("Error creating test:", error);
-
       if (error.response) {
         setError(
           `Error creating test: ${error.response.status} - ${

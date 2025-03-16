@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-// Добавим API_BASE_URL в этот компонент
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const QuestionVideo = ({ lectureId }) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [answer, setAnswer] = useState("");
-  const [timeInSeconds, setTimeInSeconds] = useState(0); // Добавим состояние для времени в секундах
+  const [timeInSeconds, setTimeInSeconds] = useState(0);
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
@@ -22,7 +21,7 @@ const QuestionVideo = ({ lectureId }) => {
       options,
       answer,
       lectureId,
-      timeInSeconds, // Добавляем время в секунды
+      timeInSeconds,
     };
 
     try {
@@ -32,7 +31,6 @@ const QuestionVideo = ({ lectureId }) => {
       );
       alert("Pytanie zostało pomyślnie dodane!");
     } catch (error) {
-      console.error("Błąd podczas dodawania pytania:", error);
       alert("Błąd podczas dodawania pytania");
     }
   };
@@ -61,12 +59,11 @@ const QuestionVideo = ({ lectureId }) => {
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
       />
-      {/* Добавляем поле для времени в секундах */}
       <input
         type="number"
         placeholder="Czas w sekundach"
         value={timeInSeconds}
-        onChange={(e) => setTimeInSeconds(parseInt(e.target.value) || 0)} // Преобразуем в целое число
+        onChange={(e) => setTimeInSeconds(parseInt(e.target.value) || 0)}
       />
       <button onClick={handleSubmit}>Dodaj pytanie</button>
     </div>
