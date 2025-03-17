@@ -6,10 +6,11 @@ import AddUser from "../../components/Admin/AddUser";
 import UserList from "../../components/Admin/UserList";
 import UploadVideo from "../../components/Admin/UploadVideo";
 import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
+import VideoQuestEdit from "../../components/Admin/VideoQuestEdit.jsx"; // Добавил новый компонент
 import UserStats from "../../components/Admin/UserStats";
 import UtworzTest from "../../components/Admin/UtworzTest";
 import TestQuestion from "../../components/Admin/TestQuestion";
-import TestQuestionEdit from "../../components/Admin/TestQuestionEdit"; // Import the TestQuestionEdit component
+import TestQuestionEdit from "../../components/Admin/TestQuestionEdit";
 import "./index.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -26,7 +27,7 @@ const AdminPage = () => {
   const [testManagementVisible, setTestManagementVisible] = useState(false);
   const [testList, setTestList] = useState([]);
   const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
-  const [editingTestId, setEditingTestId] = useState(null); // State for editing question
+  const [editingTestId, setEditingTestId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -126,7 +127,6 @@ const AdminPage = () => {
 
       <div className="zarzadzanie-container">
         <h3>⚙ Zarządzanie</h3>
-
         <div className="admin-section">
           <h3>📦 Bloki</h3>
           <button onClick={() => setBlocksVisible(!blocksVisible)}>
@@ -172,6 +172,7 @@ const AdminPage = () => {
                       </button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
+                      <VideoQuestEdit lectureId={lecture.id} /> {/* Новый компонент */}
                     </div>
                   )}
                 </li>
