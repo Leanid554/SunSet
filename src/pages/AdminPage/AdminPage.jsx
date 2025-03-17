@@ -9,6 +9,7 @@ import QuestionVideo from "../../components/Admin/QuestionVideo.jsx";
 import UserStats from "../../components/Admin/UserStats";
 import UtworzTest from "../../components/Admin/UtworzTest";
 import TestQuestion from "../../components/Admin/TestQuestion";
+import TestQuestionEdit from "../../components/Admin/TestQuestionEdit"; // Import the TestQuestionEdit component
 import "./index.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -25,6 +26,7 @@ const AdminPage = () => {
   const [testManagementVisible, setTestManagementVisible] = useState(false);
   const [testList, setTestList] = useState([]);
   const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
+  const [editingTestId, setEditingTestId] = useState(null); // State for editing question
 
   useEffect(() => {
     fetchUsers();
@@ -228,7 +230,10 @@ const AdminPage = () => {
                 </select>
               </div>
               {selectedBlockTestId && (
-                <TestQuestion blockTestId={selectedBlockTestId} />
+                <div>
+                  <h4>Edycja pytań testu</h4>
+                  <TestQuestionEdit blockTestId={selectedBlockTestId} />
+                </div>
               )}
             </div>
           )}
