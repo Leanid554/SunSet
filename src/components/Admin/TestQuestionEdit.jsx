@@ -11,7 +11,6 @@ const TestQuestionEdit = ({ blockTestId }) => {
   const [updatedTime, setUpdatedTime] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState("");
 
-  
   useEffect(() => {
     if (blockTestId) {
       fetchQuestions();
@@ -24,7 +23,7 @@ const TestQuestionEdit = ({ blockTestId }) => {
       
       const questionsWithParsedOptions = response.data.questions.map((question) => ({
         ...question,
-        options: question.options, 
+        options: question.options,
       }));
       setQuestions(questionsWithParsedOptions);
     } catch (error) {
@@ -34,9 +33,9 @@ const TestQuestionEdit = ({ blockTestId }) => {
 
   const startEditing = (question) => {
     setEditingQuestion(question.id);
-    setUpdatedText(question.question); 
-    setUpdatedAnswers(question.options || []);  
-    setCorrectAnswer(question.answer || ""); 
+    setUpdatedText(question.question);
+    setUpdatedAnswers(question.options || []);
+    setCorrectAnswer(question.answer || "");
   };
 
   const handleAnswerChange = (index, newAnswer) => {
@@ -58,9 +57,8 @@ const TestQuestionEdit = ({ blockTestId }) => {
     try {
       await axios.put(`${API_BASE_URL}/block-test/questions/${editingQuestion}`, {
         question: updatedText,
-        options: JSON.stringify(updatedAnswers), 
-        answer: correctAnswer, 
-        
+        options: JSON.stringify(updatedAnswers),
+        answer: correctAnswer,
       });
 
       setQuestions(
@@ -74,6 +72,18 @@ const TestQuestionEdit = ({ blockTestId }) => {
       alert("Pytanie zaktualizowane!");
     } catch (error) {
       alert("Błąd podczas aktualizacji pytania");
+    }
+  };
+
+  const deleteQuestion = async (id) => {
+    if (window.confirm("Czy na pewno chcesz usunąć to pytanie?")) {
+      try {
+        await axios.delete(`${API_BASE_URL}/block-test/questions/${id}`);
+        setQuestions(questions.filter((q) => q.id !== id));
+        alert("Pytanie zostało usunięte!");
+      } catch (error) {
+        alert("Błąd podczas usuwania pytania");
+      }
     }
   };
 
@@ -114,8 +124,6 @@ const TestQuestionEdit = ({ blockTestId }) => {
                     ))}
                   </select>
 
-                  
-                  
                   <div>
                     <button onClick={updateQuestion}>✅ Aktualizuj</button>
                     <button onClick={() => setEditingQuestion(null)}>❌ Anuluj</button>
@@ -125,6 +133,7 @@ const TestQuestionEdit = ({ blockTestId }) => {
                 <div>
                   <span>{question.question}</span>
                   <button onClick={() => startEditing(question)}>✏ Edytuj</button>
+                  <button onClick={() => deleteQuestion(question.id)}>🗑 Usuń</button>
                 </div>
               )}
             </li>
