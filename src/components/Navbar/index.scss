@@ -24,7 +24,16 @@
   cursor: pointer;
 }
 
-/* Кнопка "Admin Panel" */
+.role {
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.email {
+  font-size: 16px;
+  color: gray;
+}
+
 .admin-button {
   position: absolute;
   right: 20px;

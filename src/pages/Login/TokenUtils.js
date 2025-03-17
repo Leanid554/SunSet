@@ -12,17 +12,23 @@ export const setToken = (accessToken) => {
     if (decoded?.role) {
       sessionStorage.setItem("role", decoded.role);
     }
+
+    if (decoded?.email) {
+      sessionStorage.setItem("email", decoded.email);
+    }
   }
 };
 
 export const getAccessToken = () => sessionStorage.getItem("accessToken");
 export const getUserId = () => sessionStorage.getItem("userId");
 export const getRole = () => sessionStorage.getItem("role");
+export const getEmail = () => sessionStorage.getItem("email");
 
 export const removeTokens = () => {
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("userId");
   sessionStorage.removeItem("role");
+  sessionStorage.removeItem("email");
 };
 
 export const isAuthenticated = () => {
