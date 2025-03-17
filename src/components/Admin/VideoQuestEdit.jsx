@@ -140,7 +140,7 @@ const VideoQuestEdit = ({ lectureId }) => {
                   />
 
                   <div style={{ marginTop: "10px" }}>
-                    <button className="ButtonRedak" onClick={updateQuestion}>✅ Сохранить</button>
+                    <button className="ButtonRedak" onClick={updateQuestion}>✅ zapisac</button>
                     <button className="ButtonRedak" onClick={() => setEditingQuestionId(null)}>❌ cofnij</button>
                   </div>
                 </div>
