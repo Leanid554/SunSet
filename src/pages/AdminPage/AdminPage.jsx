@@ -232,6 +232,8 @@ const AdminPage = () => {
               </div>
               {selectedBlockTestId && (
                 <div>
+                   <h4>Dodawanie pytań</h4>
+                   <TestQuestion blockTestId={selectedBlockTestId} />
                   <h4>Edycja pytań testu</h4>
                   <TestQuestionEdit blockTestId={selectedBlockTestId} />
                 </div>
