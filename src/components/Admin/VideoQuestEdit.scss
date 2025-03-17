@@ -1,5 +1,5 @@
 .ButtonRedak {
-    background-color: #d9534f; /* Зеленый цвет */
+    background-color: #d9534f;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -10,16 +10,8 @@
     width: 100%;
   }
   
-  .ButtonRedak:hover {
-    background-color: #d9534f;
-  }
-  
-  .ButtonRedak:active {
-    background-color: #d9534f;
-  }
-
   .ButtonRedak2 {
-    background-color: #d9534f; /* Зеленый цвет */
+    background-color: #d9534f;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -30,3 +22,21 @@
     width: 10%;
   }
   
+  .ButtonRedak:hover,
+  .ButtonRedak:active {
+    background-color: #c9302c;
+  }
+  
+  /* Для input полей с плейсхолдером */
+  input::placeholder {
+    color: white; /* Плейсхолдер всегда белый */
+  }
+  
+  input:focus::placeholder {
+    color: white; /* Плейсхолдер остаётся белым при фокусе */
+  }
+  
+
+  .ButtonRedak3{
+    background-color: white;
+  }

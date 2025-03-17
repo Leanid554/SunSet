@@ -85,9 +85,19 @@ const VideoQuestEdit = ({ lectureId }) => {
     }
   };
 
+  const deleteQuestion = async (id) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/questions/${id}`);
+      setQuestions(questions.filter((question) => question.id !== id));
+      alert("Pytanie zostało usunięte!");
+    } catch (error) {
+      alert("Błąd usuwania pytania");
+    }
+  };
+
   return (
     <div>
-      <h3>📌 Edycja pytan</h3>
+      <h3>📌 Edycja pytań</h3>
       {questions.length > 0 ? (
         <ul>
           {questions.map((question) => (
@@ -99,7 +109,7 @@ const VideoQuestEdit = ({ lectureId }) => {
                     value={updatedText}
                     onChange={(e) => setUpdatedText(e.target.value)}
                     rows="3"
-                    style={{ width: "100%" }}
+                    style={{ width: "100%", backgroundColor: "white" }}
                   />
 
                   <h4>Opcje odpowiedzi</h4>
@@ -109,8 +119,8 @@ const VideoQuestEdit = ({ lectureId }) => {
                         type="text"
                         value={answer}
                         onChange={(e) => handleAnswerChange(index, e.target.value)}
-                        placeholder={`Ответ ${index + 1}`}
-                        style={{ flex: 1 }}
+                        placeholder={`Odpowiedź ${index + 1}`}
+                        style={{ flex: 1, backgroundColor: "white" }}
                       />
                       <button className="ButtonRedak2" onClick={() => removeAnswer(index)}>❌</button>
                     </div>
@@ -136,18 +146,19 @@ const VideoQuestEdit = ({ lectureId }) => {
                     value={updatedTime}
                     onChange={(e) => setUpdatedTime(e.target.value)}
                     placeholder="Wprowadź czas"
-                    className="ButtonRedak"
+                    className="ButtonRedak3"
                   />
 
                   <div style={{ marginTop: "10px" }}>
-                    <button className="ButtonRedak" onClick={updateQuestion}>✅ zapisac</button>
-                    <button className="ButtonRedak" onClick={() => setEditingQuestionId(null)}>❌ cofnij</button>
+                    <button className="ButtonRedak" onClick={updateQuestion}>✅ Zapisz</button>
+                    <button className="ButtonRedak" onClick={() => setEditingQuestionId(null)}>❌ Cofnij</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <span>{question.question}</span>
                   <button className="ButtonRedak" onClick={() => startEditing(question)}>✏ Edytuj</button>
+                  <button className="ButtonRedak" onClick={() => deleteQuestion(question.id)}>❌ Usuń</button>
                 </div>
               )}
             </li>
