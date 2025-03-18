@@ -26,7 +26,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
           setQuestions(response.data);
         }
       } catch (err) {
-        console.error("Ошибка загрузки вопросов:", err);
+        console.error("Błąd ładowania pytania:", err);
       }
     };
 
@@ -47,26 +47,27 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
         videoRef.current.pause();
         setActiveQuestion(questionToShow);
         setTimeLeft(30);
-
+        
         if (countdownTimer) {
           clearInterval(countdownTimer);
         }
 
+        
         const countdown = setInterval(() => {
           setTimeLeft((prev) => {
             if (prev <= 1) {
-              clearInterval(countdown);
+              clearInterval(countdown); 
               setActiveQuestion(null);
               setSkippedQuestions((prev) => new Set(prev.add(questionToShow.id)));
               if (videoRef.current) videoRef.current.play();
             }
-            return prev - 1;
+            return prev - 0.5; 
           });
-        }, 1000);
+        }, 1000); 
 
         setCountdownTimer(countdown);
 
-        return () => clearInterval(countdown);
+        return () => clearInterval(countdown); 
       }
     };
 
@@ -83,7 +84,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
       videoElement.removeEventListener("timeupdate", checkTime);
       videoElement.removeEventListener("ended", handleVideoEnd);
       if (countdownTimer) {
-        clearInterval(countdownTimer);
+        clearInterval(countdownTimer); 
       }
     };
   }, [questions, answeredQuestions, videoRef, onVideoCompleted, countdownTimer, skippedQuestions]);
@@ -112,7 +113,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
             <p>
               <strong>Pytanie:</strong> {activeQuestion.question}
             </p>
-            <p className="countdown">Осталось времени: {timeLeft} сек.</p>
+            <p className="countdown">Zostało czasu: {timeLeft} sek.</p>
             <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
                 <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>
