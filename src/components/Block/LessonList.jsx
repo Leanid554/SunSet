@@ -32,7 +32,7 @@ function LessonList({ blockId, lessons, onLectureClick }) {
                     <div className="block-row">
                       <div className="block-title">{video.title}</div>
                       <div className="position1">
-                        {video.position || "Call-Center"}
+                      <div className="position1">{userRole}</div>
                       </div>
                       <span className="access-text">🔒</span>
                     </div>
