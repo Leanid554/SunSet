@@ -13,8 +13,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
 
   useEffect(() => {
     if (blockId) {
-      console.log(`🔄 Выбран тест с ID: ${blockId}`);
-      setQuestions([]); // Очищаем вопросы перед загрузкой новых
+      setQuestions([]); 
       fetchQuestions();
     }
   }, [blockId]);
@@ -23,20 +22,16 @@ const TestQuestionEdit = ({ blockId, testId }) => {
     if (!blockId) return;
 
     try {
-      console.log(`📡 Запрос вопросов для теста ${blockId}`);
       const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
-      console.log("📨 Ответ сервера:", response.data);
 
       if (response.data && Array.isArray(response.data.questions)) {
         setQuestions(response.data.questions);
       } else {
-        console.warn("⚠ Сервер не вернул вопросы или формат некорректен.");
         setQuestions([]);
       }
     } catch (error) {
-      console.error("❌ Ошибка загрузки вопросов:", error);
       alert("Błąd podczas pobierania pytań");
-      setQuestions([]); // Если ошибка, очищаем список вопросов
+      setQuestions([]); 
     }
   };
 
@@ -91,7 +86,6 @@ const TestQuestionEdit = ({ blockId, testId }) => {
       setCorrectAnswer("");
       alert("Pytanie zaktualizowane!");
     } catch (error) {
-      console.error("❌ Ошибка обновления вопроса:", error);
       alert("Błąd aktualizacji pytania");
     }
   };
@@ -104,7 +98,6 @@ const TestQuestionEdit = ({ blockId, testId }) => {
       );
       alert("Pytanie zostało usunięte!");
     } catch (error) {
-      console.error("❌ Ошибка удаления вопроса:", error);
       alert("Błąd usuwania pytania");
     }
   };
@@ -119,11 +112,13 @@ const TestQuestionEdit = ({ blockId, testId }) => {
               {editingQuestionId === question.id ? (
                 <div>
                   <h4>Tekst pytania</h4>
-                  <textarea
+                  
+                  <input
+                    type="text"
                     value={updatedText}
                     onChange={(e) => setUpdatedText(e.target.value)}
-                    rows="3"
                     style={{ width: "100%", backgroundColor: "white" }}
+                    placeholder="Wprowadź tekst pytania"
                   />
 
                   <h4>Opcje odpowiedzi</h4>
