@@ -21,7 +21,7 @@ function TestPage() {
 
   useEffect(() => {
     if (!blockId) {
-      setError("❌ Неверный идентификатор блока");
+      setError("❌ Nieprawidłowy identyfikator bloku");
       setLoading(false);
       return;
     }
@@ -29,9 +29,6 @@ function TestPage() {
     const fetchTestQuestions = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
-        
-        // Логируем полный ответ для диагностики
-        console.log("API Response:", response.data);
 
         setBlockTestId(response.data.id);
 
@@ -45,11 +42,10 @@ function TestPage() {
 
           setQuestions(shuffledQuestions);
         } else {
-          setError("❌ Ошибка: Вопросы не найдены или неверный формат данных");
+          setError("❌ Błąd: Nie znaleziono pytań lub nieprawidłowy format danych");
         }
       } catch (err) {
-        console.error("Ошибка при загрузке данных:", err);
-        setError("❌ Ошибка загрузки теста");
+        setError("❌ Błąd ładowania testu");
       } finally {
         setLoading(false);
       }
@@ -110,9 +106,7 @@ function TestPage() {
         blockTestId,
         passed,
       });
-    } catch (err) {
-      console.error("Ошибка при сохранении прогресса теста:", err);
-    }
+    } catch (err) {}
   };
 
   const restartTest = () => {
