@@ -28,24 +28,19 @@ function TestPage() {
 
     const fetchTestQuestions = async () => {
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/block-test/${blockId}`
-        );
+        const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
+        
+        // Логируем полный ответ для диагностики
+        console.log("API Response:", response.data);
 
         setBlockTestId(response.data.id);
 
-        if (
-          response.data?.questions &&
-          Array.isArray(response.data.questions)
-        ) {
-          let shuffledQuestions = shuffleArray(response.data.questions).slice(
-            0,
-            20
-          );
+        if (response.data?.questions && Array.isArray(response.data.questions)) {
+          let shuffledQuestions = shuffleArray(response.data.questions).slice(0, 20);
 
           shuffledQuestions = shuffledQuestions.map((q) => ({
             ...q,
-            options: shuffleArray(JSON.parse(q.options)),
+            options: shuffleArray(q.options),
           }));
 
           setQuestions(shuffledQuestions);
@@ -53,6 +48,7 @@ function TestPage() {
           setError("❌ Ошибка: Вопросы не найдены или неверный формат данных");
         }
       } catch (err) {
+        console.error("Ошибка при загрузке данных:", err);
         setError("❌ Ошибка загрузки теста");
       } finally {
         setLoading(false);
@@ -114,7 +110,9 @@ function TestPage() {
         blockTestId,
         passed,
       });
-    } catch (err) {}
+    } catch (err) {
+      console.error("Ошибка при сохранении прогресса теста:", err);
+    }
   };
 
   const restartTest = () => {
@@ -163,9 +161,7 @@ function TestPage() {
               {questions[currentQuestionIndex].options.map((option, index) => (
                 <li
                   key={index}
-                  className={`option ${
-                    selectedOption === index ? "selected" : ""
-                  }`}
+                  className={`option ${selectedOption === index ? "selected" : ""}`}
                   onClick={() => setSelectedOption(index)}
                 >
                   {option}
