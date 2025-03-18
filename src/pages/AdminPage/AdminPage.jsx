@@ -29,6 +29,8 @@ const AdminPage = () => {
   const [selectedBlockTestId, setSelectedBlockTestId] = useState(null);
   const [editingTestId, setEditingTestId] = useState(null);
 
+  const [selectedBlockId, setSelectedBlockId] = useState(null);
+
   useEffect(() => {
     fetchUsers();
     fetchBlocks();
@@ -172,7 +174,8 @@ const AdminPage = () => {
                       </button>
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
-                      <VideoQuestEdit lectureId={lecture.id} /> {/* Новый компонент */}
+                      <VideoQuestEdit lectureId={lecture.id} />{" "}
+                      {/* Новый компонент */}
                     </div>
                   )}
                 </li>
@@ -212,30 +215,69 @@ const AdminPage = () => {
                 addTestToList={addTestToList}
               />
               <div>
-                <h4>Wybierz test do dodania pytań</h4>
+                <h4>Wybierz blok</h4>
                 <select
-                  onChange={(e) => setSelectedBlockTestId(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedBlockTestId(e.target.value);
+                    setEditingTestId(null); // Сбросить выбранный тест при смене блока
+                  }}
                   value={selectedBlockTestId || ""}
                 >
-                  <option value="">Wybierz test</option>
-                  {testList.length > 0 ? (
-                    testList.map((test) => (
-                      <option key={test.id} value={test.id}>
-                        {getBlockTitle(test.blockId)} - {test.title} (ID:{" "}
-                        {test.id})
+                  <option value="">Wybierz blok</option>
+                  {blocks.length > 0 ? (
+                    blocks.map((block) => (
+                      <option key={block.id} value={block.id}>
+                        {block.title} (ID: {block.id})
                       </option>
                     ))
                   ) : (
-                    <option value="">Brak dostępnych testów</option>
+                    <option value="">Brak dostępnych bloków</option>
                   )}
                 </select>
               </div>
+
               {selectedBlockTestId && (
                 <div>
-                   <h4>Dodawanie pytań</h4>
-                   <TestQuestion blockTestId={selectedBlockTestId} />
+                  <h4>Wybierz test</h4>
+                  <select
+                    onChange={(e) => setEditingTestId(e.target.value)}
+                    value={editingTestId || ""}
+                  >
+                    <option value="">Wybierz test</option>
+                    {testList.filter(
+                      (test) => test.blockId === Number(selectedBlockTestId)
+                    ).length > 0 ? (
+                      testList
+                        .filter(
+                          (test) => test.blockId === Number(selectedBlockTestId)
+                        )
+                        .map((test) => (
+                          <option key={test.id} value={test.id}>
+                            {test.title} (ID: {test.id})
+                          </option>
+                        ))
+                    ) : (
+                      <option value="">
+                        Brak dostępnych testów dla wybranego bloku
+                      </option>
+                    )}
+                  </select>
+                </div>
+              )}
+
+              {selectedBlockTestId && editingTestId && (
+                <div>
+                  <h4>Dodawanie pytań</h4>
+                  <TestQuestion
+                    blockId={selectedBlockTestId}
+                    testId={editingTestId}
+                  />
+
                   <h4>Edycja pytań testu</h4>
-                  <TestQuestionEdit blockTestId={selectedBlockTestId} />
+                  <TestQuestionEdit
+                    blockId={selectedBlockTestId}
+                    testId={editingTestId}
+                  />
                 </div>
               )}
             </div>

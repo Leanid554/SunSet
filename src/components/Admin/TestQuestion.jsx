@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const TestQuestion = ({ blockTestId }) => {
+const TestQuestion = ({ blockId, testId }) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", "", "", ""]);
   const [answer, setAnswer] = useState("");
@@ -26,7 +26,11 @@ const TestQuestion = ({ blockTestId }) => {
   };
 
   const handleSubmit = async () => {
-    if (!question.trim() || options.some((opt) => !opt.trim()) || !answer.trim()) {
+    if (
+      !question.trim() ||
+      options.some((opt) => !opt.trim()) ||
+      !answer.trim()
+    ) {
       setError("Prosimy o wypełnienie wszystkich pól.");
       return;
     }
@@ -43,7 +47,7 @@ const TestQuestion = ({ blockTestId }) => {
       };
 
       await axios.post(
-        `${API_BASE_URL}/block-test/${blockTestId}/questions`,
+        `${API_BASE_URL}/block-test/${testId}/questions`,
         [newQuestion],
         {
           headers: {

@@ -4,7 +4,7 @@ import "./VideoQuestEdit.scss";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const TestQuestionEdit = ({ blockTestId }) => {
+const TestQuestionEdit = ({ blockId, testId }) => {
   const [questions, setQuestions] = useState([]);
   const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [updatedText, setUpdatedText] = useState("");
@@ -12,19 +12,19 @@ const TestQuestionEdit = ({ blockTestId }) => {
   const [correctAnswer, setCorrectAnswer] = useState("");
 
   useEffect(() => {
-    if (blockTestId) {
-      console.log(`🔄 Выбран тест с ID: ${blockTestId}`);
+    if (blockId) {
+      console.log(`🔄 Выбран тест с ID: ${blockId}`);
       setQuestions([]); // Очищаем вопросы перед загрузкой новых
       fetchQuestions();
     }
-  }, [blockTestId]);
+  }, [blockId]);
 
   const fetchQuestions = async () => {
-    if (!blockTestId) return;
+    if (!blockId) return;
 
     try {
-      console.log(`📡 Запрос вопросов для теста ${blockTestId}`);
-      const response = await axios.get(`${API_BASE_URL}/block-test/${blockTestId}`);
+      console.log(`📡 Запрос вопросов для теста ${blockId}`);
+      const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
       console.log("📨 Ответ сервера:", response.data);
 
       if (response.data && Array.isArray(response.data.questions)) {
@@ -43,7 +43,9 @@ const TestQuestionEdit = ({ blockTestId }) => {
   const startEditing = (question) => {
     setEditingQuestionId(question.id);
     setUpdatedText(question.question);
-    setUpdatedAnswers(question.options.length === 4 ? [...question.options] : ["", "", "", ""]);
+    setUpdatedAnswers(
+      question.options.length === 4 ? [...question.options] : ["", "", "", ""]
+    );
     setCorrectAnswer(question.answer || "");
   };
 
@@ -74,9 +76,14 @@ const TestQuestionEdit = ({ blockTestId }) => {
     };
 
     try {
-      await axios.put(`${API_BASE_URL}/block-test/questions/${editingQuestionId}`, updatedData);
+      await axios.put(
+        `${API_BASE_URL}/block-test/questions/${editingQuestionId}`,
+        updatedData
+      );
       setQuestions((prevQuestions) =>
-        prevQuestions.map((q) => (q.id === editingQuestionId ? { ...q, ...updatedData } : q))
+        prevQuestions.map((q) =>
+          q.id === editingQuestionId ? { ...q, ...updatedData } : q
+        )
       );
       setEditingQuestionId(null);
       setUpdatedText("");
@@ -92,7 +99,9 @@ const TestQuestionEdit = ({ blockTestId }) => {
   const deleteQuestion = async (id) => {
     try {
       await axios.delete(`${API_BASE_URL}/block-test/questions/${id}`);
-      setQuestions((prevQuestions) => prevQuestions.filter((question) => question.id !== id));
+      setQuestions((prevQuestions) =>
+        prevQuestions.filter((question) => question.id !== id)
+      );
       alert("Pytanie zostało usunięte!");
     } catch (error) {
       console.error("❌ Ошибка удаления вопроса:", error);
@@ -123,7 +132,9 @@ const TestQuestionEdit = ({ blockTestId }) => {
                       <input
                         type="text"
                         value={answer}
-                        onChange={(e) => handleAnswerChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleAnswerChange(index, e.target.value)
+                        }
                         placeholder={`Odpowiedź ${index + 1}`}
                         style={{ width: "100%", backgroundColor: "white" }}
                       />
@@ -148,7 +159,10 @@ const TestQuestionEdit = ({ blockTestId }) => {
                     <button className="ButtonRedak" onClick={updateQuestion}>
                       ✅ Zapisz
                     </button>
-                    <button className="ButtonRedak" onClick={() => setEditingQuestionId(null)}>
+                    <button
+                      className="ButtonRedak"
+                      onClick={() => setEditingQuestionId(null)}
+                    >
                       ❌ Cofnij
                     </button>
                   </div>
@@ -156,10 +170,16 @@ const TestQuestionEdit = ({ blockTestId }) => {
               ) : (
                 <div>
                   <span>{question.question}</span>
-                  <button className="ButtonRedak" onClick={() => startEditing(question)}>
+                  <button
+                    className="ButtonRedak"
+                    onClick={() => startEditing(question)}
+                  >
                     ✏ Edytuj
                   </button>
-                  <button className="ButtonRedak" onClick={() => deleteQuestion(question.id)}>
+                  <button
+                    className="ButtonRedak"
+                    onClick={() => deleteQuestion(question.id)}
+                  >
                     ❌ Usuń
                   </button>
                 </div>
