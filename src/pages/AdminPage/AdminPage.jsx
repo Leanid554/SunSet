@@ -251,11 +251,20 @@ const AdminPage = () => {
                         .filter(
                           (test) => test.blockId === Number(selectedBlockTestId)
                         )
-                        .map((test) => (
-                          <option key={test.id} value={test.id}>
-                            {test.title} (ID: {test.id})
-                          </option>
-                        ))
+                        .map((test) => {
+                          const block = blocks.find(
+                            (b) => b.id === test.blockId
+                          );
+                          const blockTitle = block
+                            ? block.title
+                            : "Nieznany blok";
+                          return (
+                            <option key={test.id} value={test.id}>
+                              Test dla bloku "{blockTitle}" - {test.title} (ID:{" "}
+                              {test.id})
+                            </option>
+                          );
+                        })
                     ) : (
                       <option value="">
                         Brak dostępnych testów dla wybranego bloku
