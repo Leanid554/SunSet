@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./QuestionVideo.scss";
 
@@ -11,14 +11,14 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [countdownTimer, setCountdownTimer] = useState(null);
-  const [skippedQuestions, setSkippedQuestions] = useState(new Set());
+  const countdownTimerRef = useRef(null);
+  const timeLeftRef = useRef(30); 
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/questions/lecture/${lectureId}`);
-        
+
         if (response.data.length > 3) {
           const shuffled = response.data.sort(() => 0.5 - Math.random());
           setQuestions(shuffled.slice(0, 3));
@@ -40,34 +40,32 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
       const currentTime = Math.floor(videoRef.current.currentTime);
 
       const questionToShow = questions.find(
-        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id) && !skippedQuestions.has(q.id)
+        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id)
       );
 
       if (questionToShow) {
         videoRef.current.pause();
+        videoRef.current.controls = false; 
         setActiveQuestion(questionToShow);
         setTimeLeft(30);
-        
-        if (countdownTimer) {
-          clearInterval(countdownTimer);
+        timeLeftRef.current = 30;
+
+        if (countdownTimerRef.current) {
+          clearInterval(countdownTimerRef.current);
         }
 
-        
-        const countdown = setInterval(() => {
+        countdownTimerRef.current = setInterval(() => {
           setTimeLeft((prev) => {
             if (prev <= 1) {
-              clearInterval(countdown); 
+              clearInterval(countdownTimerRef.current);
               setActiveQuestion(null);
-              setSkippedQuestions((prev) => new Set(prev.add(questionToShow.id)));
+              videoRef.current.controls = true; 
               if (videoRef.current) videoRef.current.play();
+              return 0;
             }
-            return prev - 0.5; 
+            return prev - 1;
           });
-        }, 1000); 
-
-        setCountdownTimer(countdown);
-
-        return () => clearInterval(countdown); 
+        }, 1000);
       }
     };
 
@@ -83,11 +81,11 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
     return () => {
       videoElement.removeEventListener("timeupdate", checkTime);
       videoElement.removeEventListener("ended", handleVideoEnd);
-      if (countdownTimer) {
-        clearInterval(countdownTimer); 
+      if (countdownTimerRef.current) {
+        clearInterval(countdownTimerRef.current);
       }
     };
-  }, [questions, answeredQuestions, videoRef, onVideoCompleted, countdownTimer, skippedQuestions]);
+  }, [questions, answeredQuestions, videoRef, onVideoCompleted]);
 
   const handleAnswer = (questionId, selectedOption) => {
     const question = questions.find((q) => q.id === questionId);
@@ -100,9 +98,14 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
 
     setAnsweredQuestions((prev) => new Set([...prev, questionId]));
     setActiveQuestion(null);
+    videoRef.current.controls = true; 
     if (videoRef.current) videoRef.current.play();
 
     onAnswerChange(correctAnswers + (isCorrect ? 1 : 0));
+
+    if (countdownTimerRef.current) {
+      clearInterval(countdownTimerRef.current);
+    }
   };
 
   return (
