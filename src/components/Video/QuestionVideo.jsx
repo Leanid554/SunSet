@@ -10,6 +10,9 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isVideoCompleted, setIsVideoCompleted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [countdownTimer, setCountdownTimer] = useState(null);
+  const [skippedQuestions, setSkippedQuestions] = useState(new Set());
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -18,9 +21,9 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
         
         if (response.data.length > 3) {
           const shuffled = response.data.sort(() => 0.5 - Math.random());
-          setQuestions(shuffled.slice(0, 3)); // Выбираем три случайных вопроса
+          setQuestions(shuffled.slice(0, 3));
         } else {
-          setQuestions(response.data); // Если вопросов ≤ 3, берём все
+          setQuestions(response.data);
         }
       } catch (err) {
         console.error("Ошибка загрузки вопросов:", err);
@@ -37,12 +40,33 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
       const currentTime = Math.floor(videoRef.current.currentTime);
 
       const questionToShow = questions.find(
-        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id)
+        (q) => q.timeInSeconds === currentTime && !answeredQuestions.has(q.id) && !skippedQuestions.has(q.id)
       );
 
       if (questionToShow) {
         videoRef.current.pause();
         setActiveQuestion(questionToShow);
+        setTimeLeft(30);
+
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+        }
+
+        const countdown = setInterval(() => {
+          setTimeLeft((prev) => {
+            if (prev <= 1) {
+              clearInterval(countdown);
+              setActiveQuestion(null);
+              setSkippedQuestions((prev) => new Set(prev.add(questionToShow.id)));
+              if (videoRef.current) videoRef.current.play();
+            }
+            return prev - 1;
+          });
+        }, 1000);
+
+        setCountdownTimer(countdown);
+
+        return () => clearInterval(countdown);
       }
     };
 
@@ -58,8 +82,11 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
     return () => {
       videoElement.removeEventListener("timeupdate", checkTime);
       videoElement.removeEventListener("ended", handleVideoEnd);
+      if (countdownTimer) {
+        clearInterval(countdownTimer);
+      }
     };
-  }, [questions, answeredQuestions, videoRef, onVideoCompleted]);
+  }, [questions, answeredQuestions, videoRef, onVideoCompleted, countdownTimer, skippedQuestions]);
 
   const handleAnswer = (questionId, selectedOption) => {
     const question = questions.find((q) => q.id === questionId);
@@ -85,6 +112,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
             <p>
               <strong>Pytanie:</strong> {activeQuestion.question}
             </p>
+            <p className="countdown">Осталось времени: {timeLeft} сек.</p>
             <ul className="answer-list">
               {activeQuestion.options.map((option, index) => (
                 <li key={index} onClick={() => handleAnswer(activeQuestion.id, option)}>
