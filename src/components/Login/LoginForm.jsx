@@ -21,7 +21,7 @@ const LoginForm = ({
       />
 
       <InputField
-        label="Password"
+        label="Hasło"
         name="password"
         type="password"
         value={formData.password}
@@ -33,7 +33,7 @@ const LoginForm = ({
       {errors.server && <p style={{ color: "red" }}>{errors.server}</p>}
 
       <button className="submit" type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Submit"}
+        {loading ? "Ładowanie..." : "Zaloguj się"}
       </button>
     </form>
   );

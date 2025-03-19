@@ -32,7 +32,7 @@ function LessonList({ blockId, lessons, onLectureClick }) {
                     <div className="block-row">
                       <div className="block-title">{video.title}</div>
                       <div className="position1">
-                      <div className="position1">{userRole}</div>
+                      <div className="position1">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</div>
                       </div>
                       <span className="access-text">🔒</span>
                     </div>
@@ -47,7 +47,7 @@ function LessonList({ blockId, lessons, onLectureClick }) {
                   <div className="video-content">
                     <div className="block-row">
                       <div className="block-title">{video.title}</div>
-                      <div className="position1">{userRole}</div>
+                      <div className="position1">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</div> 
                       <span className="access-text">🔓</span>
                     </div>
                   </div>
