@@ -33,22 +33,22 @@ function Test({ questions, blockId }) {
   if (testFinished) {
     return (
       <div className="result">
-        <p>Твой результат: {successPercentage}%</p>
+        <p>Twój wynik: {successPercentage}%</p>
         {successPercentage >= 80 ? (
           <>
-            <p>Тест пройден! 🎉</p>
+            <p>Test zaliczony! 🎉</p>
             <button onClick={() => navigate("/main")} className="go-to-main">
-              Завершить блок
+            Ukończ blok
             </button>
           </>
         ) : (
           <>
-            <p>Попробуй еще раз!</p>
+            <p>Spróbuj ponownie!</p>
             <button
               onClick={() => navigate(`/block/${blockId}`)}
               className="go-to-video"
             >
-              Вернуться к видео
+              Powrót do wideo
             </button>
           </>
         )}

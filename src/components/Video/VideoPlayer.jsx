@@ -12,7 +12,7 @@ const VideoPlayer = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (!id) {
-      setError("Ошибка: ID лекции не найден.");
+      setError("Błąd: Nie znaleziono identyfikatora wykładu");
       setLoading(false);
       return;
     }
@@ -25,8 +25,8 @@ const VideoPlayer = React.forwardRef((props, ref) => {
 
         setSelectedLecture(response.data);
       } catch (err) {
-        console.error("Ошибка загрузки лекции:", err);
-        setError("Не удалось загрузить данные лекции.");
+        console.error("Błąd ładowania wykładu:", err);
+        setError("Nie udało się pobrać danych wykładu.");
       } finally {
         setLoading(false);
       }

@@ -2,7 +2,7 @@ import React from "react";
 
 function Question({ question, options, selectedAnswer, onAnswerChange }) {
   if (!Array.isArray(options)) {
-    return <p>Ошибка в данных вопроса.</p>;
+    return <p>Blad w pytaniu</p>;
   }
 
   return (
