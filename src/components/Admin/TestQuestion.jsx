@@ -83,14 +83,14 @@ const TestQuestion = ({ blockId, testId }) => {
             type="text"
             value={option}
             onChange={(e) => handleOptionChange(index, e)}
-            placeholder={`Ответ ${index + 1}`}
+            placeholder={`Opcja ${index + 1}`}
           />
         ))}
         <select value={answer} onChange={handleAnswerChange}>
           <option value="">Wybierz poprawną odpowiedź</option>
           {options.map((option, index) => (
             <option key={index} value={option}>
-              {`Ответ ${index + 1}: ${option}`}
+              {`Opcja ${index + 1}: ${option}`}
             </option>
           ))}
         </select>

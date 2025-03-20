@@ -8,9 +8,12 @@ const VideoQuestEdit = ({ lectureId }) => {
   const [questions, setQuestions] = useState([]);
   const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [updatedText, setUpdatedText] = useState("");
-  const [updatedAnswers, setUpdatedAnswers] = useState([]);
+  const [updatedAnswers, setUpdatedAnswers] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [updatedTime, setUpdatedTime] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (lectureId) {
@@ -20,7 +23,9 @@ const VideoQuestEdit = ({ lectureId }) => {
 
   const fetchQuestions = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/questions/lecture/${lectureId}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/questions/lecture/${lectureId}`
+      );
       setQuestions(response.data);
     } catch (error) {
       alert("Błąd podczas przesyłania pytań");
@@ -30,9 +35,13 @@ const VideoQuestEdit = ({ lectureId }) => {
   const startEditing = (question) => {
     setEditingQuestionId(question.id);
     setUpdatedText(question.question);
-    setUpdatedAnswers(question.options || []);
+    setUpdatedAnswers(question.options || ["", "", "", ""]);
     setCorrectAnswer(question.answer || "");
-    setUpdatedTime(question.timeInSeconds ? String(question.timeInSeconds) : "");
+    setUpdatedTime(
+      question.timeInSeconds ? String(question.timeInSeconds) : ""
+    );
+    setError("");
+    setSuccess("");
   };
 
   const handleAnswerChange = (index, value) => {
@@ -41,47 +50,52 @@ const VideoQuestEdit = ({ lectureId }) => {
     setUpdatedAnswers(newAnswers);
   };
 
-  const addAnswer = () => {
-    setUpdatedAnswers([...updatedAnswers, ""]);
+  const handleCorrectAnswerChange = (event) => {
+    setCorrectAnswer(event.target.value);
   };
 
-  const removeAnswer = (index) => {
-    setUpdatedAnswers(updatedAnswers.filter((_, i) => i !== index));
+  const handleTimeChange = (event) => {
+    setUpdatedTime(event.target.value);
   };
 
-  const updateQuestion = async () => {
-    if (!updatedText.trim()) {
-      alert("Tekst pytania nie może być pusty!");
+  const handleSubmit = async () => {
+    if (
+      !updatedText.trim() ||
+      updatedAnswers.some((opt) => !opt.trim()) ||
+      !correctAnswer.trim()
+    ) {
+      setError("Proszę uzupełnić wszystkie pola.");
       return;
     }
-    if (updatedAnswers.length === 0 || updatedAnswers.some((opt) => !opt.trim())) {
-      alert("Dodaj co najmniej jedną odpowiedź!");
-      return;
-    }
-    if (!correctAnswer.trim()) {
-      alert("Wybierz poprawną odpowiedź!");
-      return;
-    }
-    if (!updatedTime.trim() || isNaN(updatedTime) || Number(updatedTime) < 0) {
-      alert("Wprowadź prawidłowy czas reakcji!");
-      return;
-    }
+
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
     try {
       const updatedData = {
         question: updatedText,
         options: updatedAnswers,
         answer: correctAnswer,
-        timeInSeconds: Number(updatedTime),
-        lectureId: Number(lectureId),
+        timeInSeconds: updatedTime ? Number(updatedTime) : undefined,
       };
 
-      await axios.put(`${API_BASE_URL}/questions/${editingQuestionId}`, updatedData);
-      setQuestions(questions.map((q) => (q.id === editingQuestionId ? { ...q, ...updatedData } : q)));
+      await axios.put(
+        `${API_BASE_URL}/questions/${editingQuestionId}`,
+        updatedData
+      );
+
+      setQuestions(
+        questions.map((q) =>
+          q.id === editingQuestionId ? { ...q, ...updatedData } : q
+        )
+      );
       setEditingQuestionId(null);
-      alert("Pytanie zaktualizowane!");
+      setSuccess("Pytanie zostało pomyślnie zaktualizowane!");
     } catch (error) {
-      alert("Błąd aktualizacji pytania");
+      setError("Błąd aktualizacji pytania. Spróbuj ponownie.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,36 +117,34 @@ const VideoQuestEdit = ({ lectureId }) => {
           {questions.map((question) => (
             <li key={question.id}>
               {editingQuestionId === question.id ? (
-                <div>
+                <div className="test-question">
                   <h4>Tekst pytania</h4>
-                  <textarea
+                  <input
+                    type="text"
                     value={updatedText}
                     onChange={(e) => setUpdatedText(e.target.value)}
-                    rows="3"
-                    style={{ width: "100%", backgroundColor: "white" }}
+                    placeholder="Wprowadź tekst pytania"
                   />
 
                   <h4>Opcje odpowiedzi</h4>
                   {updatedAnswers.map((answer, index) => (
-                    <div key={index} style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
-                      <input
-                        type="text"
-                        value={answer}
-                        onChange={(e) => handleAnswerChange(index, e.target.value)}
-                        placeholder={`Odpowiedź ${index + 1}`}
-                        style={{ flex: 1, backgroundColor: "white" }}
-                      />
-                      <button className="ButtonRedak2" onClick={() => removeAnswer(index)}>❌</button>
-                    </div>
+                    <input
+                      key={index}
+                      type="text"
+                      value={answer}
+                      onChange={(e) =>
+                        handleAnswerChange(index, e.target.value)
+                      }
+                      placeholder={`Opcja ${index + 1}`}
+                    />
                   ))}
-                  <button className="ButtonRedak" onClick={addAnswer}>➕ Dodaj odpowiedź</button>
 
                   <h4>Wybierz poprawną odpowiedź</h4>
                   <select
                     value={correctAnswer}
-                    onChange={(e) => setCorrectAnswer(e.target.value)}
-                    className="ButtonRedak"
+                    onChange={handleCorrectAnswerChange}
                   >
+                    <option value="">Wybierz poprawną odpowiedź</option>
                     {updatedAnswers.map((answer, index) => (
                       <option key={index} value={answer}>
                         {answer}
@@ -144,21 +156,31 @@ const VideoQuestEdit = ({ lectureId }) => {
                   <input
                     type="number"
                     value={updatedTime}
-                    onChange={(e) => setUpdatedTime(e.target.value)}
+                    onChange={handleTimeChange}
                     placeholder="Wprowadź czas"
-                    className="ButtonRedak3"
                   />
 
-                  <div style={{ marginTop: "10px" }}>
-                    <button className="ButtonRedak" onClick={updateQuestion}>✅ Zapisz</button>
-                    <button className="ButtonRedak" onClick={() => setEditingQuestionId(null)}>❌ Cofnij</button>
+                  <div>
+                    <button onClick={handleSubmit} disabled={loading}>
+                      {loading ? "Zapisuję..." : "Zapisz zmiany"}
+                    </button>
+                    <button onClick={() => setEditingQuestionId(null)}>
+                      ❌ Anuluj
+                    </button>
                   </div>
+
+                  {error && <p className="error">{error}</p>}
+                  {success && <p className="success">{success}</p>}
                 </div>
               ) : (
                 <div>
                   <span>{question.question}</span>
-                  <button className="ButtonRedak" onClick={() => startEditing(question)}>✏ Edytuj</button>
-                  <button className="ButtonRedak" onClick={() => deleteQuestion(question.id)}>❌ Usuń</button>
+                  <button onClick={() => startEditing(question)}>
+                    ✏ Edytuj
+                  </button>
+                  <button onClick={() => deleteQuestion(question.id)}>
+                    ❌ Usuń
+                  </button>
                 </div>
               )}
             </li>

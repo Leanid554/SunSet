@@ -98,8 +98,8 @@ const UserStats = ({ users }) => {
           <ul>
             {stats.blockVisits.map((block) => (
               <li key={block.blockId}>
-                {block.block.title} (Wizyty: {block.count}) |{" "}
-                {block.completed ? "Zdany" : "Nie zdany"}
+                {block.block.title} |{" "}
+                {block.completed ? "Zdany ✅" : "Nie zdany ❌"}
               </li>
             ))}
           </ul>
@@ -121,7 +121,7 @@ const UserStats = ({ users }) => {
             {stats.lectureProgress.map((progress) => (
               <li key={progress.lectureId}>
                 {progress.lecture.title} -{" "}
-                {progress.passed ? "Zaliczone" : "Nie zaliczone"} (Próby:{" "}
+                {progress.passed ? "Zaliczone ✅" : "Nie zaliczone ❌"} (Próby:{" "}
                 {progress.attempts})
               </li>
             ))}

@@ -8,14 +8,30 @@ const QuestionVideo = ({ lectureId }) => {
   const [options, setOptions] = useState(["", "", "", ""]);
   const [answer, setAnswer] = useState("");
   const [timeInSeconds, setTimeInSeconds] = useState(0);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleOptionChange = (index, value) => {
+  const handleOptionChange = (index, event) => {
     const newOptions = [...options];
-    newOptions[index] = value;
+    newOptions[index] = event.target.value;
     setOptions(newOptions);
   };
 
   const handleSubmit = async () => {
+    if (
+      !question.trim() ||
+      options.some((opt) => !opt.trim()) ||
+      !answer.trim()
+    ) {
+      setError("Prosimy o wypełnienie wszystkich pól.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
     const questionData = {
       question,
       options,
@@ -25,19 +41,24 @@ const QuestionVideo = ({ lectureId }) => {
     };
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/questions`,
-        questionData
-      );
-      alert("Pytanie zostało pomyślnie dodane!");
+      await axios.post(`${API_BASE_URL}/questions`, questionData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      setSuccess("Pytanie zostało pomyślnie dodane!");
+      setQuestion("");
+      setOptions(["", "", "", ""]);
+      setAnswer("");
+      setTimeInSeconds(0);
     } catch (error) {
-      alert("Błąd podczas dodawania pytania");
+      setError("Błąd podczas dodawania pytania. Spróbuj ponownie.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <h3>Dodaj pytanie do wykładu</h3>
+      <h3>❓ Dodaj pytanie do wykładu</h3>
       <input
         type="text"
         placeholder="Wprowadź pytanie"
@@ -50,22 +71,28 @@ const QuestionVideo = ({ lectureId }) => {
           type="text"
           placeholder={`Opcja ${index + 1}`}
           value={option}
-          onChange={(e) => handleOptionChange(index, e.target.value)}
+          onChange={(e) => handleOptionChange(index, e)}
         />
       ))}
-      <input
-        type="text"
-        placeholder="Prawidłowa odpowiedź"
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-      />
+      <select value={answer} onChange={(e) => setAnswer(e.target.value)}>
+        <option value="">Wybierz poprawną odpowiedź</option>
+        {options.map((option, index) => (
+          <option key={index} value={option}>
+            {`Opcja ${index + 1}: ${option}`}
+          </option>
+        ))}
+      </select>
       <input
         type="number"
         placeholder="Czas w sekundach"
         value={timeInSeconds}
         onChange={(e) => setTimeInSeconds(parseInt(e.target.value) || 0)}
       />
-      <button onClick={handleSubmit}>Dodaj pytanie</button>
+      <button onClick={handleSubmit} disabled={loading}>
+        {loading ? "Wysyłka..." : "Dodaj pytanie"}
+      </button>
+      {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
     </div>
   );
 };

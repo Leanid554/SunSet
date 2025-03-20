@@ -28,21 +28,31 @@ function TestPage() {
 
     const fetchTestQuestions = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
+        const response = await axios.get(
+          `${API_BASE_URL}/block-test/${blockId}`
+        );
 
         setBlockTestId(response.data.id);
 
-        if (response.data?.questions && Array.isArray(response.data.questions)) {
-          let shuffledQuestions = shuffleArray(response.data.questions).slice(0, 20);
+        if (
+          response.data?.questions &&
+          Array.isArray(response.data.questions)
+        ) {
+          let shuffledQuestions = shuffleArray(response.data.questions).slice(
+            0,
+            20
+          );
 
           shuffledQuestions = shuffledQuestions.map((q) => ({
             ...q,
-            options: shuffleArray(q.options),
+            options: shuffleArray(JSON.parse(q.options)),
           }));
 
           setQuestions(shuffledQuestions);
         } else {
-          setError("❌ Błąd: Nie znaleziono pytań lub nieprawidłowy format danych");
+          setError(
+            "❌ Błąd: Nie znaleziono pytań lub nieprawidłowy format danych"
+          );
         }
       } catch (err) {
         setError("❌ Błąd ładowania testu");
@@ -155,7 +165,9 @@ function TestPage() {
               {questions[currentQuestionIndex].options.map((option, index) => (
                 <li
                   key={index}
-                  className={`option ${selectedOption === index ? "selected" : ""}`}
+                  className={`option ${
+                    selectedOption === index ? "selected" : ""
+                  }`}
                   onClick={() => setSelectedOption(index)}
                 >
                   {option}

@@ -13,7 +13,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
 
   useEffect(() => {
     if (blockId) {
-      setQuestions([]); 
+      setQuestions([]);
       fetchQuestions();
     }
   }, [blockId]);
@@ -31,7 +31,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
       }
     } catch (error) {
       alert("Błąd podczas pobierania pytań");
-      setQuestions([]); 
+      setQuestions([]);
     }
   };
 
@@ -112,7 +112,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
               {editingQuestionId === question.id ? (
                 <div>
                   <h4>Tekst pytania</h4>
-                  
+
                   <input
                     type="text"
                     value={updatedText}

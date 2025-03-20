@@ -1,42 +1,32 @@
-.ButtonRedak {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    width: 100%;
-  }
-  
-  .ButtonRedak2 {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    width: 10%;
-  }
-  
-  .ButtonRedak:hover,
-  .ButtonRedak:active {
-    background-color: #c9302c;
-  }
-  
-  /* Для input полей с плейсхолдером */
-  input::placeholder {
-    color: white; /* Плейсхолдер всегда белый */
-  }
-  
-  input:focus::placeholder {
-    color: white; /* Плейсхолдер остаётся белым при фокусе */
-  }
-  
+.test-question input,
+.test-question select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .ButtonRedak3{
-    background-color: white;
-  }
+.test-question button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.test-question button:hover {
+  background-color: #c9302c;
+}
+
+.test-question .error {
+  color: red;
+}
+
+.test-question .success {
+  color: green;
+}
