@@ -175,7 +175,7 @@ const AdminPage = () => {
                       <UploadVideo lectureId={lecture.id} />
                       <QuestionVideo lectureId={lecture.id} />
                       <VideoQuestEdit lectureId={lecture.id} />{" "}
-                      {/* Новый компонент */}
+                      
                     </div>
                   )}
                 </li>
@@ -219,7 +219,7 @@ const AdminPage = () => {
                 <select
                   onChange={(e) => {
                     setSelectedBlockTestId(e.target.value);
-                    setEditingTestId(null); // Сбросить выбранный тест при смене блока
+                    setEditingTestId(null); 
                   }}
                   value={selectedBlockTestId || ""}
                 >

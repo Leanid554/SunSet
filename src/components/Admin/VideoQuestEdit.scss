@@ -27,13 +27,13 @@
     background-color: #c9302c;
   }
   
-  /* Для input полей с плейсхолдером */
+  
   input::placeholder {
-    color: white; /* Плейсхолдер всегда белый */
+    color: white; 
   }
   
   input:focus::placeholder {
-    color: white; /* Плейсхолдер остаётся белым при фокусе */
+    color: white; 
   }
   
 

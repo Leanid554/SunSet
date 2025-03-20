@@ -9,10 +9,8 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
   const [activeQuestion, setActiveQuestion] = useState(null);
   const [answeredQuestions, setAnsweredQuestions] = useState(new Set());
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [isVideoCompleted, setIsVideoCompleted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
   const countdownTimerRef = useRef(null);
-  const timeLeftRef = useRef(30); 
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -45,10 +43,9 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
 
       if (questionToShow) {
         videoRef.current.pause();
-        videoRef.current.controls = false; 
+        videoRef.current.controls = false;
         setActiveQuestion(questionToShow);
         setTimeLeft(30);
-        timeLeftRef.current = 30;
 
         if (countdownTimerRef.current) {
           clearInterval(countdownTimerRef.current);
@@ -58,9 +55,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
           setTimeLeft((prev) => {
             if (prev <= 1) {
               clearInterval(countdownTimerRef.current);
-              setActiveQuestion(null);
-              videoRef.current.controls = true; 
-              if (videoRef.current) videoRef.current.play();
+              handleTimeout(questionToShow.id); // Если время вышло — обработка таймаута
               return 0;
             }
             return prev - 1;
@@ -70,7 +65,6 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
     };
 
     const handleVideoEnd = () => {
-      setIsVideoCompleted(true);
       onVideoCompleted();
     };
 
@@ -98,7 +92,7 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
 
     setAnsweredQuestions((prev) => new Set([...prev, questionId]));
     setActiveQuestion(null);
-    videoRef.current.controls = true; 
+    videoRef.current.controls = true;
     if (videoRef.current) videoRef.current.play();
 
     onAnswerChange(correctAnswers + (isCorrect ? 1 : 0));
@@ -106,6 +100,13 @@ function QuestionVideo({ lectureId, videoRef, onAnswerChange, onVideoCompleted }
     if (countdownTimerRef.current) {
       clearInterval(countdownTimerRef.current);
     }
+  };
+
+  const handleTimeout = (questionId) => {
+    setAnsweredQuestions((prev) => new Set([...prev, questionId])); // Добавляем вопрос в отвеченные
+    setActiveQuestion(null);
+    videoRef.current.controls = true;
+    if (videoRef.current) videoRef.current.play();
   };
 
   return (
