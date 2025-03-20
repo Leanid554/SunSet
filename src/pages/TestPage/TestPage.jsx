@@ -28,24 +28,27 @@ function TestPage() {
 
     const fetchTestQuestions = async () => {
       try {
+        console.log(`Запрос к API: ${API_BASE_URL}/block-test/${blockId}`);
         const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
+        console.log("Ответ API:", response.data);
+
+        if (!response.data || !Array.isArray(response.data.questions)) {
+          throw new Error("❌ Неправильный формат ответа API: нет вопросов");
+        }
 
         setBlockTestId(response.data.id);
 
-        if (response.data?.questions && Array.isArray(response.data.questions)) {
-          let shuffledQuestions = shuffleArray(response.data.questions).slice(0, 20);
-
-          shuffledQuestions = shuffledQuestions.map((q) => ({
+        let shuffledQuestions = shuffleArray(response.data.questions)
+          .slice(0, 20)
+          .map((q) => ({
             ...q,
-            options: shuffleArray(q.options),
+            options: shuffleArray(JSON.parse(q.options)), // 🔥 Фиксируем строковый массив
           }));
 
-          setQuestions(shuffledQuestions);
-        } else {
-          setError("❌ Błąd: Nie znaleziono pytań lub nieprawidłowy format danych");
-        }
+        setQuestions(shuffledQuestions);
       } catch (err) {
-        setError("❌ Błąd ładowania testu");
+        console.error("Ошибка при загрузке теста:", err.message);
+        setError(err.message || "❌ Ошибка загрузки теста");
       } finally {
         setLoading(false);
       }
@@ -55,7 +58,11 @@ function TestPage() {
   }, [blockId]);
 
   const shuffleArray = (array) => {
-    return array.sort(() => Math.random() - 0.5);
+    if (!Array.isArray(array)) {
+      console.error("❌ shuffleArray: ожидался массив, получено:", array);
+      return [];
+    }
+    return [...array].sort(() => Math.random() - 0.5);
   };
 
   const handleNext = () => {
@@ -167,9 +174,7 @@ function TestPage() {
               onClick={handleNext}
               disabled={selectedOption === null}
             >
-              {currentQuestionIndex === questions.length - 1
-                ? "Skończyć"
-                : "Dalej"}
+              {currentQuestionIndex === questions.length - 1 ? "Skończyć" : "Dalej"}
             </button>
           </div>
         )
