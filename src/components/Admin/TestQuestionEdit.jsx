@@ -8,12 +8,12 @@ const TestQuestionEdit = ({ blockId, testId }) => {
   const [questions, setQuestions] = useState([]);
   const [editingQuestionId, setEditingQuestionId] = useState(null);
   const [updatedText, setUpdatedText] = useState("");
-  const [updatedAnswers, setUpdatedAnswers] = useState(["", "", "", ""]);
+  const [updatedAnswers, setUpdatedAnswers] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState("");
 
   useEffect(() => {
     if (blockId) {
-      setQuestions([]); 
+      setQuestions([]);
       fetchQuestions();
     }
   }, [blockId]);
@@ -25,22 +25,24 @@ const TestQuestionEdit = ({ blockId, testId }) => {
       const response = await axios.get(`${API_BASE_URL}/block-test/${blockId}`);
 
       if (response.data && Array.isArray(response.data.questions)) {
-        setQuestions(response.data.questions);
+        const formattedQuestions = response.data.questions.map((q) => ({
+          ...q,
+          options: JSON.parse(q.options), // 🔥 Фиксируем строковый массив
+        }));
+        setQuestions(formattedQuestions);
       } else {
         setQuestions([]);
       }
     } catch (error) {
       alert("Błąd podczas pobierania pytań");
-      setQuestions([]); 
+      setQuestions([]);
     }
   };
 
   const startEditing = (question) => {
     setEditingQuestionId(question.id);
     setUpdatedText(question.question);
-    setUpdatedAnswers(
-      question.options.length === 4 ? [...question.options] : ["", "", "", ""]
-    );
+    setUpdatedAnswers([...question.options]); // Используем реальные ответы
     setCorrectAnswer(question.answer || "");
   };
 
@@ -66,7 +68,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
 
     const updatedData = {
       question: updatedText,
-      options: updatedAnswers,
+      options: JSON.stringify(updatedAnswers), // Преобразуем обратно в строку
       answer: correctAnswer,
     };
 
@@ -77,12 +79,12 @@ const TestQuestionEdit = ({ blockId, testId }) => {
       );
       setQuestions((prevQuestions) =>
         prevQuestions.map((q) =>
-          q.id === editingQuestionId ? { ...q, ...updatedData } : q
+          q.id === editingQuestionId ? { ...q, ...updatedData, options: updatedAnswers } : q
         )
       );
       setEditingQuestionId(null);
       setUpdatedText("");
-      setUpdatedAnswers(["", "", "", ""]);
+      setUpdatedAnswers([]);
       setCorrectAnswer("");
       alert("Pytanie zaktualizowane!");
     } catch (error) {
@@ -112,7 +114,6 @@ const TestQuestionEdit = ({ blockId, testId }) => {
               {editingQuestionId === question.id ? (
                 <div>
                   <h4>Tekst pytania</h4>
-                  
                   <input
                     type="text"
                     value={updatedText}
@@ -127,9 +128,7 @@ const TestQuestionEdit = ({ blockId, testId }) => {
                       <input
                         type="text"
                         value={answer}
-                        onChange={(e) =>
-                          handleAnswerChange(index, e.target.value)
-                        }
+                        onChange={(e) => handleAnswerChange(index, e.target.value)}
                         placeholder={`Odpowiedź ${index + 1}`}
                         style={{ width: "100%", backgroundColor: "white" }}
                       />
