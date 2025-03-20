@@ -113,6 +113,10 @@ const AdminPage = () => {
     setTestList((prevTestList) => [...prevTestList, test]);
   };
 
+  const addLectureToState = (newLecture) => {
+    setLectures((prevLectures) => [...prevLectures, newLecture]);
+  };
+
   return (
     <div className="admin-page">
       <h2>📌 Panel administratora</h2>
@@ -124,6 +128,7 @@ const AdminPage = () => {
           blocks={blocks}
           lectures={lectures}
           setLectures={setLectures}
+          addLectureToState={addLectureToState} // Добавлено для обновления лекций
         />
       </div>
 
@@ -219,7 +224,7 @@ const AdminPage = () => {
                 <select
                   onChange={(e) => {
                     setSelectedBlockTestId(e.target.value);
-                    setEditingTestId(null); // Сбросить выбранный тест при смене блока
+                    setEditingTestId(null);
                   }}
                   value={selectedBlockTestId || ""}
                 >

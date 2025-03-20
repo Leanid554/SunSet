@@ -3,24 +3,10 @@ import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 
-const AddLecture = ({ lectures, setLectures }) => {
-  const [blocks, setBlocks] = useState([]);
+const AddLecture = ({ blocks, lectures, setLectures, addLectureToState }) => {
   const [newLecture, setNewLecture] = useState({ blockId: "", title: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchBlocks();
-  }, []);
-
-  const fetchBlocks = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/blocks`);
-      setBlocks(response.data);
-    } catch (err) {
-      setError("Nie udało się załadować bloków");
-    }
-  };
 
   const addLecture = async () => {
     if (!newLecture.blockId || newLecture.title.trim() === "") return;
@@ -34,7 +20,7 @@ const AddLecture = ({ lectures, setLectures }) => {
         blockId: parseInt(newLecture.blockId),
       });
 
-      setLectures([...lectures, response.data]);
+      addLectureToState(response.data);
       setNewLecture({ blockId: "", title: "" });
     } catch (err) {
       setError("Błąd podczas dodawania lekcji");
